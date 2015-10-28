@@ -1,0 +1,323 @@
+#include "CommandsManager.h"
+#include <string>
+
+// Amount of commands saved in memory to press up to find
+#define COUNT_HISTORY 10
+#define POS_CHAT_X 40
+#define POS_CHAT_Y 660
+
+// Amount of lines of strings to save
+#define COUNT_VISIBLE 20
+#define COUNT_VISIVLE_FIT 7
+
+CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager):
+    isCommandsActive(false)
+    , window(_window)
+    , entityManager(_entityManager)
+    , textImput()
+    , timer (0)
+    , isGood(true)
+    , currentCommand(-1)
+{
+    for (int it = 0; it != COUNT_HISTORY; it++)
+    {
+        previousCommands[it] = "";
+    }
+
+    for (int it = 0; it != COUNT_VISIBLE; it++)
+    {
+        sf::Text text;
+        text.setCharacterSize(20);
+        text.setColor(sf::Color::White);
+        text.setString(std::string());
+        text.setFont(Data_Desktop::getInstance().font1);
+        visibleText[it] = text;
+    }
+
+    texture_chatArea.loadFromFile("Media/Image/Game/Gui/ChatBox.png");
+    sprite_chatArea.setPosition(POS_CHAT_X, POS_CHAT_Y);
+    sprite_chatArea.setTexture(texture_chatArea);
+}
+
+
+CommandsManager::~CommandsManager()
+{
+
+}
+
+void CommandsManager::update()
+{
+
+}
+
+void CommandsManager::getCharImput(char imput)
+{
+    // TODO Rebindable chat key
+
+    /// ' ' = nothing, 'S' = shift, 'E' = enter, '_' = backspace
+
+    if(isCommandsActive)
+    {
+        if(imput != ' ' && imput != 'S' && imput != 29 && imput != 30)
+        {
+            if(imput == '_') // backspace
+            {
+                std::string tempSt;
+                tempSt = textImput.str();
+                if(tempSt.length() > 0)
+                {
+                    tempSt.erase(tempSt.size() - 1, 1);
+                }
+                textImput.str(std::string());
+                textImput << tempSt;
+                visibleText[0].setString(textImput.str());
+            }
+            else
+            {
+                if(imput == 10)
+                {
+                    imput = 'C';
+                }
+                else if(imput == 11)
+                {
+                    imput = 'S';
+                }
+                else if(imput == 12)
+                {
+                    imput = 'A';
+                }
+                else if(imput == 17)
+                {
+                    imput = 'T';
+                }
+                else if(imput == 14)
+                {
+                    imput = 'B';
+                }
+                else if(imput == 15)
+                {
+                    imput = '_';
+                }
+                else if(imput == 16)
+                {
+                    imput = 'E';
+                }
+                else if(imput == 'B')
+                {
+                    imput = ' ';
+                }
+                else if(imput == 'E')
+                {
+                    isGood = false;
+                }
+                if(isGood)
+                {
+                    textImput << imput;
+                }
+                visibleText[0].setString(textImput.str());
+                isGood = true;
+            }
+        }
+        else if(imput == 29 || imput == 30) // up or down
+        {
+            if(imput == 29) // up
+            {
+                if(currentCommand + 1 < COUNT_HISTORY)
+                {
+                    currentCommand++;
+                    textImput.str(std::string());
+                    textImput << previousCommands[currentCommand];
+                    visibleText[0].setString(textImput.str());
+                }
+            }
+            else if(imput == 30) // down
+            {
+                if(currentCommand -1 > -1)
+                {
+                    currentCommand--;
+                    textImput.str(std::string());
+                    textImput << previousCommands[currentCommand];
+                    visibleText[0].setString(textImput.str());
+                }
+            }
+        }
+    }
+}
+
+void CommandsManager::drawCommandArea()
+{
+    if(isCommandsActive)
+    {
+        window.draw(sprite_chatArea);
+        for(int it = 0; it !=COUNT_VISIVLE_FIT; it++)
+        {
+            visibleText[it].setPosition(20 + POS_CHAT_X, 240 + POS_CHAT_Y - (it * 40));
+            window.draw(visibleText[it]);
+        }
+    }
+}
+
+void CommandsManager::setActivity(bool _isActive)
+{
+    isCommandsActive = _isActive;
+}
+
+bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
+{
+    // toggle box
+    if(actionType == 21 && isPressed == true )
+    {
+        if(isCommandsActive == true)
+        {
+            isCommandsActive = false;
+        }
+        else
+        {
+            isCommandsActive = true;
+        }
+    }
+
+    // Enter
+    else if(actionType == 20 && isPressed == true && isCommandsActive == true && textImput.str().length() > 0)
+    {
+        std::string commandSt = textImput.str();
+        textImput.str(std::string());
+
+        /// save commands
+        if(commandSt != previousCommands[0])
+        {
+            for(int it = COUNT_HISTORY - 2; it >= 0; it--)
+            {
+                previousCommands[it + 1] = previousCommands[it];
+            }
+            previousCommands[0] = commandSt;
+        }
+        currentCommand = -1;
+
+        /// Save visible text
+        for(int it = COUNT_VISIBLE - 1; it > 0; it--)
+        {
+            visibleText[it].setString(visibleText[it-1].getString());
+        }
+        visibleText[0].setString(std::string());
+
+        /// check if its chat or command
+        if(commandSt[0] == '/')
+        {
+            std::stringstream ss;
+            std::string param[6];
+
+            int character = 1;
+
+            for(unsigned char it = 0; it != 6; it++)
+            {
+                for(char it = '?'; it != ' '&& it != '\0';)
+                {
+                    it = commandSt[character];
+                    ss << commandSt[character];
+                    character++;
+                }
+                ss >> param[it];
+                ss.str(std::string());
+            }
+
+            for(int it = 0; it < 6; it++)
+            {
+                param[it].erase(std::remove(param[it].begin(), param[it].end(), ' '), param[it].end());
+                param[it].erase(std::remove(param[it].begin(), param[it].end(), '\0'), param[it].end());
+            }
+
+            // commands involving coordinates
+            if(param[0] == "spawn" || param[0] == "tp" ||  param[0] == "teleport")
+            {
+                if(param[0] == "tp" ||  param[0] == "teleport")
+                {
+                    param[3] = param[2];
+                    param[2] = param[1];
+                }
+
+                // coordinates
+                sf::Vector2f coords;
+                bool isGood_x = false;
+                bool isGood_y = false;
+                if(param[2].length() > 0 && param[3].length() > 0)
+                {
+                    // x coord
+                    if(param[2][0] == '~')
+                    {
+                        param[2].erase(param[2].begin());
+                        if(std::atoi(param[2].c_str()) < 10000)
+                        {
+                            coords.x = std::atoi(param[2].c_str()) * 32 + entityManager.getPlayerCoordinates().x;
+                            isGood_x = true;
+                        }
+                    }
+                    else if(std::atoi(param[2].c_str()) < 10000)
+                    {
+                        coords.x = std::atoi(param[2].c_str()) * 32;
+                        isGood_x = true;
+                    }
+                    // y coord
+                    if(param[3][0] == '~')
+                    {
+                        param[3].erase(param[3].begin());
+                        if(std::atoi(param[3].c_str()) < 10000)
+                        {
+                            coords.y = std::atoi(param[3].c_str()) * 32 + entityManager.getPlayerCoordinates().y;
+                            isGood_y = true;
+                        }
+                    }
+                    else if(std::atoi(param[3].c_str()) < 10000)
+                    {
+                        coords.y = std::atoi(param[3].c_str()) * 32;
+                        isGood_y = true;
+                    }
+                }
+                else
+                {
+                    coords = entityManager.getPlayerCoordinates();
+                    isGood_x = true;
+                    isGood_y = true;
+                }
+
+                if(isGood_x == true && isGood_y == true)
+                {
+                    if(param[0] == "spawn")
+                    {
+                        // Monsters
+                        if(param[1][0] == 'e' && param[1][1] == 'n' &&param[1][2] == 't' &&param[1][3] == 'i' && param[1][4] == 't' &&param[1][5] == 'y' &&param[1][6] == ':')
+                        {
+                            if(param[1] == "entity:chicken")
+                            {
+                                entityManager.createEntity(1, coords);
+                            }
+                            else if(param[1] == "entity:goblin")
+                            {
+                                entityManager.createEntity(2, coords);
+                            }
+                        }
+                    }
+                    else if(param[0] == "tp" || param[0] == "teleport")
+                    {
+                        entityManager.setPlayerCoordinates(coords);
+                    }
+                }
+            }
+        }
+        else
+        {
+            std::stringstream ss;
+            std::string temp = visibleText[1].getString();
+            ss << "Player 1: " << temp;
+            visibleText[1].setString(ss.str());
+        }
+    }
+    if(isCommandsActive)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}

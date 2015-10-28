@@ -1,0 +1,611 @@
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <fstream>
+#include <sstream>
+#include <cstring>
+#include <string>
+#include <vector>
+
+#include "TileEngine/TileEngine.h"
+
+TileEngine::TileEngine(int mapID):
+    mapWidth(0)
+    , mapHeight(0)
+{
+    std::cout<<"DEBUG: TileEngine Initialized"<<std::endl;
+}
+
+TileEngine::~TileEngine()
+{
+    std::cout<<"DEBUG: Destroyed Tile Engine"<<std::endl;
+}
+
+void TileEngine::loadMap(std::string mapName)//, SpawnManager& spawnManager)
+{
+    std::string mapSt;
+    std::string naturalSpawnSt;
+
+    std::stringstream ss;
+    ss << "Maps/";
+    ss << mapName;
+    ss << "/map.txt";
+    ss >> mapSt;
+
+    mapString(mapSt);
+
+    std::ifstream openfile;
+    openfile.open(mapSt);
+
+    std::string dummyLine;
+    std::getline(openfile, dummyLine);
+
+    if (!openfile.is_open())
+    {
+        std::cout<<"DEBUG: Map "<<mapSt<<" Failed to load"<<std::endl;
+    }
+
+    if(openfile.is_open())
+    {
+        std::cout<<"DEBUG: Map "<<mapSt<<" Loaded"<<std::endl;
+
+        //01,01
+        tile_Texture_grass_a.loadFromFile("Media/Tiles/tile_grass1.png");
+        tile_Sprite_grass_a.setTexture(tile_Texture_grass_a);
+
+        //01,02
+        tile_Texture_grass_a_a.loadFromFile("Media/Tiles/tile_grass1_a.png");
+        tile_Sprite_grass_a_a.setTexture(tile_Texture_grass_a_a);
+
+        //01,06
+        tile_Texture_dirt_a.loadFromFile("Media/Tiles/tile_dirt1.png");
+        tile_Sprite_dirt_a.setTexture(tile_Texture_dirt_a);
+
+        //01,11
+        tile_Texture_flowers_a.loadFromFile("Media/Tiles/tile_flowers1.png");
+        tile_Sprite_flowers_a.setTexture(tile_Texture_flowers_a);
+
+        //01,12
+        tile_Texture_flowers_b.loadFromFile("Media/Tiles/tile_flowers2.png");
+        tile_Sprite_flowers_b.setTexture(tile_Texture_flowers_b);
+
+        //01,21
+        tile_Texture_gravel_a.loadFromFile("Media/Tiles/tile_gravel1.png");
+        tile_Sprite_gravel_a.setTexture(tile_Texture_gravel_a);
+
+        //01,31
+        tile_Texture_floor_wood_a.loadFromFile("Media/Tiles/tile_floor_wood1.png");
+        tile_Sprite_floor_wood_a.setTexture(tile_Texture_floor_wood_a);
+
+        //01, 32
+        tile_Texture_floor_wood_b1.loadFromFile("Media/Tiles/tile_floor_wood2a.png");
+        tile_Sprite_floor_wood_b1.setTexture(tile_Texture_floor_wood_b1);
+
+        //01, 33
+        tile_Texture_floor_wood_b2.loadFromFile("Media/Tiles/tile_floor_wood2b.png");
+        tile_Sprite_floor_wood_b2.setTexture(tile_Texture_floor_wood_b2);
+
+        //01,50
+        tile_Texture_grass_a_1a.loadFromFile("Media/Tiles/tile_grass1_1a.png");
+        tile_Sprite_grass_a_1a.setTexture(tile_Texture_grass_a_1a);
+        //01,51
+        tile_Sprite_grass_a_2a.setTexture(tile_Texture_grass_a_1a);
+        tile_Sprite_grass_a_2a.setOrigin(32.f, 32.f);
+        tile_Sprite_grass_a_2a.setRotation(180);
+
+        //01,52
+        tile_Texture_grass_a_1b.loadFromFile("Media/Tiles/tile_grass1_1b.png");
+        tile_Sprite_grass_a_1b.setTexture(tile_Texture_grass_a_1b);
+        //01,53
+        tile_Sprite_grass_a_2b.setTexture(tile_Texture_grass_a_1b);
+        tile_Sprite_grass_a_2b.setOrigin(32.f, 32.f);
+        tile_Sprite_grass_a_2b.setRotation(180);
+
+
+        //01,54
+        tile_Texture_grass_a_1c.loadFromFile("Media/Tiles/tile_grass1_1c.png");
+        tile_Sprite_grass_a_1c.setTexture(tile_Texture_grass_a_1c);
+        //01,55
+        tile_Sprite_grass_a_2c.setTexture(tile_Texture_grass_a_1c);
+        tile_Sprite_grass_a_2c.setOrigin(0.f, 32.f);
+        tile_Sprite_grass_a_2c.setScale(1.f,-1.f);
+
+        //01,56
+        tile_Sprite_grass_a_3c.setTexture(tile_Texture_grass_a_1c);
+        tile_Sprite_grass_a_3c.setOrigin(32.f, 32.f);
+        tile_Sprite_grass_a_3c.setRotation(180);
+        //01,57
+        tile_Sprite_grass_a_4c.setTexture(tile_Texture_grass_a_1c);
+        tile_Sprite_grass_a_4c.setOrigin(32.f, 0.f);
+        tile_Sprite_grass_a_4c.setScale(-1.f,1.f);
+
+        //01,58
+        tile_Texture_grass_a_1d.loadFromFile("Media/Tiles/tile_grass1_1d.png");
+        tile_Sprite_grass_a_1d.setTexture(tile_Texture_grass_a_1d);
+        //01,59
+        tile_Sprite_grass_a_2d.setTexture(tile_Texture_grass_a_1d);
+        tile_Sprite_grass_a_2d.setOrigin(0.f, 32.f);
+        tile_Sprite_grass_a_2d.setScale(1.f,-1.f);
+        //01,60
+        tile_Sprite_grass_a_3d.setTexture(tile_Texture_grass_a_1d);
+        tile_Sprite_grass_a_3d.setOrigin(32.f, 32.f);
+        tile_Sprite_grass_a_3d.setRotation(180);
+        //01,61
+        tile_Sprite_grass_a_4d.setTexture(tile_Texture_grass_a_1d);
+        tile_Sprite_grass_a_4d.setOrigin(32.f, 0.f);
+        tile_Sprite_grass_a_4d.setScale(-1.f,1.f);
+
+        //------------------------------------------------------
+
+        //50,01
+        tile_Texture_nothing.loadFromFile("Media/Tiles/tile_nothing.png");
+        tile_Sprite_nothing.setTexture(tile_Texture_nothing);
+
+        //50, 10
+        tile_Texture_brick_basic_a.loadFromFile("Media/Tiles/tile_brick_basic1.png");
+        tile_Sprite_brick_basic_a.setTexture(tile_Texture_brick_basic_a);
+
+        //50,11
+        tile_Texture_brick_basic_b.loadFromFile("Media/Tiles/tile_brick_basic2.png");
+        tile_Sprite_brick_basic_b.setTexture(tile_Texture_brick_basic_b);
+
+        //50,14
+        tile_Texture_brick_basic_Wb.loadFromFile("Media/Tiles/tile_brick_basic_W2.png");
+        tile_Sprite_brick_basic_Wb.setTexture(tile_Texture_brick_basic_Wb);
+
+        //50, 20
+        tile_Texture_brick_fancy_a.loadFromFile("Media/Tiles/tile_brick_fancy1.png");
+        tile_Sprite_brick_fancy_a.setTexture(tile_Texture_brick_fancy_a);
+
+        //------------------------------------------------------
+
+        //55, 01
+        tile_Texture_crate_a.loadFromFile("Media/Tiles/tile_crate_1.png");
+        tile_Sprite_crate_a.setTexture(tile_Texture_crate_a);
+
+        //55, 11
+        tile_Texture_well_a.loadFromFile("Media/Tiles/tile_well1.png");
+        tile_Sprite_well_a.setTexture(tile_Texture_well_a);
+
+
+        //-----------------------------------------------
+
+        //60, 01
+        tile_Texture_tree_a.loadFromFile("Media/Tiles/tile_tree_1.png");
+        tile_Sprite_tree_a.setTexture(tile_Texture_tree_a);
+
+        //-----------------------------------------------
+
+        //75, 01
+
+        tile_Texture_wall_1a.loadFromFile("Media/Tiles/tile_wall_side1.png");
+        tile_Sprite_wall_1a.setTexture(tile_Texture_wall_1a);
+
+
+        //-----------------------------------------------
+
+        //76, 01
+        tile_Sprite_wall_2a.setTexture(tile_Texture_wall_1a);
+        tile_Sprite_wall_2a.setOrigin(32.f, 0.f);
+        tile_Sprite_wall_2a.setScale(-1.f,1.f);
+        //tile_Sprite_wall_2a.setRotation(180);
+
+
+
+        while(!openfile.eof())
+        {
+            std::string str, value;
+            std::getline(openfile, str);
+            std::stringstream stringStream(str);
+
+            while (std::getline(stringStream, value, '|'))
+            {
+                if(value.length() > 0)
+                {
+                    std::string x_a = value.substr(0, value.find(','));
+                    std::string x_b = value.substr(value.find(',')+1);
+
+                    int x, y, a, b;
+
+                    for (a = 0; a < x_a.length(); a++)
+                    {
+                        if(x_a[a]== '00')
+                        {
+                            break;
+                        }
+                    }
+                    for (b = 0; b < x_b.length(); b++)
+                    {
+                        if(x_b[b]== '00')
+                        {
+                            break;
+                        }
+                    }
+                    if (a==x_a.length())
+                    {
+                        x = atoi(x_a.c_str());
+                    }
+                    if (b==x_b.length())
+                    {
+                        y = atoi(x_b.c_str());
+                    }
+                    mapWidth++;
+                    tempMap.push_back(sf::Vector2i(x, y));
+                }
+            }
+            mapVector.push_back(tempMap);
+            tempMap.clear();
+            mapHeight++;
+        }
+        mapWidth = mapWidth / mapHeight;
+    }
+
+    std::vector<std::string> tilesIndexName = Data_Desktop::getInstance().getFiles("Media/Tiles/", false);
+    for(std::string& tileIndexSt : tilesIndexName)
+    {
+        std::stringstream ss;
+        std::string tileIDDir;
+        ss << "Media/Tiles/" << tileIndexSt;
+        ss >> tileIDDir;
+        std::vector<std::string> tilesIDName = Data_Desktop::getInstance().getFiles(tileIDDir , false);
+        for(std::string& tileIDSt : tilesIDName)
+        {
+            if(tileIsUsed(std::atoi(tileIndexSt.c_str())), std::atoi(tileIDSt.c_str()))
+            {
+                ss.clear();
+                if(std::atoi(tileIndexSt.c_str()) < 2)
+                {
+                    ss << "Media/Tiles/0" << tileIndexSt << ".png";
+                }
+                else
+                {
+                    ss << "Media/Tiles/" << tileIndexSt << ".png";
+                }
+                ss >> tileIDDir;
+                std::map<int, sf::Sprite> tileID;
+                sf::Sprite tileSprite;
+                tileSprite.setTexture(tileIDDir);
+            }
+        }
+        std::cout << std::atoi(tileIndexSt.c_str()) << std::endl;
+        ss.clear();
+    }
+}
+
+void TileEngine::drawMap(sf::RenderWindow &window, sf::Vector2f coordinates)
+{
+    //std::cout<<"Map Width:"<<mapWidth<<std::endl;
+    //std::cout<<"Map Height:"<<mapHeight<<std::endl;
+
+    for (int x =(coordinates.y-13); x < (coordinates.y+10); x++)
+    {
+        for (int y =(coordinates.x-20); y < (coordinates.x+18); y++)
+        {
+            if (x>-1 && y > -1 && x < mapHeight && y < mapWidth)
+            {
+                loadTiles(x, y, mapVector[x][y].x, mapVector[x][y].y, window);
+            }
+        }
+    }
+}
+
+void TileEngine::drawWholeMap(sf::RenderWindow &window)
+{
+    for (int x=0; x < mapVector.size(); x++)
+    {
+        for (int y=0; y < mapVector[x].size(); y++)
+        {
+            if(mapVector[x][y].x != 00 && mapVector[x][y].y != 00)
+            {
+                loadTiles(x, y, mapVector[x][y].x, mapVector[x][y].y, window);
+            }
+        }
+    }
+}
+
+void TileEngine::loadTiles(int x, int y, int tileIndex, int tileID, sf::RenderWindow &window)
+{
+    sf::Vector2f idVector(x, y);
+
+    if(tileIndex == 01)
+    {
+        switch(tileID)
+        {
+        case 1:
+            tile_Sprite_grass_a.setPosition (y * 32, x * 32);
+            window.draw(tile_Sprite_grass_a);
+            break;
+        case 2:
+            tile_Sprite_grass_a_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_a);
+            break;
+        case 6:
+            tile_Sprite_dirt_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_dirt_a);
+            break;
+        case 11:
+            tile_Sprite_flowers_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_flowers_a);
+            break;
+        case 12:
+            tile_Sprite_flowers_b.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_flowers_b);
+            break;
+        case 21:
+            tile_Sprite_gravel_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_gravel_a);
+            break;
+        case 31:
+            tile_Sprite_floor_wood_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_floor_wood_a);
+            break;
+        case 32:
+            tile_Sprite_floor_wood_b1.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_floor_wood_b1);
+            break;
+        case 33:
+            tile_Sprite_floor_wood_b2.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_floor_wood_b2);
+            break;
+        case 50:
+            tile_Sprite_grass_a_1a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_1a);
+            break;
+        case 51:
+            tile_Sprite_grass_a_2a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_2a);
+            break;
+        case 52:
+            tile_Sprite_grass_a_1b.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_1b);
+            break;
+        case 53:
+            tile_Sprite_grass_a_2b.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_2b);
+            break;
+        case 54:
+            tile_Sprite_grass_a_1c.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_1c);
+            break;
+        case 55:
+            tile_Sprite_grass_a_2c.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_2c);
+            break;
+        case 56:
+            tile_Sprite_grass_a_3c.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_3c);
+            break;
+        case 57:
+            tile_Sprite_grass_a_4c.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_4c);
+            break;
+        case 58:
+            tile_Sprite_grass_a_1d.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_1d);
+            break;
+        case 59:
+            tile_Sprite_grass_a_2d.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_2d);
+            break;
+        case 60:
+            tile_Sprite_grass_a_3d.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_3d);
+            break;
+        case 61:
+            tile_Sprite_grass_a_4d.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_grass_a_4d);
+            break;
+        default:
+            isATile = false;
+            break;
+
+        }
+    }
+    else if(tileIndex == 50)
+    {
+        switch(tileID)
+        {
+        case 1:
+            //tile_Sprite_nothing.setPosition (y * 32, x * 32);
+            //window.draw (tile_Sprite_nothing);
+            break;
+        case 10:
+            tile_Sprite_brick_basic_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_brick_basic_a);
+            break;
+        case 11:
+            tile_Sprite_brick_basic_b.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_brick_basic_b);
+            break;
+        case 14:
+            tile_Sprite_brick_basic_Wb.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_brick_basic_Wb);
+            break;
+        case 20:
+            tile_Sprite_brick_fancy_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_brick_fancy_a);
+            break;
+        default:
+            isATile = false;
+            break;
+        }
+    }
+    else if(tileIndex == 55)
+    {
+        switch(tileID)
+        {
+        case 1:
+            tile_Sprite_crate_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_crate_a);
+            break;
+        case 11:
+            tile_Sprite_well_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_well_a);
+            break;
+        default:
+            isATile = false;
+            break;
+        }
+    }
+    else if(tileIndex == 60)
+    {
+        switch(tileID)
+        {
+        case 1:
+            tile_Sprite_tree_a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_tree_a);
+            break;
+        default:
+            isATile = false;
+            break;
+        }
+    }
+    else if(tileIndex == 75)
+    {
+        switch(tileID)
+        {
+        case 1:
+            tile_Sprite_wall_1a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_wall_1a);
+            break;
+        default:
+            isATile = false;
+            break;
+        }
+    }
+    else if(tileIndex == 76)
+    {
+        switch(tileID)
+        {
+        case 1:
+            tile_Sprite_wall_2a.setPosition (y * 32, x * 32);
+            window.draw (tile_Sprite_wall_2a);
+            break;
+        default:
+            isATile = false;
+            break;
+        }
+    }
+    else
+    {
+        isATile = false;
+    }
+}
+
+
+int TileEngine::getMapCollision(sf::Vector2i mapCoordinates, sf::Vector2f playerCoordinates, sf::Vector2f getSideRadius, sf::Vector2f velocity, int (&returnCollision)[4])
+{
+    for(int a = 0; a<4; a++)
+    {
+        returnCollision[a] = 0;
+    }
+
+    float tileTop, tileLeft;
+
+    sf::FloatRect playerRectUp(playerCoordinates.x-getSideRadius.x,playerCoordinates.y-getSideRadius.y-velocity.y, getSideRadius.x*2,getSideRadius.y*2);
+    sf::FloatRect playerRectDown(playerCoordinates.x-getSideRadius.x,playerCoordinates.y-getSideRadius.y+velocity.y, getSideRadius.x*2,getSideRadius.y*2);
+    sf::FloatRect playerRectLeft(playerCoordinates.x-getSideRadius.x-velocity.x,playerCoordinates.y-getSideRadius.y, getSideRadius.x*2,getSideRadius.y*2);
+    sf::FloatRect playerRectRight(playerCoordinates.x-getSideRadius.x+velocity.x,playerCoordinates.y-getSideRadius.y, getSideRadius.x*2,getSideRadius.y*2);
+
+    for (int x=(mapCoordinates.y-2); x < (mapCoordinates.y+2); x++)
+    {
+        for (int y=(mapCoordinates.x-2); y < (mapCoordinates.x+2); y++)
+        {
+            if (x>-1 && y > -1 && x < mapHeight && y < mapWidth)
+            {
+                if(mapVector[x][y].x != 0 && mapVector[x][y].y != 0 && mapVector[x][y].x >= 50 && mapVector[x][y].x <75)
+                {
+                    tileTop = x * 32.f;
+                    tileLeft = y * 32.f;
+
+                    sf::FloatRect tileRect(tileLeft, tileTop, 32.f, 32.f);
+
+                    if(playerRectUp.intersects(tileRect))
+                    {
+                        returnCollision[0] = 1;
+                    }
+                    if(playerRectDown.intersects(tileRect))
+                    {
+                        returnCollision[2] = 1;
+                    }
+                    if(playerRectLeft.intersects(tileRect))
+                    {
+                        returnCollision[3] = 1;
+                    }
+                    if(playerRectRight.intersects(tileRect))
+                    {
+                        returnCollision[1] = 1;
+                    }
+                }
+                else if (mapVector[x][y].x != 0 && mapVector[x][y].y != 0 && mapVector[x][y].x == 75) //Right wall
+                {
+                    tileTop = x * 32.f;
+                    tileLeft = y * 32.f;
+
+                    sf::FloatRect tileRect(tileLeft, tileTop, 4.f, 32.f);
+
+                    if(playerRectUp.intersects(tileRect))
+                    {
+                        returnCollision[0] = 1;
+                    }
+                    if(playerRectDown.intersects(tileRect))
+                    {
+                        returnCollision[2] = 1;
+                    }
+                    if(playerRectLeft.intersects(tileRect))
+                    {
+                        returnCollision[3] = 1;
+                    }
+                    if(playerRectRight.intersects(tileRect))
+                    {
+                        returnCollision[1] = 1;
+                    }
+                }
+                else if (mapVector[x][y].x != 0 && mapVector[x][y].y != 0 && mapVector[x][y].x == 76) //Left wall
+                {
+                    tileTop = x * 32.f;
+                    tileLeft = y * 32.f;
+
+                    sf::FloatRect tileRect(tileLeft+28.f, tileTop, 4.f, 32.f);
+
+                    if(playerRectUp.intersects(tileRect))
+                    {
+                        returnCollision[0] = 1;
+                    }
+                    if(playerRectDown.intersects(tileRect))
+                    {
+                        returnCollision[2] = 1;
+                    }
+                    if(playerRectLeft.intersects(tileRect))
+                    {
+                        returnCollision[3] = 1;
+                    }
+                    if(playerRectRight.intersects(tileRect))
+                    {
+                        returnCollision[1] = 1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+
+
+std::vector<std::vector <sf::Vector2i> > TileEngine::getMapVector()
+{
+    return mapVector;
+}
+
+void TileEngine::setMapVector (std::vector<std::vector <sf::Vector2i> > MapVector)
+{
+    mapVector = MapVector;
+}
+
+void TileEngine::tileIsUsed(int index, int id)
+{
+    return true;
+}
+
+
+
