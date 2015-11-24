@@ -29,19 +29,19 @@ GuiManager::GuiManager(sf::RenderWindow &_window,  ResourceManager &res, bool ga
 
 
         statisticsTextHP.setFont(Data_Desktop::getInstance().font1);
-        statisticsTextHP.setCharacterSize(30);
+        statisticsTextHP.setCharacterSize(25);
         statisticsTextHP.setColor(sf::Color::Black);
-        statisticsTextHP.setPosition(260,1028);
+        statisticsTextHP.setPosition(260,1047);
 
         statisticsTextMP.setFont(Data_Desktop::getInstance().font1);
-        statisticsTextMP.setCharacterSize(30);
+        statisticsTextMP.setCharacterSize(25);
         statisticsTextMP.setColor(sf::Color::Black);
-        statisticsTextMP.setPosition(900,1028);
+        statisticsTextMP.setPosition(900,1047);
 
         statisticsTextStamina.setFont(Data_Desktop::getInstance().font1);
-        statisticsTextStamina.setCharacterSize(30);
+        statisticsTextStamina.setCharacterSize(25);
         statisticsTextStamina.setColor(sf::Color::Black);
-        statisticsTextStamina.setPosition(1469,1028);
+        statisticsTextStamina.setPosition(1469,1047);
     }
     else
     {

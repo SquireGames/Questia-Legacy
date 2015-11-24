@@ -406,7 +406,7 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
 
     }
 
-scrollSelector:
+    scrollSelector:
 
     switch (optionsTab)
     {

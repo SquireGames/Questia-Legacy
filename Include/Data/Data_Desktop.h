@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <iostream>
+#include <sstream>
 
 
 class Data_Desktop
@@ -72,8 +73,8 @@ public:
         return tempMouseWheelDelta;
     }
 
-    std::string getMapSelection(){return mapSelection;}
-    void setMapSelection(std::string newMap){mapSelection = newMap;}
+
+
 
 private:
     sf::Vector2i desktopResolution;
@@ -107,7 +108,33 @@ private:
     char mostRecentChar;
     int mouseWheelDelta;
 
+
+
+    // map selection
+public:
+    std::string getMapSelection(){return mapSelection;}
+    void setMapSelection(std::string newMap){mapSelection = newMap;}
+private:
     std::string mapSelection;
+
+    // character info
+public:
+    void writeGameOptions(sf::Vector2f coordinates);
+
+    std::string getCharacterSelection(){return characterSelection;}
+    void setCharacterSelection(std::string newCharacter){characterSelection = newCharacter;}
+
+    std::string getSaved_coordinates_x(){return saved_coordinates_x;}
+    void setSaved_coordinates_x(std::string _saved_coordinates_x){saved_coordinates_x = _saved_coordinates_x;}
+
+    std::string getSaved_coordinates_y(){return saved_coordinates_y;}
+    void setSaved_coordinates_y(std::string _saved_coordinates_y){saved_coordinates_y = _saved_coordinates_y;}
+
+private:
+    std::string characterSelection;
+    std::string saved_coordinates_x;
+    std::string saved_coordinates_y;
+    int saved_hp, saved_mp, saved_st;
 };
 
 #endif // DATA_DESKTOP_H

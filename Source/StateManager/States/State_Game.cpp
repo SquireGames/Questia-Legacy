@@ -2,6 +2,7 @@
 #include <sstream>
 #include <math.h>
 #include <tuple>
+#include <string>
 
 #include "StateManager/StateManager.h"
 #include "StateManager/States/State_Game.h"
@@ -58,11 +59,11 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     overlayView.zoom(1);
 
     //character
-    entityManager.createEntity(0, sf::Vector2f(800,2400));
+    entityManager.createEntity(0, sf::Vector2f(std::atoi(Data_Desktop::getInstance().getSaved_coordinates_x().c_str()),std::atoi(Data_Desktop::getInstance().getSaved_coordinates_y().c_str())));
 
     //loading the map
-    tileEngine.loadMap("Tutorial_1", true);
-    spawnManager.loadSpawnFile("Tutorial_1");
+    tileEngine.loadMap(Data_Desktop::getInstance().getMapSelection(), true);
+    spawnManager.loadSpawnFile(Data_Desktop::getInstance().getMapSelection());
 
     //rebindable keys
     moveKey0.keyType = 0;
@@ -138,6 +139,7 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 
     if(key == sf::Keyboard::Escape)
     {
+        Data_Desktop::getInstance().writeGameOptions(entityManager.getPlayerCoordinates());
         if(guiManager.buttonTimer())
         {
             if(!pause)

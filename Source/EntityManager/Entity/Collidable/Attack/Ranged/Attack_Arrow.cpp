@@ -35,19 +35,7 @@ Attack_Arrow::Attack_Arrow( ResourceManager &res, EntityManager &entityManager, 
     hitbox_Attack.push_back(sf::Vector2f(2, -10));
     hitbox_Attack.push_back(sf::Vector2f(-2, -10));
 
-    for(int it = 0; it != hitbox_Attack.size(); it++)
-    {
-        float sin = std::sin(angle);
-        float cos = std::cos(angle);
-
-        float x,y;
-
-        x = hitbox_Attack[it].x * cos - hitbox_Attack[it].y * sin;
-        y = hitbox_Attack[it].x * sin + hitbox_Attack[it].y * cos;
-
-        hitbox_Attack[it].x =  x + coordinates.x;
-        hitbox_Attack[it].y =  y + coordinates.y;
-    }
+    rotatePoints(angle, coordinates, hitbox_Attack);
 }
 
 bool Attack_Arrow::checkCollision(sf::Vector2f entityCoordinates, sf::Vector2f sideRadius)
@@ -62,11 +50,6 @@ bool Attack_Arrow::checkCollision(sf::Vector2f entityCoordinates, sf::Vector2f s
     return check_Collision_SAT(hitbox_Attack, hitbox_Target);
 }
 
-int Attack_Arrow::returnID()
-{
-    return attackID;
-}
-
 void Attack_Arrow::drawEntity(sf::RenderWindow &mWindow)
 {
 
@@ -76,15 +59,6 @@ void  Attack_Arrow::drawLayer2(sf::RenderWindow &mWindow)
 {
     entitySprite.setPosition(coordinates);
     mWindow.draw(entitySprite);
-    /*
-    for(int it = 0; it != 4; it++)
-    {
-        mWindow.draw(circleAttack[it]);
-        mWindow.draw(circleTarget[it]);
-        mWindow.draw(rectTarget[it]);
-        mWindow.draw(rectAttack[it]);
-    }
-    */
 }
 
 void Attack_Arrow::update(int effect, int (&returnCollision)[4])
@@ -93,26 +67,6 @@ void Attack_Arrow::update(int effect, int (&returnCollision)[4])
     {
         entityManager.destroyEntity(attackID);
     }
-
-}
-sf::Vector2f Attack_Arrow::getSideRadius()
-{
-    return sf::Vector2f(2,10);
-}
-sf::Vector2f Attack_Arrow::getVelocity()
-{
-    return velocity;
-}
-sf::Vector2f Attack_Arrow::getCoordinates()
-{
-    return coordinates;
-}
-sf::Vector2i Attack_Arrow::getMapCoordinates()
-{
-    mapCoordinates.x = (int)coordinates.x/32 + 1;
-    mapCoordinates.y = (int)coordinates.y/32 + 1;
-
-    return mapCoordinates;
 }
 
 bool Attack_Arrow::isActive()
@@ -123,19 +77,7 @@ bool Attack_Arrow::isActive()
         return false;
     }
 
-    float x_component, y_component;
-
-    x_component = std::cos(angle - (.5 * 3.14159)) * velocity.x;
-    y_component = std::sin(angle - (.5 * 3.14159)) * velocity.x;
-
-    coordinates.x += x_component;
-    coordinates.y += y_component;
-
-    for(int x = 0; x <= 3; x++)
-    {
-        hitbox_Attack[x].x = hitbox_Attack[x].x + x_component;
-        hitbox_Attack[x].y = hitbox_Attack[x].y + y_component;
-    }
+    movePoints(angle, coordinates, velocity, hitbox_Attack);
     return true;
 }
 void Attack_Arrow::update(sf::Vector2f coords)
@@ -165,8 +107,32 @@ int Attack_Arrow::getDamage(int ID)
     }
 }
 
+
+
 std::string Attack_Arrow::getAttacker()
 {
     return attackerName;
 }
+sf::Vector2f Attack_Arrow::getSideRadius()
+{
+    return sf::Vector2f(2,10);
+}
+sf::Vector2f Attack_Arrow::getVelocity()
+{
+    return velocity;
+}
+sf::Vector2f Attack_Arrow::getCoordinates()
+{
+    return coordinates;
+}
+sf::Vector2i Attack_Arrow::getMapCoordinates()
+{
+    mapCoordinates.x = (int)coordinates.x/32 + 1;
+    mapCoordinates.y = (int)coordinates.y/32 + 1;
 
+    return mapCoordinates;
+}
+int Attack_Arrow::returnID()
+{
+    return attackID;
+}

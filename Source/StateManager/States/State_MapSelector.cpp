@@ -37,6 +37,7 @@ State_MapSelector::State_MapSelector(sf::RenderWindow &mWindow):
     {
         guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
     }
+
     selectedMapOverlay.setPosition(-1000,-1000);
     selectedMapOverlay.setSize(sf::Vector2f(1150, 80));
     selectedMapOverlay.setFillColor(sf::Color(192, 192, 192, 100));

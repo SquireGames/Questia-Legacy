@@ -24,6 +24,9 @@ public:
     float fixAngle(float& angle);
     float convertDegreesToRadians(float& angle);
 
+    void rotatePoints(float angle, sf::Vector2f coordinates, std::vector<sf::Vector2f>& _point);
+    void movePoints(float angle, sf::Vector2f& coordinates, sf::Vector2f velocity, std::vector<sf::Vector2f>& _point);
+
 protected:
 private:
 

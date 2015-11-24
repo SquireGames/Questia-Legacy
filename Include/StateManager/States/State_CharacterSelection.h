@@ -22,6 +22,29 @@ private:
 
     sf::Sprite background;
 
+    std::vector<std::string> characterFiles;
+    unsigned int characterCount;
+    int scrollAmount;
+    sf::Sprite mapBox;
+    sf::RectangleShape selectedCharacterOverlay;
+    int selectedCharacter;
+
+    sf::Text userImput;
+    sf::Sprite newCharacterTile;
+    bool isMakingNewCharacter;
+    std::map <int, std::string> options;
+    std::map <int, std::string> questions;
+    sf::Text optionText;
+    std::string answerString;
+    unsigned char optionsIterator;
+    bool local_createCharacter();
+    bool local_deleteCharacter();
+    bool local_loadCharacter();
+    int deleteProgress;
+
+    bool keyboard_up;
+    bool keyboard_down;
+
     ResourceManager resourceManager;
     GuiManager guiManager;
 };

@@ -16,6 +16,7 @@ Data_Desktop::Data_Desktop():
     , FPS (0)
     , mostRecentChar(' ')
     , mapSelection("NO MAP SELECTED")
+    , characterSelection("NO CHARACTER SELECTED")
     , isDebuggerMode(false)
 {
     std::cout<<std::endl;
@@ -358,3 +359,23 @@ sf::Keyboard::Key Data_Desktop::getKey(int keyNumber)
 {
     return keyMap[keyNumber];
 }
+
+void Data_Desktop::writeGameOptions(sf::Vector2f coordinates)
+{
+    std::string fileName_mapInfo    = "mapInfo";
+    std::string result_mapInfo;
+    std::stringstream ss2;
+    ss2 << "Saves/Characters/" << characterSelection << "/" << fileName_mapInfo << ".txt";
+    ss2 >> result_mapInfo;
+
+    std::ofstream characterMapInfo;
+    characterMapInfo.open(result_mapInfo, std::ofstream::out);
+    if(characterMapInfo.is_open())
+    {
+        characterMapInfo << "Map:" << "Tutorial_1" << std::endl;
+        characterMapInfo << "Coordinates_x:" << (int) coordinates.x << std::endl;
+        characterMapInfo << "Coordinates_y:" << (int) coordinates.y << std::endl;
+    }
+}
+
+
