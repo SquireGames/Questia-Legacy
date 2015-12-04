@@ -21,6 +21,8 @@ Attack_Slash::Attack_Slash( ResourceManager &res, int _attackID,int _attackerID,
     , res(res)
     , initDuration(_duration)
 {
+    chec
+
     rectBox1_P[0] = sf::Vector2f(coordinates.x,coordinates.y);
     rectBox1_P[1] = sf::Vector2f(coordinates.x- 25,coordinates.y+ 25);
     rectBox1_P[2] = sf::Vector2f(coordinates.x- 19,coordinates.y+ 29);
@@ -58,7 +60,6 @@ Attack_Slash::Attack_Slash( ResourceManager &res, int _attackID,int _attackerID,
     entitySprite.setRotation(angle-45-180);
 
     angle = angle * 3.141592 / 180;
-
 
     //std::cout<<"Angle :"<<angle<<std::endl;
 

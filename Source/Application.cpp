@@ -56,6 +56,8 @@ void Application::run()
 
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
+
     while(mWindow.isOpen())
     {
         sf::Time elapsedTime = clock.restart();
@@ -78,7 +80,6 @@ void Application::processEvents()
 
     while(mWindow.pollEvent(event))
     {
-
         if(sf::Event::TextEntered == event.type)
         {
             if(event.text.unicode < 128 && event.text.unicode  != 8)
