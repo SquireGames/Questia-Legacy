@@ -164,31 +164,31 @@ void State_TileMapEditor::displayTextures()
         {
         case 0:
         {
-            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 0);
+            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 0, true);
+            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 1, 100);
             tileEngineEditor.tile_hover(Data_Desktop::getInstance().getScaledMousePosition(window) , selectionSize, coordinates);
         }
         break;
         case 1:
         {
-            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 0);
+            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 0, true);
 
             window.setView(overlayView);
             sf::RectangleShape screenCover;
             screenCover.setSize(sf::Vector2f(1920, 1080));
             screenCover.setPosition(0,0);
-            screenCover.setFillColor(sf::Color(0,0,0,111));
+            screenCover.setFillColor(sf::Color(200,200,200,111));
             window.draw(screenCover);
             window.setView(mapView);
 
-
-            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 1);
+            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 1, true);
             tileEngineEditor.tile_hover(Data_Desktop::getInstance().getScaledMousePosition(window), selectionSize, coordinates);
         }
         break;
         case 3:
         {
-            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 0);
-            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 1);
+            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 0, false);
+            tileEngineEditor.drawTileMap(window, player_MapCoordinates, scrollMultiplier, 1, false);
         }
         break;
         default:

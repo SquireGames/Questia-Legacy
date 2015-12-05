@@ -203,7 +203,7 @@ void TileEngine_Editor::saveCurrentMap()
     }
 }
 
-void TileEngine_Editor::drawTileMap(sf::RenderWindow &window, sf::Vector2f coordinates, float scaler,int layer)
+void TileEngine_Editor::drawTileMap(sf::RenderWindow &window, sf::Vector2f coordinates, float scaler,int layer, bool isDrawingCollision)
 {
     scaler = ((scaler - 1) * 30) + 12;
 
@@ -213,10 +213,41 @@ void TileEngine_Editor::drawTileMap(sf::RenderWindow &window, sf::Vector2f coord
         {
             if (x>-1 && y > -1 && x < tileEngine.mapHeight && y < tileEngine.mapWidth)
             {
-                tileEngine.loadTiles(x, y, editTileMap[layer][x][y].x,editTileMap[layer][x][y].y);
+                if(isDrawingCollision)
+                {
+                    tileEngine.loadTiles(x, y, editTileMap[layer][x][y].x, editTileMap[layer][x][y].y);
+                    if(editTileMap[layer][x][y].x == 60)
+                    {
+                        tileEngine.loadTiles(x, y, 50, 1);
+                    }
+                }
+                else
+                {
+                    if(!(editTileMap[layer][x][y].x == 50 && editTileMap[layer][x][y].y == 1))
+                    {
+                        tileEngine.loadTiles(x, y, editTileMap[layer][x][y].x, editTileMap[layer][x][y].y);
+                    }
+                }
             }
         }
     }
 }
 
+void TileEngine_Editor::drawTileMap(sf::RenderWindow &window, sf::Vector2f coordinates, float scaler,int layer, int transparency)
+{
+    scaler = ((scaler - 1) * 30) + 12;
 
+    for (int x=(coordinates.y-13 -scaler); x < (coordinates.y+10 + scaler); x++)
+    {
+        for (int y=(coordinates.x-20 - scaler); y < (coordinates.x+18 + scaler); y++)
+        {
+            if (x>-1 && y > -1 && x < tileEngine.mapHeight && y < tileEngine.mapWidth)
+            {
+                if(!(editTileMap[layer][x][y].x == 50 && editTileMap[layer][x][y].y == 1))
+                {
+                    tileEngine.loadTiles(x, y, editTileMap[layer][x][y].x, editTileMap[layer][x][y].y, transparency);
+                }
+            }
+        }
+    }
+}

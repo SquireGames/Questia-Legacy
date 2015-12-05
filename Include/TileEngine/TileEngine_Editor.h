@@ -28,7 +28,8 @@ public:
 
     void returnIDList(sf::RenderWindow &window);
 
-    void drawTileMap(sf::RenderWindow &window, sf::Vector2f coordinates, float scaler, int layer);
+    void drawTileMap(sf::RenderWindow &window, sf::Vector2f coordinates, float scaler, int layer, bool isDrawingCollision);
+    void drawTileMap(sf::RenderWindow &window, sf::Vector2f coordinates, float scaler, int layer, int transparency);
 
     TileEngine tileEngine;
 private:

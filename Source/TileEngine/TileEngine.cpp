@@ -279,6 +279,16 @@ void TileEngine::loadTiles(int x, int y, int index, int id)
     window.draw(sprite);
 }
 
+void TileEngine::loadTiles(int x, int y, int index, int id, int transparency)
+{
+    sf::Sprite& sprite = tileIndex[index][id];
+    sprite.setPosition(y * 32, x * 32);
+    sf::Color tempColor = sprite.getColor();
+    sprite.setColor(sf::Color(0,0,0,transparency));
+    window.draw(sprite);
+    sprite.setColor(tempColor);
+}
+
 
 int TileEngine::getMapCollision(sf::Vector2i mapCoordinates, sf::Vector2f playerCoordinates, sf::Vector2f getSideRadius, sf::Vector2f velocity, int (&returnCollision)[4])
 {
