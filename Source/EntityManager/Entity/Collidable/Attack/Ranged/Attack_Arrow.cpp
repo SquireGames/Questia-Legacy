@@ -21,11 +21,10 @@ Attack_Arrow::Attack_Arrow( ResourceManager &res, EntityManager &entityManager, 
     , entityManager(entityManager)
 
 {
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Attacks/Ranged/Arrow.png"));
     angle = fixAngle(angle);
 
-    //set the origin to the middle of the attack
-    entitySprite.setOrigin(2,10);
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Attacks/Ranged/Arrow.png"));
+    entitySprite.setOrigin(2,10); //set the origin to the middle of the attack
     entitySprite.setRotation(angle);
 
     angle = convertDegreesToRadians(angle);
@@ -35,7 +34,11 @@ Attack_Arrow::Attack_Arrow( ResourceManager &res, EntityManager &entityManager, 
     hitbox_Attack.push_back(sf::Vector2f(2, -10));
     hitbox_Attack.push_back(sf::Vector2f(-2, -10));
 
-    rotatePoints(angle, coordinates, hitbox_Attack);
+    rotateNewPoints(angle, coordinates, hitbox_Attack);
+
+    //offset
+    //movePoints(convertDegreesToRadians(0), coordinates, sf::Vector2f(10,10), hitbox_Attack);     // Up
+    movePoints(angle, coordinates, sf::Vector2f(10,10), hitbox_Attack); // Distance
 }
 
 bool Attack_Arrow::checkCollision(sf::Vector2f entityCoordinates, sf::Vector2f sideRadius)
@@ -106,8 +109,6 @@ int Attack_Arrow::getDamage(int ID)
         return 0;
     }
 }
-
-
 
 std::string Attack_Arrow::getAttacker()
 {

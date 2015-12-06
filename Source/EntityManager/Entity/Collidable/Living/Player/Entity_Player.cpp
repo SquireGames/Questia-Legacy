@@ -10,10 +10,9 @@ Entity_Player::Entity_Player( ResourceManager &res, EntityManager &entityManager
     , entityManager(entityManager)
     , res(res)
 
-    ,tick(1)
+    , tick(1)
 
     , sideRadius(12.5, 12.5)
-    //, velocity(1.25, 1.25)
     , velocity(12, 12)
 
     , maxHP(100)

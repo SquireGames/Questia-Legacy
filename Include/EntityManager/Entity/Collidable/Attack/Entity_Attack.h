@@ -22,9 +22,11 @@ public:
     virtual void drawLayer2(sf::RenderWindow &mWindow) = 0;
 
     float fixAngle(float& angle);
-    float convertDegreesToRadians(float& angle);
+    float convertDegreesToRadians(float angle);
+    float convertRadiansToDegrees(float angle);
 
     void rotatePoints(float angle, sf::Vector2f coordinates, std::vector<sf::Vector2f>& _point);
+    void rotateNewPoints(float angle, sf::Vector2f coordinates, std::vector<sf::Vector2f>& _point);
     void movePoints(float angle, sf::Vector2f& coordinates, sf::Vector2f velocity, std::vector<sf::Vector2f>& _point);
 
 protected:

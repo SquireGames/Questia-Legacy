@@ -73,9 +73,6 @@ public:
         return tempMouseWheelDelta;
     }
 
-
-
-
 private:
     sf::Vector2i desktopResolution;
     sf::Vector2f scaleFactor;

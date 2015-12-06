@@ -25,15 +25,40 @@ float Entity_Attack::fixAngle(float& angle)
     return angle;
 }
 
-float Entity_Attack::convertDegreesToRadians(float& angle)
+float Entity_Attack::convertDegreesToRadians(float angle)
 {
     return (angle * 3.141592 / 180);
+}
+
+float Entity_Attack::convertRadiansToDegrees(float angle)
+{
+    return (angle * 180 / 3.141592);
+}
+
+void Entity_Attack::rotateNewPoints(float angle, sf::Vector2f coordinates, std::vector<sf::Vector2f>& _point)
+{
+    for(int it = 0; it != _point.size(); it++)
+    {
+        float sin = std::sin(angle);
+        float cos = std::cos(angle);
+
+        float x,y;
+
+        x = _point[it].x * cos - _point[it].y * sin;
+        y = _point[it].x * sin + _point[it].y * cos;
+
+        _point[it].x =  x + coordinates.x;
+        _point[it].y =  y + coordinates.y;
+    }
 }
 
 void Entity_Attack::rotatePoints(float angle, sf::Vector2f coordinates, std::vector<sf::Vector2f>& _point)
 {
     for(int it = 0; it != _point.size(); it++)
     {
+        _point[it].x -= coordinates.x;
+        _point[it].y -= coordinates.y;
+
         float sin = std::sin(angle);
         float cos = std::cos(angle);
 

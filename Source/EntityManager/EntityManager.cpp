@@ -168,7 +168,6 @@ int EntityManager::createSpecialEntity(int entity, int _attackerID, std::string 
 
     if(entityStack.size() != entityList[entityList.size()-1]+1)
     {
-
         if(entityStack.size()>1)
         {
             for(int x = 0; x < entityList.size(); x++)

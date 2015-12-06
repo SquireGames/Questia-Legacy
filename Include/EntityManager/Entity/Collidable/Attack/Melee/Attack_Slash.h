@@ -61,8 +61,10 @@ private:
 
     /*/ Extra /*/
     float angle;
+    float angleDifference;
 
     std::vector <int> entityIDList;
+    std::vector<sf::Vector2f> hitbox_Attack;
 
     sf::CircleShape circleAttack [4];
     sf::CircleShape circleTarget [4];
