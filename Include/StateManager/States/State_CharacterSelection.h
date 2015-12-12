@@ -47,6 +47,11 @@ private:
 
     ResourceManager resourceManager;
     GuiManager guiManager;
+    GuiManager guiManager_options;
+
+
+    enum ClassSelection {none, knight, ranger, mage};
+    ClassSelection classSelection;
 };
 
 #endif // STATE_CHARACTERSELECTION_H

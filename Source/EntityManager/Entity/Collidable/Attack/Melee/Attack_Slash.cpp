@@ -22,7 +22,6 @@ Attack_Slash::Attack_Slash( ResourceManager &res, int _attackID,int _attackerID,
     , initDuration(_duration)
 {
     angle = fixAngle(angle);
-    angle = angle;
 
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Attacks/Melee/sword_club.png"));
     entitySprite.setTextureRect(sf::IntRect(0, 35, 7, -35));

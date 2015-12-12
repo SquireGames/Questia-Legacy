@@ -14,6 +14,7 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     window(mWindow)
     , resourceManager()
     , guiManager(mWindow, resourceManager, false)
+    , guiManager_options(mWindow, resourceManager, false)
     , characterCount(0)
     , keyboard_up(false)
     , keyboard_down(false)
@@ -21,8 +22,11 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     , optionsIterator(0)
     , selectedCharacter(-1)
     , deleteProgress (0)
+
+    , classSelection(none)
 {
     background.setTexture(resourceManager.getTexture("Media/Image/Menu/Options.png"));
+
     characterFiles = Data_Desktop::getInstance().getFiles("Saves/Characters", false);
     characterCount = characterFiles.size();
 
@@ -31,7 +35,7 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     guiManager.addButton(3, false, 20, 300, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("New Character"), 30, 308,1,25, sf::Color::Black, sf::Color(153,153,0,111));
     guiManager.addButton(4, false, 20, 500, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Delete Character"), 30, 508,1,25, sf::Color::Black, sf::Color(153,153,0,111));
 
-    for(int it = 20; it!= characterCount+ 20; it++)
+    for(int it = 20; it != characterCount + 20; it++)
     {
         guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
     }
@@ -53,6 +57,8 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
 
     questions[0] = std::string("Character Name:");
     questions[1] = std::string("Class:");
+
+
 }
 
 State_CharacterSelection::~State_CharacterSelection()
@@ -180,24 +186,33 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
             }
             userImput.setColor(sf::Color::Black);
         }
-        else if(imputChar == 'E')
+        else if(imputChar == 'E') // Enter
         {
             if(answerString.length() > 0 && answerString.length() < 40)
             {
                 if(optionsIterator == 1)
                 {
-                    if(std::atoi(answerString.c_str()) >= 1 && std::atoi(answerString.c_str()) <= 3)
+                    if(classSelection != none)
                     {
-                        options[optionsIterator] = answerString;
+                        std::string playerClass;
+
+                        switch(classSelection)
+                        {
+                        case knight:
+                            playerClass = "1";
+                            break;
+                        case ranger:
+                            playerClass = "2";
+                            break;
+                        case mage:
+                            playerClass = "3";
+                            break;
+                        }
+                        options[optionsIterator] = playerClass;
                         optionsIterator++;
                         answerString = "";
                         userImput.setString(answerString);
-                        userImput.setColor(sf::Color::Black);
-                    }
-                    else
-                    {
-                        userImput.setColor(sf::Color::Red);
-                        userImput.setString(answerString);
+
                     }
                 }
                 else
@@ -248,10 +263,12 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
             {
                 guiManager.changeVisibility(it, true);
             }
+            selectedCharacterOverlay.setPosition(-1000,-1000);
             isMakingNewCharacter = true;
         }
         else if(guiManager.testButton(4)) // delete Character
         {
+            // Click 3 times to delete
             deleteProgress++;
             if(deleteProgress > 2)
             {
@@ -338,14 +355,22 @@ void State_CharacterSelection::displayTextures()
 {
     window.draw(background);
     guiManager.buttonCheck();
+    guiManager_options.buttonCheck();
     guiManager.drawGui();
+    guiManager_options.drawGui();
     window.draw(selectedCharacterOverlay);
 
     if(isMakingNewCharacter)
     {
-        window.draw(newCharacterTile);
-        window.draw(userImput);
-        window.draw(optionText);
+
+
+        if(optionsIterator != 1
+           && optionsIterator != 2)
+        {
+            window.draw(newCharacterTile);
+            window.draw(userImput);
+            window.draw(optionText);
+        }
     }
 }
 
