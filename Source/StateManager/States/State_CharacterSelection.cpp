@@ -188,41 +188,37 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
         }
         else if(imputChar == 'E') // Enter
         {
-            if(answerString.length() > 0 && answerString.length() < 40)
+            if(optionsIterator == 1)
             {
-                if(optionsIterator == 1)
+                if(classSelection != none)
                 {
-                    if(classSelection != none)
+                    std::string playerClass;
+
+                    switch(classSelection)
                     {
-                        std::string playerClass;
-
-                        switch(classSelection)
-                        {
-                        case knight:
-                            playerClass = "1";
-                            break;
-                        case ranger:
-                            playerClass = "2";
-                            break;
-                        case mage:
-                            playerClass = "3";
-                            break;
-                        }
-                        options[optionsIterator] = playerClass;
-                        optionsIterator++;
-                        answerString = "";
-                        userImput.setString(answerString);
-
+                    case knight:
+                        playerClass = "1";
+                        break;
+                    case ranger:
+                        playerClass = "2";
+                        break;
+                    case mage:
+                        playerClass = "3";
+                        break;
                     }
-                }
-                else
-                {
-                    options[optionsIterator] = answerString;
+                    options[optionsIterator] = playerClass;
                     optionsIterator++;
                     answerString = "";
                     userImput.setString(answerString);
-                    userImput.setColor(sf::Color::Black);
                 }
+            }
+            else if(answerString.length() > 0 && answerString.length() < 40)
+            {
+                options[optionsIterator] = answerString;
+                optionsIterator++;
+                answerString = "";
+                userImput.setString(answerString);
+                userImput.setColor(sf::Color::Black);
             }
             else
             {
@@ -243,64 +239,82 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        if(guiManager.testButton(1)) // open
+        if(isMakingNewCharacter == false)
         {
-            if(Data_Desktop::getInstance().getCharacterSelection() != "NO CHARACTER SELECTED")
+            if(guiManager.testButton(1)) // open
             {
-                if(local_loadCharacter())
+                if(Data_Desktop::getInstance().getCharacterSelection() != "NO CHARACTER SELECTED")
                 {
-                    StateManager::getInstance().changeState(new State_Transition(window, 2));
+                    if(local_loadCharacter())
+                    {
+                        StateManager::getInstance().changeState(new State_Transition(window, 2));
+                    }
                 }
             }
-        }
-        else if(guiManager.testButton(2)) // menu
-        {
-            StateManager::getInstance().changeState(new State_Transition(window, 1));
-        }
-        else if(guiManager.testButton(3)) // new Character
-        {
-            for(int it = 20; it!= characterCount+20; it++)
+            if(guiManager.testButton(2)) // menu
             {
-                guiManager.changeVisibility(it, true);
+                StateManager::getInstance().changeState(new State_Transition(window, 1));
             }
-            selectedCharacterOverlay.setPosition(-1000,-1000);
-            isMakingNewCharacter = true;
-        }
-        else if(guiManager.testButton(4)) // delete Character
-        {
-            // Click 3 times to delete
-            deleteProgress++;
-            if(deleteProgress > 2)
+            else if(guiManager.testButton(3)) // new Character
             {
-                deleteProgress = 0;
                 for(int it = 20; it!= characterCount+20; it++)
                 {
-                    guiManager.deleteButton(it);
+                    guiManager.changeVisibility(it, true);
                 }
-                if(local_deleteCharacter())
-                {
-
-                }
-                selectedCharacter = -1;
                 selectedCharacterOverlay.setPosition(-1000,-1000);
-                characterFiles = Data_Desktop::getInstance().getFiles("Saves/Characters", false);
-                characterCount = characterFiles.size();
+                isMakingNewCharacter = true;
+            }
+            else if(guiManager.testButton(4)) // delete Character
+            {
+                // Click 3 times to delete
+                deleteProgress++;
+                if(deleteProgress > 2)
+                {
+                    deleteProgress = 0;
+                    for(int it = 20; it!= characterCount+20; it++)
+                    {
+                        guiManager.deleteButton(it);
+                    }
+                    if(local_deleteCharacter())
+                    {
+
+                    }
+                    selectedCharacter = -1;
+                    selectedCharacterOverlay.setPosition(-1000,-1000);
+                    characterFiles = Data_Desktop::getInstance().getFiles("Saves/Characters", false);
+                    characterCount = characterFiles.size();
+                    for(int it = 20; it!= characterCount+20; it++)
+                    {
+                        guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
+                    }
+                }
+            }
+            else
+            {
+                for(int it = 20; it!= characterCount + 20; it++)
+                {
+                    if(guiManager.testButton(it))
+                    {
+                        selectedCharacterOverlay.setPosition(guiManager.getButtonCoords(it).x, guiManager.getButtonCoords(it).y);
+                        Data_Desktop::getInstance().setCharacterSelection(characterFiles[it-20]);
+                        selectedCharacter = it - 20;
+                    }
+                }
+            }
+        }
+        else // If not making new character...
+        {
+            if(guiManager.testButton(2)) // menu
+            {
                 for(int it = 20; it!= characterCount+20; it++)
                 {
                     guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
-            }
-        }
-        else
-        {
-            for(int it = 20; it!= characterCount + 20; it++)
-            {
-                if(guiManager.testButton(it))
-                {
-                    selectedCharacterOverlay.setPosition(guiManager.getButtonCoords(it).x, guiManager.getButtonCoords(it).y);
-                    Data_Desktop::getInstance().setCharacterSelection(characterFiles[it-20]);
-                    selectedCharacter = it - 20;
-                }
+                isMakingNewCharacter = false;
+                options.clear();
+                optionsIterator = 0;
+                answerString = "";
+                userImput.setString("");
             }
         }
     }
@@ -364,8 +378,8 @@ void State_CharacterSelection::displayTextures()
     {
 
 
-        if(optionsIterator != 1
-           && optionsIterator != 2)
+        //if(optionsIterator != 1
+        //  && optionsIterator != 2)
         {
             window.draw(newCharacterTile);
             window.draw(userImput);
