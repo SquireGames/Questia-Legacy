@@ -6,6 +6,8 @@
 
 #include "ResourceManager.h"
 #include "GuiManager.h"
+#include "ClassManager.h"
+#include "Namespace_Character.h"
 
 class State_CharacterSelection : public State
 {
@@ -49,9 +51,9 @@ private:
     GuiManager guiManager;
     GuiManager guiManager_options;
 
+    ClassManager classManager;
 
-    enum ClassSelection {none, knight, ranger, mage};
-    ClassSelection classSelection;
+    Character::ClassType selectedClassType;
 };
 
 #endif // STATE_CHARACTERSELECTION_H

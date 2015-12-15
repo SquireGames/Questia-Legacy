@@ -15,6 +15,7 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     , resourceManager()
     , guiManager(mWindow, resourceManager, false)
     , guiManager_options(mWindow, resourceManager, false)
+    , classManager(false)
     , characterCount(0)
     , keyboard_up(false)
     , keyboard_down(false)
@@ -23,7 +24,7 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     , selectedCharacter(-1)
     , deleteProgress (0)
 
-    , classSelection(none)
+    , selectedClassType(Character::ClassType::none)
 {
     background.setTexture(resourceManager.getTexture("Media/Image/Menu/Options.png"));
 
@@ -58,6 +59,9 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     questions[0] = std::string("Character Name:");
     questions[1] = std::string("Class:");
 
+    //test
+    std::cout << classManager.returnCharacterInformation(Character::ClassType::ranger, Character::InformationType::description);
+    std::cout << classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description);
 
 }
 
@@ -190,19 +194,19 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
         {
             if(optionsIterator == 1)
             {
-                if(classSelection != none)
+                if(selectedClassType != Character::ClassType::none)
                 {
                     std::string playerClass;
 
-                    switch(classSelection)
+                    switch(selectedClassType)
                     {
-                    case knight:
+                    case Character::ClassType::knight:
                         playerClass = "1";
                         break;
-                    case ranger:
+                    case Character::ClassType::ranger:
                         playerClass = "2";
                         break;
-                    case mage:
+                    case Character::ClassType::mage:
                         playerClass = "3";
                         break;
                     }
