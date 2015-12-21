@@ -63,6 +63,10 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     std::cout << classManager.returnCharacterInformation(Character::ClassType::ranger, Character::InformationType::description);
     std::cout << classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description);
 
+    guiManager_options.addButton(1, true, 215,  140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Knight"),    215,  140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager_options.addButton(2, true, 735,  140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Ranger"),    735,  140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager_options.addButton(3, true, 1255, 140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Mage"),      1255, 140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+
 }
 
 State_CharacterSelection::~State_CharacterSelection()
@@ -100,8 +104,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
 {
     if(isMakingNewCharacter)
     {
-        int tempIterator = 0;
-        for(; tempIterator != questions.size() && optionsIterator != questions.size();)
+        for(int tempIterator = 0; tempIterator != questions.size() && optionsIterator != questions.size();)
         {
             optionText.setString(questions[optionsIterator]);
             tempIterator++;
@@ -210,6 +213,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                         playerClass = "3";
                         break;
                     }
+                    selectedClassType = Character::ClassType::none;
                     options[optionsIterator] = playerClass;
                     optionsIterator++;
                     answerString = "";
@@ -241,9 +245,27 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
         guiManager.changeVisibility(4, false);
     }
 
+    switch(optionsIterator)
+    {
+    case 1:
+    {
+        guiManager_options.changeVisibility(1, false);
+        guiManager_options.changeVisibility(2, false);
+        guiManager_options.changeVisibility(3, false);
+    }
+    break;
+    default:
+    {
+        guiManager_options.changeVisibility(1, true);
+        guiManager_options.changeVisibility(2, true);
+        guiManager_options.changeVisibility(3, true);
+    }
+    break;
+    }
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        if(isMakingNewCharacter == false)
+        if(!isMakingNewCharacter)
         {
             if(guiManager.testButton(1)) // open
             {
@@ -306,7 +328,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                 }
             }
         }
-        else // If not making new character...
+        else // If making new character...
         {
             if(guiManager.testButton(2)) // menu
             {
@@ -320,8 +342,26 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                 answerString = "";
                 userImput.setString("");
             }
+            // Class selection
+            else if(guiManager_options.testButton(1))
+            {
+                selectedClassType = Character::ClassType::knight;
+                Data_Desktop::getInstance().setMostRecentChar('E');
+            }
+            else if(guiManager_options.testButton(2))
+            {
+                selectedClassType = Character::ClassType::ranger;
+                Data_Desktop::getInstance().setMostRecentChar('E');
+            }
+            else if(guiManager_options.testButton(3))
+            {
+                selectedClassType = Character::ClassType::mage;
+                Data_Desktop::getInstance().setMostRecentChar('E');
+            }
+
         }
     }
+
     if(!isMakingNewCharacter)
     {
 scrollSelector:
@@ -380,9 +420,7 @@ void State_CharacterSelection::displayTextures()
 
     if(isMakingNewCharacter)
     {
-
-
-        //if(optionsIterator != 1
+        if(optionsIterator != 1)
         //  && optionsIterator != 2)
         {
             window.draw(newCharacterTile);

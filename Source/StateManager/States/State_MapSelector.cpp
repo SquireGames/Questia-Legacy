@@ -93,8 +93,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
 {
     if(isMakingNewMap)
     {
-        int tempIterator = 0;
-        for(; tempIterator != questions.size() && optionsIterator != questions.size();)
+        for(int tempIterator = 0; tempIterator != questions.size() && optionsIterator != questions.size();)
         {
             optionText.setString(questions[optionsIterator]);
             tempIterator++;
