@@ -19,6 +19,7 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &mWindow):
 
     , velocity(32,32)
     , coordinates(960,540)
+    , coordinates_t(960,540)
 
     , selectionSize(1)
     , scrollMultiplier(1)
@@ -58,6 +59,22 @@ void State_TileMapEditor::processImput(sf::Keyboard::Key key, bool isPressed)
     else if(key == sf::Keyboard::D || key == sf::Keyboard::Right)
     {
         mIsMovingRight = isPressed;
+    }
+    else if(key == sf::Keyboard::T )
+    {
+        tIsMovingUp = isPressed;
+    }
+    else if(key == sf::Keyboard::G)
+    {
+        tIsMovingDown = isPressed;
+    }
+    else if(key == sf::Keyboard::F)
+    {
+        tIsMovingLeft = isPressed;
+    }
+    else if(key == sf::Keyboard::H )
+    {
+        tIsMovingRight = isPressed;
     }
     else if(key == sf::Keyboard::R)
     {
@@ -100,15 +117,32 @@ void State_TileMapEditor::update(sf::Time)
     }
     if(mIsMovingDown)
     {
-        coordinates.y = coordinates.y + (velocity.y );
+        coordinates.y = coordinates.y + (velocity.y);
     }
     if(mIsMovingLeft)
     {
-        coordinates.x = coordinates.x - (velocity.x );
+        coordinates.x = coordinates.x - (velocity.x);
     }
     if(mIsMovingRight)
     {
-        coordinates.x = coordinates.x + (velocity.x );
+        coordinates.x = coordinates.x + (velocity.x);
+    }
+
+    if(tIsMovingUp)
+    {
+        coordinates_t.y = coordinates_t.y - (velocity.y);
+    }
+    if(tIsMovingDown)
+    {
+        coordinates_t.y = coordinates_t.y + (velocity.y);
+    }
+    if(tIsMovingLeft)
+    {
+        coordinates_t.x = coordinates_t.x - (velocity.x);
+    }
+    if(tIsMovingRight)
+    {
+        coordinates_t.x = coordinates_t.x + (velocity.x);
     }
 
     switch (Data_Desktop::getInstance().getMouseWheelDelta())
@@ -142,13 +176,15 @@ void State_TileMapEditor::displayTextures()
     window.setView(mapView);
     if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
+        mapView.setCenter(coordinates_t.x, coordinates_t.y);
+        window.setView(mapView);
         tileEngineEditor.returnIDList(window);
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            tileEngineEditor.tileSelection(Data_Desktop::getInstance().getScaledMousePosition(window), coordinates);
+            tileEngineEditor.tileSelection(Data_Desktop::getInstance().getScaledMousePosition(window), coordinates_t);
         }
 
-        tileEngineEditor.tile_hover(Data_Desktop::getInstance().getScaledMousePosition(window),  selectionSize, coordinates);
+        tileEngineEditor.tile_hover(Data_Desktop::getInstance().getScaledMousePosition(window),  selectionSize, coordinates_t);
     }
     else
     {

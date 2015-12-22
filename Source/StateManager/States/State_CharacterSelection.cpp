@@ -60,13 +60,13 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     questions[1] = std::string("Class:");
 
     //test
-    std::cout << classManager.returnCharacterInformation(Character::ClassType::ranger, Character::InformationType::description);
-    std::cout << classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description);
 
     guiManager_options.addButton(1, true, 215,  140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Knight"),    215,  140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
     guiManager_options.addButton(2, true, 735,  140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Ranger"),    735,  140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
     guiManager_options.addButton(3, true, 1255, 140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Mage"),      1255, 140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
 
+    std::cout << classManager.returnCharacterInformation(Character::ClassType::ranger, Character::InformationType::description);
+    std::cout << classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description);
 }
 
 State_CharacterSelection::~State_CharacterSelection()
@@ -265,7 +265,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        if(!isMakingNewCharacter)
+        if(!isMakingNewCharacter) // Play game
         {
             if(guiManager.testButton(1)) // open
             {
@@ -274,6 +274,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                     if(local_loadCharacter())
                     {
                         StateManager::getInstance().changeState(new State_Transition(window, 2));
+                        return;
                     }
                 }
             }

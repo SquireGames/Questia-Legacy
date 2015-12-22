@@ -34,6 +34,7 @@ private:
 
     sf::Vector2f velocity;
     sf::Vector2f coordinates;
+    sf::Vector2f coordinates_t;
 
     float scrollMultiplier;
 
@@ -41,6 +42,11 @@ private:
     bool mIsMovingDown;
     bool mIsMovingLeft;
     bool mIsMovingRight;
+
+    bool tIsMovingUp;
+    bool tIsMovingDown;
+    bool tIsMovingLeft;
+    bool tIsMovingRight;
 
     int selectionSize;
     int selectedLayer;
