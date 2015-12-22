@@ -43,11 +43,6 @@ private:
     bool mIsMovingLeft;
     bool mIsMovingRight;
 
-    bool tIsMovingUp;
-    bool tIsMovingDown;
-    bool tIsMovingLeft;
-    bool tIsMovingRight;
-
     int selectionSize;
     int selectedLayer;
 

@@ -60,22 +60,7 @@ void State_TileMapEditor::processImput(sf::Keyboard::Key key, bool isPressed)
     {
         mIsMovingRight = isPressed;
     }
-    else if(key == sf::Keyboard::T )
-    {
-        tIsMovingUp = isPressed;
-    }
-    else if(key == sf::Keyboard::G)
-    {
-        tIsMovingDown = isPressed;
-    }
-    else if(key == sf::Keyboard::F)
-    {
-        tIsMovingLeft = isPressed;
-    }
-    else if(key == sf::Keyboard::H )
-    {
-        tIsMovingRight = isPressed;
-    }
+
     else if(key == sf::Keyboard::R)
     {
         tileEngineEditor.saveCurrentMap();
@@ -111,38 +96,43 @@ void State_TileMapEditor::update(sf::Time)
         scrollMultiplier = 1;
     }
 
-    if(mIsMovingUp)
+    if(!sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
-        coordinates.y = coordinates.y - (velocity.y);
+        if(mIsMovingUp)
+        {
+            coordinates.y = coordinates.y - (velocity.y);
+        }
+        if(mIsMovingDown)
+        {
+            coordinates.y = coordinates.y + (velocity.y);
+        }
+        if(mIsMovingLeft)
+        {
+            coordinates.x = coordinates.x - (velocity.x);
+        }
+        if(mIsMovingRight)
+        {
+            coordinates.x = coordinates.x + (velocity.x);
+        }
     }
-    if(mIsMovingDown)
+    else
     {
-        coordinates.y = coordinates.y + (velocity.y);
-    }
-    if(mIsMovingLeft)
-    {
-        coordinates.x = coordinates.x - (velocity.x);
-    }
-    if(mIsMovingRight)
-    {
-        coordinates.x = coordinates.x + (velocity.x);
-    }
-
-    if(tIsMovingUp)
-    {
-        coordinates_t.y = coordinates_t.y - (velocity.y);
-    }
-    if(tIsMovingDown)
-    {
-        coordinates_t.y = coordinates_t.y + (velocity.y);
-    }
-    if(tIsMovingLeft)
-    {
-        coordinates_t.x = coordinates_t.x - (velocity.x);
-    }
-    if(tIsMovingRight)
-    {
-        coordinates_t.x = coordinates_t.x + (velocity.x);
+        if(mIsMovingUp)
+        {
+            coordinates_t.y = coordinates_t.y - (velocity.y);
+        }
+        if(mIsMovingDown)
+        {
+            coordinates_t.y = coordinates_t.y + (velocity.y);
+        }
+        if(mIsMovingLeft)
+        {
+            coordinates_t.x = coordinates_t.x - (velocity.x);
+        }
+        if(mIsMovingRight)
+        {
+            coordinates_t.x = coordinates_t.x + (velocity.x);
+        }
     }
 
     switch (Data_Desktop::getInstance().getMouseWheelDelta())
