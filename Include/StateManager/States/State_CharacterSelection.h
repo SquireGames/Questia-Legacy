@@ -54,6 +54,10 @@ private:
     ClassManager classManager;
 
     Character::ClassType selectedClassType;
+
+    std::vector <std::string> hairTypes;
+    std::vector <std::string> eyeTypes;
+    std::vector <std::string> skinTypes;
 };
 
 #endif // STATE_CHARACTERSELECTION_H

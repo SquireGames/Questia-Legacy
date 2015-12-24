@@ -19,6 +19,5 @@ void CharacterManager::handleInput(int actionType, bool isPressed, int player)
     if(isPressed == true)
     {
 
-
     }
 }

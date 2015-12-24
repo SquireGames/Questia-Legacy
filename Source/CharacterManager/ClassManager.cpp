@@ -1,6 +1,7 @@
 #include "ClassManager.h"
 
 #include <fstream>
+#include <sstream>
 
 ClassManager::ClassManager(bool _isInGame):
     isInGame(_isInGame)
@@ -61,12 +62,13 @@ std::string ClassManager::returnCharacterInformation(Character::ClassType classT
     }
     break;
     }
-
     completePath = classDir + infoFileName;
     fileStream.open(completePath);
+    std::stringstream ss;
     while(!fileStream.eof())
     {
         std::getline(fileStream, outputString);
+        ss << outputString << '\n';
     }
-    return outputString;
+    return ss.str();
 }

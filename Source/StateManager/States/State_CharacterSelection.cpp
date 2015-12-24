@@ -59,14 +59,15 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     questions[0] = std::string("Character Name:");
     questions[1] = std::string("Class:");
 
-    //test
+    // Class selection
+    guiManager_options.addButton(1, true, 215,  140, std::string("Media/Image/Menu/Classes/Knight.png"), classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description), 230,  660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager_options.addButton(2, true, 735,  140, std::string("Media/Image/Menu/Classes/Ranger.png"), classManager.returnCharacterInformation(Character::ClassType::ranger, Character::InformationType::description), 750,  660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager_options.addButton(3, true, 1255, 140, std::string("Media/Image/Menu/Classes/Mage.png")  , classManager.returnCharacterInformation(Character::ClassType::mage,   Character::InformationType::description), 1270, 660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
 
-    guiManager_options.addButton(1, true, 215,  140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Knight"),    215,  140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager_options.addButton(2, true, 735,  140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Ranger"),    735,  140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager_options.addButton(3, true, 1255, 140, std::string("Media/Image/Menu/Classes/Knight.png"), std::string("Mage"),      1255, 140,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-
-    std::cout << classManager.returnCharacterInformation(Character::ClassType::ranger, Character::InformationType::description);
-    std::cout << classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description);
+    // Character customization
+    hairTypes = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Hair", true);
+    eyeTypes  = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Eyes", true);
+    skinTypes = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Skin", true);
 }
 
 State_CharacterSelection::~State_CharacterSelection()
