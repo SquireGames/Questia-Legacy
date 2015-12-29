@@ -8,13 +8,15 @@
 
 #include "TileEngine/TileEngine.h"
 #include "EntityManager/EntityManager.h"
-#include "MultiplayerManager/MultiplayerManager.h"
 #include "GuiManager/GuiManager.h"
 #include "ResourceManager/ResourceManager.h"
 #include "EntityManager/SpawnManager.h"
 #include "CharacterManager/CharacterManager.h"
 #include "ItemManager/ItemManager.h"
 #include "Data/CommandsManager.h"
+#include "LightManager/LightManager.h"
+#include "MultiplayerManager/MultiplayerManager.h"
+
 #include "Data/Data_Desktop.h"
 
 class State_Game : public State
@@ -42,13 +44,13 @@ private:
     ResourceManager resourceManager;
     TileEngine tileEngine;
     EntityManager entityManager;
-    MultiplayerManager multiplayerManager;
     GuiManager guiManager;
     SpawnManager spawnManager;
     CharacterManager characterManager;
     ItemManager itemManager;
     CommandsManager commandsManager;
-
+    LightManager lightManager;
+    MultiplayerManager multiplayerManager;
 
     int tempCoords_x, tempCoords_y;
     float playerAngle;

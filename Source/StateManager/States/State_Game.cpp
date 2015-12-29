@@ -21,6 +21,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)
     , commandsManager(mWindow, entityManager)
+    , lightManager(mWindow)
     , multiplayerManager()
 
     //character info
@@ -61,6 +62,9 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     //character
     entityManager.createEntity(0, sf::Vector2f(std::atoi(Data_Desktop::getInstance().getSaved_coordinates_x().c_str()),std::atoi(Data_Desktop::getInstance().getSaved_coordinates_y().c_str())));
 
+    //light init
+    lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
+
     //loading the map
     tileEngine.loadMap(Data_Desktop::getInstance().getMapSelection(), true);
     spawnManager.loadSpawnFile(Data_Desktop::getInstance().getMapSelection());
@@ -93,6 +97,17 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     toggleTalkKey.keyType = 0;
     toggleTalkKey.keyInput = sf::Keyboard::RControl;
     keybindVector.push_back(toggleTalkKey);
+
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(40,40));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(45,45));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(50,50));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(55,55));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(60,60));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(65,65));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(70,70));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(90,90));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 230, 1, sf::Vector2f(120,120));
+    //lightManager.delete_lightSource(2);
 }
 
 State_Game::~State_Game()
@@ -210,6 +225,18 @@ void State_Game::update(sf::Time elapsedTime)
     spawnManager.checkSpawns();
 
     gameView.setCenter(entityManager.getPlayerCoordinates());
+    lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(0,entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(1,entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(2,entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(3,entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(4,entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(5,entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(6,entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(7,entityManager.getPlayerCoordinates());
+    lightManager.moveLightSource(8,entityManager.getPlayerCoordinates());
+
+
 
     //Multi-player
     if(multiplayerManager.isRunningServer())
@@ -229,10 +256,14 @@ void State_Game::update(sf::Time elapsedTime)
         multiplayerManager.client_recievePackets();
     }
 
+
     /* Gui */
     guiManager.addStats(std::string("FPS: "), Data_Desktop::getInstance().get_FPS());
     guiManager.addStats(std::string("Coordinates: "), tempCoords_x, std::string(" , "), tempCoords_y);
     guiManager.addStats(std::string("Entities: "), entityManager.getEntityCount());
+
+
+
 
     guiManager.setStats(entityManager.getPlayerStats());
 
@@ -257,12 +288,9 @@ void State_Game::displayTextures()
     window.setView(gameView);
     tileEngine.drawMap(player_MapCoordinates);
     entityManager.drawEntity();
-
-    //float angleToMouse = multiplayerManager.struct_Character.angle;
-    //int playerStep = multiplayerManager.struct_Character.step;
+    lightManager.drawLighting();
 
     window.setView(overlayView);
-
     guiManager.buttonCheck();
     commandsManager.drawCommandArea();
     guiManager.drawGui();
