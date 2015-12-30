@@ -14,6 +14,7 @@
 #include "CharacterManager/CharacterManager.h"
 #include "ItemManager/ItemManager.h"
 #include "Data/CommandsManager.h"
+#include "TimeManager/TimeManager.h"
 #include "LightManager/LightManager.h"
 #include "MultiplayerManager/MultiplayerManager.h"
 
@@ -31,6 +32,7 @@ public:
 
 private:
     bool pause;
+    unsigned char tick;
 
     sf::Vector2f player_Velocity;
     sf::Vector2f player_Coordinates;
@@ -51,6 +53,7 @@ private:
     CommandsManager commandsManager;
     LightManager lightManager;
     MultiplayerManager multiplayerManager;
+    TimeManager timeManager;
 
     int tempCoords_x, tempCoords_y;
     float playerAngle;

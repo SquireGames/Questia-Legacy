@@ -1,8 +1,7 @@
 #include "LightManager.h"
 
-LightManager::LightManager(sf::RenderWindow &mWindow,TimeManager& _timeManager):
+LightManager::LightManager(sf::RenderWindow &mWindow):
     window(mWindow)
-    , timeManager(_timeManager)
 {
     lightingOverlayTexture.create(1920, 1080);
     lightingOverlaySprite.setTexture(lightingOverlayTexture.getTexture());
@@ -80,15 +79,6 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
     {
         brightness *= -1;
     }
-    if(brightness > 100)
-    {
-        brightness = 100;
-    }
-    else if(brightness < 0)
-    {
-        brightness = 0;
-    }
-    brightness = brightness / 100 * 255;
 
     switch(shapeType)
     {
@@ -167,29 +157,6 @@ int LightManager::delete_lightSource(int id)
             std::cout << "Deleted light src: " <<  id << std::endl;
         }
     }
-}
-
-void LightManager::updateLighting()
-{
-    double brightness = (80 * std::sin(   (1.f/12.f) * (timeManager.getDecimalTime() - 6.f) * 3.14159f   )) + 70;
-
-    brightness = brightness - 100.f;
-    if(brightness < 0)
-    {
-        brightness *= -1;
-    }
-    if(brightness > 100)
-    {
-        brightness = 100;
-    }
-    else if(brightness < 0)
-    {
-        brightness = 0;
-    }
-
-    brightness = brightness / 100.f * 255.f;
-
-    blackwhiteOverlay.a = brightness;
 }
 
 void LightManager::drawLighting()

@@ -2,14 +2,16 @@
 #define LIGHTMANAGER_H
 
 #include <iostream>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 
 #include "Struct_LightSource.h"
+#include "TimeManager/TimeManager.h"
 
 class LightManager
 {
 public:
-    LightManager(sf::RenderWindow &mWindow);
+    LightManager(sf::RenderWindow &mWindow, TimeManager& _timeManager);
     ~LightManager();
 
     void setLightOverlay_Coords(sf::Vector2f coords)      {lightingOverlaySprite.setPosition(coords); playerCoordinates = coords;}
@@ -22,6 +24,7 @@ public:
 
     void moveLightSource(int id, sf::Vector2f coordinates);
 
+    void updateLighting();
     void drawLighting();
 
 private:
@@ -39,7 +42,8 @@ private:
     int count_lightSources;
     std::vector <Struct_LightSource*> lightingList;
 
-    sf::RenderWindow &window;
+    sf::RenderWindow& window;
+    TimeManager& timeManager;
 };
 
 #endif // LIGHTMANAGER_H

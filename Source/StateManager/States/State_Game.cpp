@@ -21,7 +21,8 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)
     , commandsManager(mWindow, entityManager)
-    , lightManager(mWindow)
+    , timeManager(2,10)
+    , lightManager(mWindow, timeManager)
     , multiplayerManager()
 
     //character info
@@ -43,6 +44,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
     //etc
     , pause(false)
+    , tick (0)
 {
     //std::vector<std::string> path = Data_Desktop::getInstance().getFiles("Maps");
 
@@ -98,15 +100,18 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     toggleTalkKey.keyInput = sf::Keyboard::RControl;
     keybindVector.push_back(toggleTalkKey);
 
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(40,40));
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(45,45));
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(50,50));
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(55,55));
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(60,60));
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(65,65));
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(70,70));
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 200, 1, sf::Vector2f(90,90));
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 230, 1, sf::Vector2f(120,120));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(40,40));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(45,45));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(50,50));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(55,55));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(60,60));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(65,65));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(70,70));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(90,90));
+    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(120,120));
+
+    lightManager.create_lightSource(sf::Vector2f(0,0), 50, 2, sf::Vector2f(120,120));
+
     //lightManager.delete_lightSource(2);
 }
 
@@ -185,6 +190,17 @@ void State_Game::update(sf::Time elapsedTime)
     commandsManager.getCharImput(Data_Desktop::getInstance().getMostRecentChar());
     commandsManager.update();
 
+    tick++;
+    if(tick >= 144)
+    {
+        tick = 0;
+    }
+
+    if(tick == 0)
+    {
+        timeManager.update();
+        lightManager.updateLighting();
+    }
 
     if(!pause)
     {
@@ -261,6 +277,11 @@ void State_Game::update(sf::Time elapsedTime)
     guiManager.addStats(std::string("FPS: "), Data_Desktop::getInstance().get_FPS());
     guiManager.addStats(std::string("Coordinates: "), tempCoords_x, std::string(" , "), tempCoords_y);
     guiManager.addStats(std::string("Entities: "), entityManager.getEntityCount());
+    guiManager.addStats(std::string("Hour  : "), (int) timeManager.getHour());
+    guiManager.addStats(std::string("Minute: "), (int) timeManager.getMinute());
+    guiManager.addStats(std::string("Time: "), (float) timeManager.getDecimalTime());
+
+
 
 
 
