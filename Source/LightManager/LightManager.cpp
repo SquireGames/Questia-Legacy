@@ -4,19 +4,20 @@ LightManager::LightManager(sf::RenderWindow &mWindow,TimeManager& _timeManager):
     window(mWindow)
     , timeManager(_timeManager)
 {
-    lightingOverlayTexture.create(1920, 1080);
+    lightingOverlayTexture.create(960,540);
     lightingOverlaySprite.setTexture(lightingOverlayTexture.getTexture());
-    lightingOverlaySprite.setOrigin(960,540);
+    lightingOverlaySprite.setOrigin(480,270);
     lightingOverlaySprite.setPosition(0,0);
+    lightingOverlaySprite.setTextureRect(sf::IntRect(0,0,960,540));
 
     blackwhiteOverlay = sf::Color(0,0,0,255);
     colorOverlay      = sf::Color(0,0,0,0);
 
-    blackwhiteRect.setSize(sf::Vector2f(1920,1080));
+    blackwhiteRect.setSize(sf::Vector2f(960,540));
     blackwhiteRect.setPosition(0,0);
     blackwhiteRect.setFillColor(blackwhiteOverlay);
 
-    colorRect.setSize(sf::Vector2f(1920,1080));
+    colorRect.setSize(sf::Vector2f(960,540));
     colorRect.setPosition(0,0);
     colorRect.setFillColor(colorOverlay);
 
@@ -104,7 +105,7 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
         filling.a = brightness;
 
         lightSource->circle.setFillColor(filling);
-        lightSource->circle.setPosition(coordinates.x + 960, coordinates.y + 540);
+        lightSource->circle.setPosition(coordinates.x + 480, coordinates.y + 270);
     }
     break;
     case 2:
@@ -120,7 +121,7 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
         filling.a = brightness;
 
         lightSource->rect.setFillColor(filling);
-        lightSource->rect.setPosition(coordinates.x + 960, coordinates.y + 540);
+        lightSource->rect.setPosition(coordinates.x + 480, coordinates.y + 270);
     }
     break;
 
@@ -145,12 +146,13 @@ void LightManager::moveLightSource(int id, sf::Vector2f coordinates)
         {
             if(lightingList[x]->lightShape == 1)
             {
-                lightingList[x]->circle.setPosition(coordinates.x + 960, coordinates.y + 540);
+                lightingList[x]->circle.setPosition(coordinates.x + 480, coordinates.y + 270);
             }
             else if(lightingList[x]->lightShape == 2)
             {
-                lightingList[x]->rect.setPosition(coordinates.x + 960, coordinates.y + 540);
+                lightingList[x]->rect.setPosition(coordinates.x + 960, coordinates.y + 270);
             }
+            return;
         }
     }
 }
@@ -171,13 +173,8 @@ int LightManager::delete_lightSource(int id)
 
 void LightManager::updateLighting()
 {
-    double brightness = (80 * std::sin(   (1.f/12.f) * (timeManager.getDecimalTime() - 6.f) * 3.14159f   )) + 70;
+    float brightness = (100 * std::sin(   (timeManager.getDecimalTime() - 6.f) * 0.26179f   )) + 90;
 
-    brightness = brightness - 100.f;
-    if(brightness < 0)
-    {
-        brightness *= -1;
-    }
     if(brightness > 100)
     {
         brightness = 100;
@@ -185,6 +182,12 @@ void LightManager::updateLighting()
     else if(brightness < 0)
     {
         brightness = 0;
+    }
+
+    brightness = brightness - 100;
+    if(brightness < 0)
+    {
+        brightness = brightness * -1;
     }
 
     brightness = brightness / 100.f * 255.f;
@@ -221,7 +224,6 @@ void LightManager::drawLighting()
     }
 
     lightingOverlayTexture.display();
-
     window.draw(lightingOverlaySprite);
     lightingOverlayTexture.clear(sf::Color::Transparent);
 }

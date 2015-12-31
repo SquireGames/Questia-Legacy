@@ -21,7 +21,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)
     , commandsManager(mWindow, entityManager)
-    , timeManager(2,10)
+    , timeManager(0,0)
     , lightManager(mWindow, timeManager)
     , multiplayerManager()
 
@@ -101,6 +101,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     keybindVector.push_back(toggleTalkKey);
 
     lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(40,40));
+
     lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(45,45));
     lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(50,50));
     lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(55,55));
@@ -111,6 +112,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 1, sf::Vector2f(120,120));
 
     lightManager.create_lightSource(sf::Vector2f(0,0), 50, 2, sf::Vector2f(120,120));
+
 
     //lightManager.delete_lightSource(2);
 }
@@ -240,10 +242,14 @@ void State_Game::update(sf::Time elapsedTime)
     entityManager.update(tileEngine, player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
     spawnManager.checkSpawns();
 
+
+
     gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
     lightManager.moveLightSource(0,entityManager.getPlayerCoordinates());
+
     lightManager.moveLightSource(1,entityManager.getPlayerCoordinates());
+    /*
     lightManager.moveLightSource(2,entityManager.getPlayerCoordinates());
     lightManager.moveLightSource(3,entityManager.getPlayerCoordinates());
     lightManager.moveLightSource(4,entityManager.getPlayerCoordinates());
@@ -251,6 +257,7 @@ void State_Game::update(sf::Time elapsedTime)
     lightManager.moveLightSource(6,entityManager.getPlayerCoordinates());
     lightManager.moveLightSource(7,entityManager.getPlayerCoordinates());
     lightManager.moveLightSource(8,entityManager.getPlayerCoordinates());
+    */
 
 
 
@@ -280,10 +287,6 @@ void State_Game::update(sf::Time elapsedTime)
     guiManager.addStats(std::string("Hour  : "), (int) timeManager.getHour());
     guiManager.addStats(std::string("Minute: "), (int) timeManager.getMinute());
     guiManager.addStats(std::string("Time: "), (float) timeManager.getDecimalTime());
-
-
-
-
 
 
     guiManager.setStats(entityManager.getPlayerStats());
