@@ -1,8 +1,9 @@
 #include "LightManager.h"
 
-LightManager::LightManager(sf::RenderWindow &mWindow,TimeManager& _timeManager):
+LightManager::LightManager(sf::RenderWindow &mWindow,TimeManager& _timeManager, ResourceManager& _resourceManager):
     window(mWindow)
     , timeManager(_timeManager)
+    , resourceManager(_resourceManager)
 {
     lightingOverlayTexture.create(960,540);
     lightingOverlaySprite.setTexture(lightingOverlayTexture.getTexture());
@@ -116,12 +117,23 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
         lightSource->rect.setSize(sideRadius);
         lightSource->rect.setOrigin(sideRadius.x/2, sideRadius.y/2);
 
-
         sf::Color filling = sf::Color::Transparent;
         filling.a = brightness;
 
         lightSource->rect.setFillColor(filling);
         lightSource->rect.setPosition(coordinates.x + 480, coordinates.y + 270);
+    }
+    break;
+    case 3:
+    {
+        lightSource->lightShape = 3;
+
+        lightSource->lightSprite;
+        lightSource->lightSprite.setTexture(resourceManager.getTexture(std::string("Media/Image/Game/Lighting/Light_Circle_1.png")));
+        lightSource->lightSprite.setScale((sideRadius.x*2.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*2.f)/ lightSource->lightSprite.getLocalBounds().height);
+        lightSource->lightSprite.setOrigin(lightSource->lightSprite.getLocalBounds().width/2, lightSource->lightSprite.getLocalBounds().height/2);
+
+        lightSource->lightSprite.setPosition(coordinates.x + 480, coordinates.y + 270);
     }
     break;
 
@@ -150,7 +162,11 @@ void LightManager::moveLightSource(int id, sf::Vector2f coordinates)
             }
             else if(lightingList[x]->lightShape == 2)
             {
-                lightingList[x]->rect.setPosition(coordinates.x + 960, coordinates.y + 270);
+                lightingList[x]->rect.setPosition(coordinates.x + 480, coordinates.y + 270);
+            }
+            else if(lightingList[x]->lightShape == 3)
+            {
+                lightingList[x]->lightSprite.setPosition(coordinates.x + 480, coordinates.y + 270);
             }
             return;
         }
@@ -217,9 +233,17 @@ void LightManager::drawLighting()
         {
             sf::Vector2f temp = lightingList[x]->rect.getPosition();
             lightingList[x]->rect.setPosition(lightingList[x]->rect.getPosition().x - playerCoordinates.x,
-                                                lightingList[x]->rect.getPosition().y - playerCoordinates.y);
+                                              lightingList[x]->rect.getPosition().y - playerCoordinates.y);
             lightingOverlayTexture.draw(lightingList[x]->rect, sf::BlendMultiply);
             lightingList[x]->rect.setPosition(temp);
+        }
+        else if(lightingList[x]->lightShape == 3)
+        {
+            sf::Vector2f temp = lightingList[x]->lightSprite.getPosition();
+            lightingList[x]->lightSprite.setPosition(lightingList[x]->lightSprite.getPosition().x - playerCoordinates.x,
+                                              lightingList[x]->lightSprite.getPosition().y - playerCoordinates.y);
+            lightingOverlayTexture.draw(lightingList[x]->lightSprite, sf::BlendMultiply);
+            lightingList[x]->lightSprite.setPosition(temp);
         }
     }
 

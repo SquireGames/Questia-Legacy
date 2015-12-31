@@ -7,11 +7,12 @@
 
 #include "Struct_LightSource.h"
 #include "TimeManager/TimeManager.h"
+#include "ResourceManager.h"
 
 class LightManager
 {
 public:
-    LightManager(sf::RenderWindow &mWindow, TimeManager& _timeManager);
+    LightManager(sf::RenderWindow &mWindow, TimeManager& _timeManager, ResourceManager& _resourceManager);
     ~LightManager();
 
     void setLightOverlay_Coords(sf::Vector2f coords)      {lightingOverlaySprite.setPosition(coords); playerCoordinates = coords;}
@@ -44,6 +45,7 @@ private:
 
     sf::RenderWindow& window;
     TimeManager& timeManager;
+    ResourceManager& resourceManager;
 };
 
 #endif // LIGHTMANAGER_H
