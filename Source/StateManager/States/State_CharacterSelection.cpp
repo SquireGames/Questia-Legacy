@@ -58,6 +58,7 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
 
     questions[0] = std::string("Character Name:");
     questions[1] = std::string("Class:");
+    questions[2] = std::string("Customization:");
 
     // Class selection
     guiManager_options.addButton(1, true, 215,  140, std::string("Media/Image/Menu/Classes/Knight.png"), classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description), 230,  660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));

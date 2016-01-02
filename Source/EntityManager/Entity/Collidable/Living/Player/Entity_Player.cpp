@@ -4,11 +4,12 @@
 
 #define DEBUGMODE true
 
-Entity_Player::Entity_Player( ResourceManager &res, EntityManager &entityManager, sf::Vector2f coordinates, int ID):
+Entity_Player::Entity_Player( ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,  sf::Vector2f coordinates, int ID):
     coordinates(coordinates.x,coordinates.y)
     , ID(ID)
     , entityManager(entityManager)
     , res(res)
+    , lightManager(_lightManager)
 
     , tick(1)
 
@@ -36,6 +37,8 @@ Entity_Player::Entity_Player( ResourceManager &res, EntityManager &entityManager
 {
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Player/Character_Base.png"));
     entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Gui/Health.png"));
+
+    lightID = lightManager.create_lightSource(coordinates, 20, 4, sf::Vector2f(200,200));
 }
 
 Entity_Player::~Entity_Player()
@@ -404,6 +407,9 @@ void Entity_Player::update(int effect, int (&returnCollision)[4])
     {
         velocity = sf::Vector2f(1.25, 1.25);
     }
+
+    ///lighting
+    lightManager.moveLightSource(lightID,coordinates);
 
 
     ///tick

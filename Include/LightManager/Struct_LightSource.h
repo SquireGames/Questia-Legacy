@@ -16,6 +16,7 @@ struct Struct_LightSource
     float brighness;
 
     sf::Sprite lightSprite;
+    sf::Sprite lightSpriteColor;
 };
 
 #endif // STRUCT_LIGHTSOURCE_H

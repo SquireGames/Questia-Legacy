@@ -21,7 +21,6 @@ private:
     sf::Vector2f coordinates;
     sf::Sprite entitySprite;
     sf::Vector2i mapCoordinates;
-
 };
 
 #endif // ENTITY_H

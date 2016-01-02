@@ -12,7 +12,7 @@
 class Entity_Player : public Entity_Playable
 {
 public:
-    Entity_Player(ResourceManager &res,EntityManager &entityManager, sf::Vector2f coordinates, int ID);
+    Entity_Player(ResourceManager &res,EntityManager &entityManager, LightManager& _lightManager, sf::Vector2f coordinates, int ID);
     ~Entity_Player();
 
     ///default
@@ -95,9 +95,13 @@ private:
     bool wasRunning;
     int runningTick;
 
+    ///lights
+    int lightID;
+
     ///references
     ResourceManager &res;
     EntityManager& entityManager;
+    LightManager& lightManager;
 };
 
 #endif // ENTITY_PLAYER_H

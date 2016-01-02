@@ -13,11 +13,12 @@
 
 #include "ResourceManager.h"
 #include "TileEngine.h"
+#include "LightManager.h"
 
 class EntityManager
 {
 public:
-    EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, sf::Vector2f coordinates);
+    EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager,  sf::Vector2f coordinates);
     ~EntityManager();
 
     void handleInput(int actionType,bool isPressed,int player);
@@ -58,8 +59,9 @@ private:
 
     int spawnTick;
 
-    sf::RenderWindow &window;
-    ResourceManager &resourceManager;
+    sf::RenderWindow& window;
+    ResourceManager& resourceManager;
+    LightManager& lightManager;
 
     int entityNumber;
 

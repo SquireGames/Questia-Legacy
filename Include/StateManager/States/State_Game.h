@@ -6,6 +6,8 @@
 
 #include "StateManager/State.h"
 
+#include "TimeManager/TimeManager.h"
+#include "LightManager/LightManager.h"
 #include "TileEngine/TileEngine.h"
 #include "EntityManager/EntityManager.h"
 #include "GuiManager/GuiManager.h"
@@ -14,8 +16,6 @@
 #include "CharacterManager/CharacterManager.h"
 #include "ItemManager/ItemManager.h"
 #include "Data/CommandsManager.h"
-#include "TimeManager/TimeManager.h"
-#include "LightManager/LightManager.h"
 #include "MultiplayerManager/MultiplayerManager.h"
 
 #include "Data/Data_Desktop.h"

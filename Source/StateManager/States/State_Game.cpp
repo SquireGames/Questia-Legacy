@@ -14,15 +14,16 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     window(mWindow)
     //managers
     , resourceManager()
+    , timeManager(0,0)
+    , lightManager(mWindow, timeManager, resourceManager)
     , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager, true)
-    , entityManager (mWindow, resourceManager, sf::Vector2f(800,2400))
+    , entityManager (mWindow, resourceManager, lightManager, sf::Vector2f(800,2400))
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)
     , commandsManager(mWindow, entityManager)
-    , timeManager(2,0)
-    , lightManager(mWindow, timeManager, resourceManager)
+
     , multiplayerManager()
 
     //character info
@@ -100,11 +101,10 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     toggleTalkKey.keyInput = sf::Keyboard::RControl;
     keybindVector.push_back(toggleTalkKey);
 
-    lightManager.create_lightSource(entityManager.getPlayerCoordinates(), 20, 3, sf::Vector2f(200,200));
-
-    lightManager.create_lightSource(sf::Vector2f(20,20), 20, 1, sf::Vector2f(45,45));
-
-    lightManager.create_lightSource(sf::Vector2f(20,20), 50, 2, sf::Vector2f(120,120));
+    lightManager.create_lightSource(sf::Vector2f(22*32 + 3,17*32), 100, 2, sf::Vector2f(32 * 10 - 6,32 * 9));
+    lightManager.create_lightSource(sf::Vector2f(23*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
+    lightManager.create_lightSource(sf::Vector2f(30*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
+    //lightManager.create_lightSource(sf::Vector2f(20,20), 50, 2, sf::Vector2f(120,120));
 
 
     //lightManager.delete_lightSource(2);
@@ -239,7 +239,7 @@ void State_Game::update(sf::Time elapsedTime)
 
     gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
-    lightManager.moveLightSource(0,entityManager.getPlayerCoordinates());
+
 
     //lightManager.moveLightSource(1,entityManager.getPlayerCoordinates());
     /*

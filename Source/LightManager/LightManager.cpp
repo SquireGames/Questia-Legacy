@@ -115,7 +115,7 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
 
         lightSource->rect;
         lightSource->rect.setSize(sideRadius);
-        lightSource->rect.setOrigin(sideRadius.x/2, sideRadius.y/2);
+        lightSource->rect.setOrigin(0, 0);
 
         sf::Color filling = sf::Color::Transparent;
         filling.a = brightness;
@@ -136,7 +136,26 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
         lightSource->lightSprite.setPosition(coordinates.x + 480, coordinates.y + 270);
     }
     break;
+    case 4:
+    {
+        lightSource->lightShape = 3;
 
+        lightSource->lightSprite;
+        lightSource->lightSprite.setTexture(resourceManager.getTexture(std::string("Media/Image/Game/Lighting/Light_Circle_1.png")));
+        lightSource->lightSprite.setScale((sideRadius.x*2.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*2.f)/ lightSource->lightSprite.getLocalBounds().height);
+        lightSource->lightSprite.setOrigin(lightSource->lightSprite.getLocalBounds().width/2, lightSource->lightSprite.getLocalBounds().height/2);
+
+        lightSource->lightSpriteColor;
+        lightSource->lightSpriteColor.setTexture(resourceManager.getTexture(std::string("Media/Image/Game/Lighting/Light_Circle_2.png")));
+        lightSource->lightSpriteColor.setScale((sideRadius.x*3.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*3.f)/ lightSource->lightSprite.getLocalBounds().height);
+        lightSource->lightSpriteColor.setOrigin(lightSource->lightSprite.getLocalBounds().width/2, lightSource->lightSprite.getLocalBounds().height/2);
+        lightSource->lightSpriteColor.setColor(sf::Color(255,215,0,0));
+
+
+        lightSource->lightSprite.setPosition(coordinates.x + 480, coordinates.y + 270);
+        lightSource->lightSpriteColor.setPosition(coordinates.x + 480, coordinates.y + 270);
+    }
+    break;
     default:
         delete lightSource;
         return -1;
@@ -167,6 +186,7 @@ void LightManager::moveLightSource(int id, sf::Vector2f coordinates)
             else if(lightingList[x]->lightShape == 3)
             {
                 lightingList[x]->lightSprite.setPosition(coordinates.x + 480, coordinates.y + 270);
+                lightingList[x]->lightSpriteColor.setPosition(coordinates.x + 480, coordinates.y + 270);
             }
             return;
         }
@@ -209,10 +229,30 @@ void LightManager::updateLighting()
     brightness = brightness / 100.f * 255.f;
 
     blackwhiteOverlay.a = brightness;
+
+    for(int x = 0; x != lightingList.size(); x++)
+    {
+        if(lightingList[x]->lightShape == 3)
+        {
+            sf::Color tempColor = lightingList[x]->lightSpriteColor.getColor();
+
+            if(brightness < 120)
+            {
+                tempColor.a = brightness;
+            }
+            else
+            {
+                tempColor.a = 120;
+            }
+            lightingList[x]->lightSpriteColor.setColor(tempColor);
+        }
+    }
 }
 
 void LightManager::drawLighting()
 {
+    updateLighting();
+
     blackwhiteRect.setFillColor(blackwhiteOverlay);
     colorRect.setFillColor(colorOverlay);
 
@@ -226,7 +266,13 @@ void LightManager::drawLighting()
             sf::Vector2f temp = lightingList[x]->circle.getPosition();
             lightingList[x]->circle.setPosition(lightingList[x]->circle.getPosition().x - playerCoordinates.x,
                                                 lightingList[x]->circle.getPosition().y - playerCoordinates.y);
-            lightingOverlayTexture.draw(lightingList[x]->circle, sf::BlendMultiply);
+
+            if(std::abs(lightingList[x]->circle.getPosition().x - 480) < 2000 &&  std::abs(lightingList[x]->circle.getPosition().y - 270) < 1500)
+            {
+                lightingOverlayTexture.draw(lightingList[x]->circle, sf::BlendMultiply);
+            }
+
+
             lightingList[x]->circle.setPosition(temp);
         }
         else if(lightingList[x]->lightShape == 2)
@@ -234,16 +280,44 @@ void LightManager::drawLighting()
             sf::Vector2f temp = lightingList[x]->rect.getPosition();
             lightingList[x]->rect.setPosition(lightingList[x]->rect.getPosition().x - playerCoordinates.x,
                                               lightingList[x]->rect.getPosition().y - playerCoordinates.y);
-            lightingOverlayTexture.draw(lightingList[x]->rect, sf::BlendMultiply);
+
+            if(std::abs(lightingList[x]->rect.getPosition().x - 480) < 3000 &&  std::abs(lightingList[x]->rect.getPosition().y - 270) < 2000)
+            {
+                lightingOverlayTexture.draw(lightingList[x]->rect, sf::BlendMultiply);
+            }
+
             lightingList[x]->rect.setPosition(temp);
         }
         else if(lightingList[x]->lightShape == 3)
         {
             sf::Vector2f temp = lightingList[x]->lightSprite.getPosition();
+
             lightingList[x]->lightSprite.setPosition(lightingList[x]->lightSprite.getPosition().x - playerCoordinates.x,
-                                              lightingList[x]->lightSprite.getPosition().y - playerCoordinates.y);
-            lightingOverlayTexture.draw(lightingList[x]->lightSprite, sf::BlendMultiply);
+                                                     lightingList[x]->lightSprite.getPosition().y - playerCoordinates.y);
+
+            if(std::abs(lightingList[x]->lightSprite.getPosition().x - 480) < 2000 &&  std::abs(lightingList[x]->lightSprite.getPosition().y - 270) < 1500)
+            {
+                lightingOverlayTexture.draw(lightingList[x]->lightSprite, sf::BlendMultiply);
+            }
+
             lightingList[x]->lightSprite.setPosition(temp);
+        }
+    }
+    for(int x = 0; x != lightingList.size(); x++)
+    {
+        if(lightingList[x]->lightShape == 3)
+        {
+            sf::Vector2f temp = lightingList[x]->lightSpriteColor.getPosition();
+
+            lightingList[x]->lightSpriteColor.setPosition(lightingList[x]->lightSpriteColor.getPosition().x - playerCoordinates.x,
+                                                          lightingList[x]->lightSpriteColor.getPosition().y - playerCoordinates.y);
+
+            if(std::abs(lightingList[x]->lightSpriteColor.getPosition().x - 480) < 2000 &&  std::abs(lightingList[x]->lightSpriteColor.getPosition().y - 270) < 1500)
+            {
+                lightingOverlayTexture.draw(lightingList[x]->lightSpriteColor);
+            }
+
+            lightingList[x]->lightSpriteColor.setPosition(temp);
         }
     }
 

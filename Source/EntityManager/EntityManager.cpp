@@ -22,12 +22,13 @@
 #include "ResourceManager.h"
 
 
-EntityManager::EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, sf::Vector2f coordinates):
+EntityManager::EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager, sf::Vector2f coordinates):
     window (mWindow)
     , spawnTick(0)
     , entityNumber(0)
     , timer1(25)
     , resourceManager(res)
+    , lightManager(_lightManager)
     , playerSpawn(coordinates)
     , playerID(-1)
 {
@@ -92,7 +93,7 @@ int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
     {
     case 0:
     {
-        Entity_Player* entity= new Entity_Player(resourceManager, *this , coordinates, IDNumber);
+        Entity_Player* entity= new Entity_Player(resourceManager, *this, lightManager, coordinates, IDNumber);
         std::cout<<"DEBUG: Created entity: " << "Player     ID: " << IDNumber <<std::endl;
         if(playerID == -1)
         {
