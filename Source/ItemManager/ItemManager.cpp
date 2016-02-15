@@ -19,7 +19,7 @@ void ItemManager::spawnItem()
     std::vector<int> itemList;
     for(int x = 0; x < itemVector.size(); x++)
     {
-        itemList.push_back(itemVector[x]->vectorID);
+        itemList.push_back(itemVector[x]->storageID);
     }
 
     std::sort(itemList.begin(),itemList.end());
@@ -56,11 +56,12 @@ void ItemManager::spawnItem()
     Struct_Item* item = new Struct_Item();
 
     item->itemID = 0;
-    item->vectorID = IDNumber;
+    item->storageID = IDNumber;
     item->itemType = combat;
     item->attackType = sword;
     item->itemUsage = ground;
-    item->itemString = "Wooden Club";
+    item->itemName = "Wooden Club";
+    item->itemDescription = "Wooden Club";
     item->itemSprite.setTexture(resourceManager.getTexture("1.png"));
     item->coord_x = 0;
     item->coord_y = 0;
@@ -79,7 +80,7 @@ void ItemManager::destroyItem(int item)
 
     for(int x = 0; x < itemVector.size(); x++)
     {
-        if(itemVector[x]->vectorID == item)
+        if(itemVector[x]->storageID == item)
         {
             e = x;
             e++;

@@ -16,7 +16,7 @@ public:
 
     virtual void setCoordinates(sf::Vector2f coords) = 0;
 
-    bool check_Collision_SAT(std::vector<sf::Vector2f>& objectVector_1, std::vector<sf::Vector2f>& objectVector_2);
+    static bool check_Collision_SAT(std::vector<sf::Vector2f>& objectVector_1, std::vector<sf::Vector2f>& objectVector_2);
 
 
 protected:

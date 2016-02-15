@@ -90,6 +90,10 @@ private:
     mappedKey talkKey;
 
     std::vector <struct mappedKey> keybindVector;
+
+
+    //TEMP
+    sf::Sprite alignment;
 };
 
 #endif // STATE_GAME_H

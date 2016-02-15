@@ -2,9 +2,9 @@
 #include <cmath>
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Player.h"
 
-#define DEBUGMODE true
+#define DEBUGMODE false
 
-Entity_Player::Entity_Player( ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,  sf::Vector2f coordinates, int ID):
+Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,  sf::Vector2f coordinates, int ID):
     coordinates(coordinates.x,coordinates.y)
     , ID(ID)
     , entityManager(entityManager)
@@ -32,13 +32,26 @@ Entity_Player::Entity_Player( ResourceManager &res, EntityManager &entityManager
     , count_playerStep(1)
     , previousVelocity(1.25)
 
+    , direction_facing(0)
+    , playerStep(1)
+
+
+    , animationDirection(1)
+    , animationStep(1)
+
     , wasRunning(false)
     , runningTick(0)
+
+    , animation(res, "Media/Image/Game/Player/Character_Base.png", 8, 3)
+    , colRect()
 {
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Player/Character_Base.png"));
     entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Gui/Health.png"));
 
     lightID = lightManager.create_lightSource(coordinates, 20, 4, sf::Vector2f(200,200));
+
+    colRect.setFillColor(sf::Color(0,0,255,100));
+    colRect.setSize(sf::Vector2f(sideRadius.x *2, sideRadius.y*2));
 }
 
 Entity_Player::~Entity_Player()
@@ -46,11 +59,18 @@ Entity_Player::~Entity_Player()
 
 }
 
-
 void Entity_Player::drawEntity(sf::RenderWindow &window)
 {
-    entitySprite.setPosition(coordinates.x-sideRadius.x, coordinates.y-sideRadius.y-25);
-    window.draw(entitySprite);
+    animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x-(animation.getSheetWidth()/2), coordinates.y-(animation.getSheetHeight()/2)-12.5);
+    window.draw(animation.getSprite(animationDirection-1, animationStep-1));
+
+
+    if(DEBUGMODE)
+    {
+        colRect.setPosition(sf::Vector2f(coordinates.x - sideRadius.x, coordinates.y - sideRadius.y));
+        window.draw(colRect);
+    }
+
 
     entitySprite_HP.setPosition(coordinates.x-sideRadius.x, coordinates.y-sideRadius.y-35);
     float HPP;
@@ -82,7 +102,6 @@ void Entity_Player::handleImput(int actionType, bool isPressed)
     {
         mIsMovingRight = isPressed;
     }
-
     else if(actionType == 4)
     {
         shiftIsPressed = isPressed;
@@ -122,138 +141,68 @@ void Entity_Player::update(int effect, int (&returnCollision)[4])
 
 
     ///Determining the direction the player is facing
-
-    int direction_facing;
+    ///And also, choosing the sprite
 
     if(337.5<angleToMouse || angleToMouse<22.5)
     {
         direction_facing = 0;
-        switch (playerStep)
-        {
-        case 1:
-            entitySprite.setTextureRect(sf::IntRect(104,0,25,50));
-            break;
-        case 2:
-            entitySprite.setTextureRect(sf::IntRect(104,51,25,50));
-            break;
-        case 3:
-            entitySprite.setTextureRect(sf::IntRect(104,102,25,50));
-            break;
-        }
+
+        animationDirection = 5;
+        animationStep = playerStep;
     }
     else if(22.5<angleToMouse && angleToMouse<67.5)
     {
         direction_facing = 1;
-        switch (playerStep)
-        {
-        case 1:
-            entitySprite.setTextureRect(sf::IntRect(156,0,25,50));
-            break;
-        case 2:
-            entitySprite.setTextureRect(sf::IntRect(156,51,25,50));
-            break;
-        case 3:
-            entitySprite.setTextureRect(sf::IntRect(156,102,25,50));
-            break;
-        }
+
+        animationDirection = 7;
+        animationStep = playerStep;
+
     }
     else if(67.5<angleToMouse && angleToMouse<112.5)
     {
         direction_facing = 2;
-        switch (playerStep)
-        {
-        case 1:
-            entitySprite.setTextureRect(sf::IntRect(0,0,25,50));
-            break;
-        case 2:
-            entitySprite.setTextureRect(sf::IntRect(0,51,25,50));
-            break;
-        case 3:
-            entitySprite.setTextureRect(sf::IntRect(0,102,25,50));
-            break;
-        }
+
+        animationDirection = 1;
+        animationStep = playerStep;
     }
     else if(112.5<angleToMouse && angleToMouse<157.5)
     {
-
         direction_facing = 3;
-        switch (playerStep)
-        {
-        case 1:
-            entitySprite.setTextureRect(sf::IntRect(182,0,25,50));
-            break;
-        case 2:
-            entitySprite.setTextureRect(sf::IntRect(182,51,25,50));
-            break;
-        case 3:
-            entitySprite.setTextureRect(sf::IntRect(182,102,25,50));
-            break;
-        }
+
+        animationDirection = 8;
+        animationStep = playerStep;
+
     }
     else if(157.5<angleToMouse && angleToMouse<202.5)
     {
         direction_facing = 4;
-        switch (playerStep)
-        {
-        case 1:
-            entitySprite.setTextureRect(sf::IntRect(130,0,25,50));
-            break;
-        case 2:
-            entitySprite.setTextureRect(sf::IntRect(130,51,25,50));
-            break;
-        case 3:
-            entitySprite.setTextureRect(sf::IntRect(130,102,25,50));
-            break;
-        }
+
+        animationDirection = 6;
+        animationStep = playerStep;
+
     }
     else if(202.5<angleToMouse && angleToMouse<247.5)
     {
         direction_facing = 5;
-        switch (playerStep)
-        {
-        case 1:
-            entitySprite.setTextureRect(sf::IntRect(78,0,25,50));
-            break;
-        case 2:
-            entitySprite.setTextureRect(sf::IntRect(78,51,25,50));
-            break;
-        case 3:
-            entitySprite.setTextureRect(sf::IntRect(78,102,25,50));
-            break;
-        }
+
+        animationDirection = 4;
+        animationStep = playerStep;
+
 
     }
     else if(247.5<angleToMouse && angleToMouse<292.5)
     {
         direction_facing = 6;
-        switch (playerStep)
-        {
-        case 1:
-            entitySprite.setTextureRect(sf::IntRect(26,0,25,50));
-            break;
-        case 2:
-            entitySprite.setTextureRect(sf::IntRect(26,51,25,50));
-            break;
-        case 3:
-            entitySprite.setTextureRect(sf::IntRect(26,102,25,50));
-            break;
-        }
+
+        animationDirection = 2;
+        animationStep = playerStep;
     }
     else
     {
         direction_facing = 7;
-        switch (playerStep)
-        {
-        case 1:
-            entitySprite.setTextureRect(sf::IntRect(52,0,25,50));
-            break;
-        case 2:
-            entitySprite.setTextureRect(sf::IntRect(52,51,25,50));
-            break;
-        case 3:
-            entitySprite.setTextureRect(sf::IntRect(52,102,25,50));
-            break;
-        }
+
+        animationDirection = 3;
+        animationStep = playerStep;
     }
 
 

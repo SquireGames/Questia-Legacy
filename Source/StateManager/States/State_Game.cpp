@@ -108,6 +108,9 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
 
     //lightManager.delete_lightSource(2);
+
+
+    alignment.setTexture(resourceManager.getTexture("Media/Image/Alignment.png"));
 }
 
 State_Game::~State_Game()
@@ -138,7 +141,7 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
             entityManager.handleInput(currentKey, isPressed, 0); // player input
         }
 
-        if(key == sf::Keyboard::Tilde)
+        if(key == sf::Keyboard::Tilde && !isPressed)
         {
             guiManager.toggleOverlay();
         }
@@ -304,13 +307,16 @@ void State_Game::displayTextures()
 {
     window.setView(gameView);
     tileEngine.drawMap(player_MapCoordinates);
+    lightManager.drawLighting_1();
     entityManager.drawEntity();
-    lightManager.drawLighting();
+    lightManager.drawLighting_2();
 
     window.setView(overlayView);
     guiManager.buttonCheck();
     commandsManager.drawCommandArea();
     guiManager.drawGui();
+
+    window.draw(alignment);
 }
 
 

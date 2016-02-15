@@ -7,6 +7,7 @@
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Playable.h"
 #include "ResourceManager.h"
 #include "EntityManager/EntityManager.h"
+#include "Struct_Animation.h"
 
 
 class Entity_Player : public Entity_Playable
@@ -61,6 +62,8 @@ private:
     sf::Vector2f velocity;
     const sf::Vector2f sideRadius;
 
+    Struct_Animation animation;
+
     ///class
     enum PlayerClass{rogue, archer};
     PlayerClass playerClass;
@@ -79,9 +82,12 @@ private:
      ///timing
     unsigned short tick;
 
-    ///animation
+    ///animation timing
     int count_playerStep;
     int playerStep;
+    int direction_facing;
+    int animationStep;
+    int animationDirection;
     float previousVelocity;
 
     ///controls
@@ -102,6 +108,9 @@ private:
     ResourceManager &res;
     EntityManager& entityManager;
     LightManager& lightManager;
+
+    ///Collision visual
+    sf::RectangleShape colRect;
 };
 
 #endif // ENTITY_PLAYER_H

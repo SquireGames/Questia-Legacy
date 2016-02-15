@@ -26,7 +26,8 @@ public:
     void moveLightSource(int id, sf::Vector2f coordinates);
 
     void updateLighting();
-    void drawLighting();
+    void drawLighting_1();
+    void drawLighting_2();
 
 private:
     sf::Vector2f playerCoordinates;

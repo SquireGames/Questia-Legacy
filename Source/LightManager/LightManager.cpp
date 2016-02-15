@@ -249,7 +249,28 @@ void LightManager::updateLighting()
     }
 }
 
-void LightManager::drawLighting()
+void LightManager::drawLighting_1()
+{
+    for(int x = 0; x != lightingList.size(); x++)
+    {
+        if(lightingList[x]->lightShape == 3)
+        {
+            sf::Vector2f temp = lightingList[x]->lightSpriteColor.getPosition();
+
+            lightingList[x]->lightSpriteColor.setPosition(lightingList[x]->lightSpriteColor.getPosition().x - playerCoordinates.x,
+                    lightingList[x]->lightSpriteColor.getPosition().y - playerCoordinates.y);
+
+            if(std::abs(lightingList[x]->lightSpriteColor.getPosition().x - 480) < 2000 &&  std::abs(lightingList[x]->lightSpriteColor.getPosition().y - 270) < 1500)
+            {
+                window.draw(lightingList[x]->lightSpriteColor);
+            }
+
+            lightingList[x]->lightSpriteColor.setPosition(temp);
+        }
+    }
+}
+
+void LightManager::drawLighting_2()
 {
     updateLighting();
 
@@ -293,7 +314,7 @@ void LightManager::drawLighting()
             sf::Vector2f temp = lightingList[x]->lightSprite.getPosition();
 
             lightingList[x]->lightSprite.setPosition(lightingList[x]->lightSprite.getPosition().x - playerCoordinates.x,
-                                                     lightingList[x]->lightSprite.getPosition().y - playerCoordinates.y);
+                    lightingList[x]->lightSprite.getPosition().y - playerCoordinates.y);
 
             if(std::abs(lightingList[x]->lightSprite.getPosition().x - 480) < 2000 &&  std::abs(lightingList[x]->lightSprite.getPosition().y - 270) < 1500)
             {
@@ -303,23 +324,7 @@ void LightManager::drawLighting()
             lightingList[x]->lightSprite.setPosition(temp);
         }
     }
-    for(int x = 0; x != lightingList.size(); x++)
-    {
-        if(lightingList[x]->lightShape == 3)
-        {
-            sf::Vector2f temp = lightingList[x]->lightSpriteColor.getPosition();
 
-            lightingList[x]->lightSpriteColor.setPosition(lightingList[x]->lightSpriteColor.getPosition().x - playerCoordinates.x,
-                                                          lightingList[x]->lightSpriteColor.getPosition().y - playerCoordinates.y);
-
-            if(std::abs(lightingList[x]->lightSpriteColor.getPosition().x - 480) < 2000 &&  std::abs(lightingList[x]->lightSpriteColor.getPosition().y - 270) < 1500)
-            {
-                lightingOverlayTexture.draw(lightingList[x]->lightSpriteColor);
-            }
-
-            lightingList[x]->lightSpriteColor.setPosition(temp);
-        }
-    }
 
     lightingOverlayTexture.display();
     window.draw(lightingOverlaySprite);

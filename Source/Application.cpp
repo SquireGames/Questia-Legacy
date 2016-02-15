@@ -47,8 +47,8 @@ void Application::run()
         mWindow.setVerticalSyncEnabled(false);
     }
 
-    mWindow.setFramerateLimit(2000);
-    mWindow.setVerticalSyncEnabled(false);
+    //mWindow.setFramerateLimit(2000);
+    //mWindow.setVerticalSyncEnabled(false);
 
     sf::View beginningView;
     beginningView.setSize(1920,1080);
