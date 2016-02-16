@@ -24,6 +24,7 @@ public:
     int delete_lightSource(int id);
 
     void moveLightSource(int id, sf::Vector2f coordinates);
+    void flickerLight(int id, float lowerBound, float upperBound);
 
     void updateLighting();
     void drawLighting_1();
@@ -34,6 +35,9 @@ private:
 
     sf::RenderTexture lightingOverlayTexture;
     sf::Sprite        lightingOverlaySprite;
+
+    sf::Texture lightingTexture_1;
+    sf::Texture lightingTextureColor_1;
 
     sf::Color         blackwhiteOverlay;
     sf::Color         colorOverlay;

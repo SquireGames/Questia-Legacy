@@ -104,6 +104,8 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     lightManager.create_lightSource(sf::Vector2f(22*32 + 3,17*32), 100, 2, sf::Vector2f(32 * 10 - 6,32 * 9));
     lightManager.create_lightSource(sf::Vector2f(23*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
     lightManager.create_lightSource(sf::Vector2f(30*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
+
+    //lightManager.create_lightSource(sf::Vector2f(20,20), 50, 2, sf::Vector2f(120,120));
     //lightManager.create_lightSource(sf::Vector2f(20,20), 50, 2, sf::Vector2f(120,120));
 
 
@@ -316,7 +318,7 @@ void State_Game::displayTextures()
     commandsManager.drawCommandArea();
     guiManager.drawGui();
 
-    window.draw(alignment);
+    //window.draw(alignment);
 }
 
 

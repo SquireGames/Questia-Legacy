@@ -61,7 +61,7 @@ Entity_Player::~Entity_Player()
 
 void Entity_Player::drawEntity(sf::RenderWindow &window)
 {
-    animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x-(animation.getSheetWidth()/2), coordinates.y-(animation.getSheetHeight()/2)-12.5);
+    animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x-(animation.getSheetWidth()/2.f), coordinates.y-(animation.getSheetHeight()/2.f)-12.5);
     window.draw(animation.getSprite(animationDirection-1, animationStep-1));
 
 
@@ -359,6 +359,7 @@ void Entity_Player::update(int effect, int (&returnCollision)[4])
 
     ///lighting
     lightManager.moveLightSource(lightID,coordinates);
+    lightManager.flickerLight(lightID, 80, 120);
 
 
     ///tick

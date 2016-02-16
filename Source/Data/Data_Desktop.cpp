@@ -93,9 +93,11 @@ int Data_Desktop::loadOptions()
     openFile.open(config);
     if(openFile.is_open() && openFile.good())
     {
+
         std::stringstream sStream;
         std::map <int, std::string> optionsVector;
         int level = 0;
+
         while(!openFile.eof())
         {
             char line[200];
@@ -130,6 +132,7 @@ int Data_Desktop::loadOptions()
             }
             level++;
         }
+
         std::cout<< "Window mode:  " << optionsVector[0] << std::endl << "Sound mode:  " << optionsVector[1] << std::endl;
 
         windowType = std::atoi(optionsVector[0].c_str());

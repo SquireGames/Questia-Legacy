@@ -15,6 +15,9 @@ struct Struct_LightSource
     sf::Color colorOverlay;
     float brighness;
 
+    float baseScale_x;
+    float baseScale_y;
+
     sf::Sprite lightSprite;
     sf::Sprite lightSpriteColor;
 };

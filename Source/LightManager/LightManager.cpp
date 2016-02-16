@@ -1,3 +1,5 @@
+#include <cstdlib>
+
 #include "LightManager.h"
 
 LightManager::LightManager(sf::RenderWindow &mWindow,TimeManager& _timeManager, ResourceManager& _resourceManager):
@@ -23,6 +25,13 @@ LightManager::LightManager(sf::RenderWindow &mWindow,TimeManager& _timeManager, 
     colorRect.setFillColor(colorOverlay);
 
     playerCoordinates = sf::Vector2f(0,0);
+
+    lightingTexture_1.loadFromFile(std::string("Media/Image/Game/Lighting/Light_Circle_1.png"));
+    lightingTextureColor_1.loadFromFile(std::string("Media/Image/Game/Lighting/Light_Circle_2.png"));
+
+    lightingTexture_1.setSmooth(true);
+    lightingTextureColor_1.setSmooth(true);
+
 }
 
 LightManager::~LightManager()
@@ -131,6 +140,9 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
         lightSource->lightSprite;
         lightSource->lightSprite.setTexture(resourceManager.getTexture(std::string("Media/Image/Game/Lighting/Light_Circle_1.png")));
         lightSource->lightSprite.setScale((sideRadius.x*2.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*2.f)/ lightSource->lightSprite.getLocalBounds().height);
+        lightSource->baseScale_x = lightSource->lightSprite.getScale().x;
+        lightSource->baseScale_y = lightSource->lightSprite.getScale().y;
+
         lightSource->lightSprite.setOrigin(lightSource->lightSprite.getLocalBounds().width/2, lightSource->lightSprite.getLocalBounds().height/2);
 
         lightSource->lightSprite.setPosition(coordinates.x + 480, coordinates.y + 270);
@@ -141,15 +153,18 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
         lightSource->lightShape = 3;
 
         lightSource->lightSprite;
-        lightSource->lightSprite.setTexture(resourceManager.getTexture(std::string("Media/Image/Game/Lighting/Light_Circle_1.png")));
+        lightSource->lightSprite.setTexture(lightingTexture_1);
         lightSource->lightSprite.setScale((sideRadius.x*2.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*2.f)/ lightSource->lightSprite.getLocalBounds().height);
+        lightSource->baseScale_x = lightSource->lightSprite.getScale().x;
+        lightSource->baseScale_y = lightSource->lightSprite.getScale().y;
         lightSource->lightSprite.setOrigin(lightSource->lightSprite.getLocalBounds().width/2, lightSource->lightSprite.getLocalBounds().height/2);
 
+
         lightSource->lightSpriteColor;
-        lightSource->lightSpriteColor.setTexture(resourceManager.getTexture(std::string("Media/Image/Game/Lighting/Light_Circle_2.png")));
-        lightSource->lightSpriteColor.setScale((sideRadius.x*3.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*3.f)/ lightSource->lightSprite.getLocalBounds().height);
+        lightSource->lightSpriteColor.setTexture(lightingTextureColor_1);
+        lightSource->lightSpriteColor.setScale((sideRadius.x*2.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*2.f)/ lightSource->lightSprite.getLocalBounds().height);
         lightSource->lightSpriteColor.setOrigin(lightSource->lightSprite.getLocalBounds().width/2, lightSource->lightSprite.getLocalBounds().height/2);
-        lightSource->lightSpriteColor.setColor(sf::Color(255,215,0,0));
+        lightSource->lightSpriteColor.setColor(sf::Color(226,184,34,0));
 
 
         lightSource->lightSprite.setPosition(coordinates.x + 480, coordinates.y + 270);
@@ -236,13 +251,13 @@ void LightManager::updateLighting()
         {
             sf::Color tempColor = lightingList[x]->lightSpriteColor.getColor();
 
-            if(brightness < 120)
+            if(brightness < 200)
             {
                 tempColor.a = brightness;
             }
             else
             {
-                tempColor.a = 120;
+                tempColor.a = 200;
             }
             lightingList[x]->lightSpriteColor.setColor(tempColor);
         }
@@ -255,6 +270,7 @@ void LightManager::drawLighting_1()
     {
         if(lightingList[x]->lightShape == 3)
         {
+            /*
             sf::Vector2f temp = lightingList[x]->lightSpriteColor.getPosition();
 
             lightingList[x]->lightSpriteColor.setPosition(lightingList[x]->lightSpriteColor.getPosition().x - playerCoordinates.x,
@@ -266,8 +282,21 @@ void LightManager::drawLighting_1()
             }
 
             lightingList[x]->lightSpriteColor.setPosition(temp);
+            */
+
+            lightingList[x]->lightSpriteColor.setPosition(lightingList[x]->lightSprite.getPosition().x - 480,
+                    lightingList[x]->lightSprite.getPosition().y - 270);
+
+            if(std::abs(lightingList[x]->lightSpriteColor.getPosition().x - playerCoordinates.x) < 2000 &&  std::abs(lightingList[x]->lightSpriteColor.getPosition().y - playerCoordinates.y) < 1500)
+            {
+                window.draw(lightingList[x]->lightSpriteColor);
+            }
         }
     }
+
+    //lightingOverlayTexture.display();
+    //window.draw(lightingOverlaySprite);
+    //lightingOverlayTexture.clear(sf::Color::Transparent);
 }
 
 void LightManager::drawLighting_2()
@@ -319,6 +348,7 @@ void LightManager::drawLighting_2()
             if(std::abs(lightingList[x]->lightSprite.getPosition().x - 480) < 2000 &&  std::abs(lightingList[x]->lightSprite.getPosition().y - 270) < 1500)
             {
                 lightingOverlayTexture.draw(lightingList[x]->lightSprite, sf::BlendMultiply);
+
             }
 
             lightingList[x]->lightSprite.setPosition(temp);
@@ -329,4 +359,86 @@ void LightManager::drawLighting_2()
     lightingOverlayTexture.display();
     window.draw(lightingOverlaySprite);
     lightingOverlayTexture.clear(sf::Color::Transparent);
+}
+
+void LightManager::flickerLight(int id, float lowerBound, float upperBound)
+{
+    float flicker = std::rand()%54;
+    //std::cout << flicker;
+
+    if(flicker == 0)
+    {
+        flicker = -0.004;
+    }
+    else if(flicker == 1)
+    {
+        flicker = 0.004;
+    }
+    else
+    {
+        flicker = 0;
+    }
+
+    if(flicker != 0)
+    {
+        for(int x = 0; x != lightingList.size(); x++)
+        {
+            if(lightingList[x]->id == id)
+            {
+                if(lightingList[x]->lightShape == 3)
+                {
+                    ///Get the current scale
+                    float scale = lightingList[x]->lightSprite.getScale().x;
+                    float newScale;
+
+                    ///Find the upper and lower scale
+                    float lower = lightingList[x]->baseScale_x * (lowerBound/100.f);
+                    float upper = lightingList[x]->baseScale_x * (upperBound/100.f);
+
+                    ///Add the change
+                    if(flicker > 0)
+                    {
+                        if((scale + flicker) <= upper)
+                        {
+                            newScale = scale + flicker;
+                        }
+                        else
+                        {
+                            newScale = scale - flicker;
+                        }
+                    }
+                    else
+                    {
+                        if((scale - flicker) >= lower)
+                        {
+                            newScale = scale - flicker;
+                        }
+                        else
+                        {
+                            newScale = scale + flicker;
+                        }
+                    }
+
+                    if(newScale > upper)
+                    {
+                        newScale = upper;
+                    }
+                    if(newScale < lower)
+                    {
+                        newScale = lower;
+                    }
+
+                    ///Apply the scale
+                    lightingList[x]->lightSprite.setScale(newScale, newScale);
+                    lightingList[x]->lightSpriteColor.setScale(newScale, newScale);
+
+                    std::cout << "Upper: " << upper << std::endl;
+                    std::cout << "Lower: " << lower << std::endl;
+                    std::cout << "Scale: " << scale << std::endl;
+                    //std::cout << "Flicker: " << lightingList[x]->lightSprite.getScale().x << std::endl;
+                }
+                return;
+            }
+        }
+    }
 }

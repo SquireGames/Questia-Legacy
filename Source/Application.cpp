@@ -13,6 +13,7 @@ Application::Application():
     mStatisticsUpdateTime()
     , mStatisticsFramesCount(0)
 {
+    std::cout << "??1";
     int mode = Data_Desktop::getInstance().loadOptions();
 
     switch (mode)
@@ -47,8 +48,7 @@ void Application::run()
         mWindow.setVerticalSyncEnabled(false);
     }
 
-    //mWindow.setFramerateLimit(2000);
-    //mWindow.setVerticalSyncEnabled(false);
+    //mWindow.setFramerateLimit(2000); mWindow.setVerticalSyncEnabled(false);
 
     sf::View beginningView;
     beginningView.setSize(1920,1080);
@@ -59,7 +59,6 @@ void Application::run()
 
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
-
 
     while(mWindow.isOpen())
     {
