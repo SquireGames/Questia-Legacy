@@ -129,7 +129,7 @@ void Application::processEvents()
                 Data_Desktop::getInstance().setMostRecentChar('B');
             }
 
-            //std::cout << "imput: " << event.text.unicode << std::endl;
+            //std::cout << "input: " << event.text.unicode << std::endl;
         }
 
         switch(event.type)

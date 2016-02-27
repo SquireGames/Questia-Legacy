@@ -35,6 +35,9 @@ public:
     int getEntityCount();
 
     int createEntity(int entity, sf::Vector2f coordinates);
+    int createEntity(std::string entityName, sf::Vector2f coordinates);
+
+
     int createSpecialEntity(int entity, int _attackerID, std::string _attackerName,
                              sf::Vector2f _coordinates, sf::Vector2f _velocity, float _angle,
                              int _duration, int _attackDamage, float _sizeMultiplier, float _timeMultiplier,
@@ -52,6 +55,8 @@ public:
     std::vector <int> getDeadIDs();
 
 private:
+    int getIDNumber();
+
     int playerID;
     int playerID_2;
 

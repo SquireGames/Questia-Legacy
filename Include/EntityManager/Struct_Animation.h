@@ -13,6 +13,11 @@ struct Struct_Animation
         , size_x(0)
         , size_y(0)
     {
+        if(imageLocation == "None")
+        {
+            return;
+        }
+
         sf::Texture animationSheet;
         animationSheet.loadFromFile(imageLocation);
         sf::Vector2<unsigned int> imageSize = animationSheet.getSize();

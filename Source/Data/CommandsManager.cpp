@@ -50,7 +50,7 @@ void CommandsManager::update()
 
 }
 
-void CommandsManager::getCharImput(char imput)
+void CommandsManager::getCharImput(char input)
 {
     // TODO Rebindable chat key
 
@@ -58,9 +58,9 @@ void CommandsManager::getCharImput(char imput)
 
     if(isCommandsActive)
     {
-        if(imput != ' ' && imput != 'S' && imput != 29 && imput != 30)
+        if(input != ' ' && input != 'S' && input != 29 && input != 30)
         {
-            if(imput == '_') // backspace
+            if(input == '_') // backspace
             {
                 std::string tempSt;
                 tempSt = textImput.str();
@@ -74,53 +74,53 @@ void CommandsManager::getCharImput(char imput)
             }
             else
             {
-                if(imput == 10)
+                if(input == 10)
                 {
-                    imput = 'C';
+                    input = 'C';
                 }
-                else if(imput == 11)
+                else if(input == 11)
                 {
-                    imput = 'S';
+                    input = 'S';
                 }
-                else if(imput == 12)
+                else if(input == 12)
                 {
-                    imput = 'A';
+                    input = 'A';
                 }
-                else if(imput == 17)
+                else if(input == 17)
                 {
-                    imput = 'T';
+                    input = 'T';
                 }
-                else if(imput == 14)
+                else if(input == 14)
                 {
-                    imput = 'B';
+                    input = 'B';
                 }
-                else if(imput == 15)
+                else if(input == 15)
                 {
-                    imput = '_';
+                    input = '_';
                 }
-                else if(imput == 16)
+                else if(input == 16)
                 {
-                    imput = 'E';
+                    input = 'E';
                 }
-                else if(imput == 'B')
+                else if(input == 'B')
                 {
-                    imput = ' ';
+                    input = ' ';
                 }
-                else if(imput == 'E')
+                else if(input == 'E')
                 {
                     isGood = false;
                 }
                 if(isGood)
                 {
-                    textImput << imput;
+                    textImput << input;
                 }
                 visibleText[0].setString(textImput.str());
                 isGood = true;
             }
         }
-        else if(imput == 29 || imput == 30) // up or down
+        else if(input == 29 || input == 30) // up or down
         {
-            if(imput == 29) // up
+            if(input == 29) // up
             {
                 if(currentCommand + 1 < COUNT_HISTORY)
                 {
@@ -130,7 +130,7 @@ void CommandsManager::getCharImput(char imput)
                     visibleText[0].setString(textImput.str());
                 }
             }
-            else if(imput == 30) // down
+            else if(input == 30) // down
             {
                 if(currentCommand -1 > -1)
                 {

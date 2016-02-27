@@ -13,7 +13,7 @@ public:
     CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager);
     ~CommandsManager();
 
-    void getCharImput(char imput);
+    void getCharImput(char input);
     void drawCommandArea();
     void update();
     bool handleImput(int actionType,bool isPressed,int player);

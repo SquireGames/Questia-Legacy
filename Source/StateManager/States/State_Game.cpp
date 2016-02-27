@@ -63,7 +63,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     overlayView.zoom(1);
 
     //character
-    entityManager.createEntity(0, sf::Vector2f(std::atoi(Data_Desktop::getInstance().getSaved_coordinates_x().c_str()),std::atoi(Data_Desktop::getInstance().getSaved_coordinates_y().c_str())));
+    entityManager.createEntity("entity:player", sf::Vector2f(std::atoi(Data_Desktop::getInstance().getSaved_coordinates_x().c_str()),std::atoi(Data_Desktop::getInstance().getSaved_coordinates_y().c_str())));
 
     //light init
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
@@ -113,6 +113,8 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
 
     alignment.setTexture(resourceManager.getTexture("Media/Image/Alignment.png"));
+
+    itemManager.spawnItem("item:test", ItemUsage::ground, 64, 64);
 }
 
 State_Game::~State_Game()
@@ -310,6 +312,7 @@ void State_Game::displayTextures()
     window.setView(gameView);
     tileEngine.drawMap(player_MapCoordinates);
     lightManager.drawLighting_1();
+    itemManager.drawItems();
     entityManager.drawEntity();
     lightManager.drawLighting_2();
 

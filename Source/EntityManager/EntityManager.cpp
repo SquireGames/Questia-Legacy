@@ -44,9 +44,8 @@ EntityManager::~EntityManager()
     std::cout<<"DEBUG: Destroyed Entity Manager"<<std::endl;
 }
 
-int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
+int EntityManager::getIDNumber()
 {
-    spawnTick = 35;
     int IDNumber;
 
     std::vector<int> entityList;
@@ -88,6 +87,14 @@ int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
         entityNumber =  0;
         IDNumber = entityNumber;
     }
+    return IDNumber;
+}
+
+int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
+{
+    spawnTick = 35;
+
+    int IDNumber = getIDNumber();
 
     switch (entity)
     {
@@ -152,45 +159,68 @@ int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
     return IDNumber;
 }
 
+int EntityManager::createEntity(std::string entityName, sf::Vector2f coordinates)
+{
+    spawnTick = 35;
+    int IDNumber = getIDNumber();
+    //Temporary way
+
+    if(entityName == "entity:player")
+    {
+        Entity_Player* entity= new Entity_Player(resourceManager, *this, lightManager, coordinates, IDNumber);
+        std::cout<<"DEBUG: Created entity: " << "Player     ID: " << IDNumber <<std::endl;
+        if(playerID == -1)
+        {
+            playerID = IDNumber;
+        }
+        else
+        {
+            playerID_2 = IDNumber;
+        }
+
+        entityStack.push_back(entity);
+        entityCollidableStack.push_back(entity);
+        entityLivingStack.push_back(entity);
+        entityPlayableStack.push_back(entity);
+    }
+    else if(entityName == "entity:chicken")
+    {
+        Entity_Chicken* entity= new Entity_Chicken(resourceManager, *this, coordinates, IDNumber);
+
+        std::cout<<"DEBUG: Created entity: " << "Chicken     ID: " << IDNumber <<std::endl;
+
+
+        entityStack.push_back(entity);
+        entityCollidableStack.push_back(entity);
+        entityLivingStack.push_back(entity);
+    }
+    else if(entityName == "entity:goblin")
+    {
+        Hostile_Goblin* entity= new Hostile_Goblin(resourceManager, *this, coordinates, IDNumber);
+
+        std::cout<<"DEBUG: Created entity: " << "Goblin     ID: " << IDNumber <<std::endl;
+
+
+        entityStack.push_back(entity);
+        entityCollidableStack.push_back(entity);
+        entityLivingStack.push_back(entity);
+    }
+    else
+    {
+        return -1;
+    }
+
+    return IDNumber;
+}
+
+
 int EntityManager::createSpecialEntity(int entity, int _attackerID, std::string _attackerName,
                                        sf::Vector2f _coordinates, sf::Vector2f _velocity, float _angle,
                                        int _duration, int _attackDamage, float _sizeMultiplier, float _timeMultiplier,
                                        int _extra)
 {
     spawnTick = 35;
-    int IDNumber;
-
-    std::vector<int> entityList;
-    for(int x = 0; x < entityStack.size(); x++)
-    {
-        entityList.push_back(entityStack[x]->returnID());
-    }
-    std::sort(entityList.begin(),entityList.end());
-
-    if(entityStack.size() != entityList[entityList.size()-1]+1)
-    {
-        if(entityStack.size()>1)
-        {
-            for(int x = 0; x < entityList.size(); x++)
-            {
-                if (entityList[x]+1 != entityList[x+1])
-                {
-                    IDNumber = entityList[x]+1;
-                    x = 99999;
-                }
-            }
-        }
-        else
-        {
-            entityNumber = entityList[entityList.size()-1]+1;
-            IDNumber = entityNumber;
-        }
-    }
-    else
-    {
-        entityNumber = entityList[entityList.size()-1]+1;
-        IDNumber = entityNumber;
-    }
+    int IDNumber = getIDNumber();
 
     switch (entity)
     {
@@ -242,47 +272,7 @@ int EntityManager::createSpecialEntity(int entity, int _attackerID, std::string 
 
 void EntityManager::createInteravtiveEntity(int entity, int x, int y, int type, int subtype)
 {
-    int IDNumber;
-
-    std::vector<int> entityList;
-    for(int x = 0; x < entityStack.size(); x++)
-    {
-        entityList.push_back(entityStack[x]->returnID());
-    }
-
-    std::sort(entityList.begin(),entityList.end());
-    if(entityList.size() > 0)
-    {
-        if(entityStack.size() != entityList[entityList.size()-1]+1)
-        {
-            if(entityStack.size()>1)
-            {
-                for(int x = 0; x < entityList.size(); x++)
-                {
-                    if (entityList[x]+1 != entityList[x+1])
-                    {
-                        IDNumber = entityList[x]+1;
-                        x = 99999;
-                    }
-                }
-            }
-            else
-            {
-                entityNumber = entityList[entityList.size()-1]+1;
-                IDNumber = entityNumber;
-            }
-        }
-        else
-        {
-            entityNumber =  entityList[entityList.size()-1]+1;
-            IDNumber = entityNumber;
-        }
-    }
-    else
-    {
-        entityNumber =  0;
-        IDNumber = entityNumber;
-    }
+    int IDNumber = getIDNumber();
 
 
     switch (entity)

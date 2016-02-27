@@ -12,7 +12,7 @@ ItemManager::~ItemManager()
 
 }
 
-void ItemManager::spawnItem()
+int ItemManager::getStorageID()
 {
     int IDNumber;
 
@@ -53,26 +53,57 @@ void ItemManager::spawnItem()
         IDNumber = 0;
     }
 
-    Struct_Item* item = new Struct_Item();
-
-    item->itemID = 0;
-    item->storageID = IDNumber;
-    item->itemType = combat;
-    item->attackType = sword;
-    item->itemUsage = ground;
-    item->itemName = "Wooden Club";
-    item->itemDescription = "Wooden Club";
-    item->itemSprite.setTexture(resourceManager.getTexture("1.png"));
-    item->coord_x = 0;
-    item->coord_y = 0;
-    item->grid_x = 1;
-    item->grid_y = 2;
-    item->quality = 50;
-    item->subType = 0;
-    item->price = 0;
-
-    itemVector.push_back(item);
+    return IDNumber;
 }
+
+void ItemManager::createItem(Struct_Item* item, int IDNumber, std::string itemName, ItemUsage itemUsage, int coord_x, int coord_y)
+{
+    bool isItem = true;
+    if(itemName == "item:test")
+    {
+        item = new Struct_Item(resourceManager,
+                               IDNumber, itemName,
+                               "Item Name", "Item Desc",
+                               coord_x, coord_y,   //coords
+                               1, 1,   //grid size
+                               "Media/Image/Game/Items/Test/Test_Inv.png", "None", //sprite loc
+                               itemUsage, ItemType::inactive, AttackType::none);
+    }
+    else
+    {
+        isItem = false;
+    }
+
+    if(isItem)
+    {
+        // Inventory Sprite
+        item->inventorySprite.getSprite(0,0).setOrigin(item->inventorySprite.getSheetWidth()/2.f,item->inventorySprite.getSheetHeight()/2.f);
+        item->inventorySprite.getSprite(0,0).setScale(0.25,0.25);
+        item->inventorySprite.getSprite(0,0).setPosition(coord_x, coord_y);
+        itemVector.push_back(item);
+    }
+    else
+    {
+        item = nullptr;
+    }
+}
+
+void ItemManager::spawnItem(std::string itemName, ItemUsage itemUsage, int coord_x, int coord_y)
+{
+    int IDNumber = getStorageID();
+
+    Struct_Item* item = nullptr;
+
+    createItem(item, IDNumber, itemName, itemUsage, coord_x, coord_y);
+
+    if(item == nullptr)
+    {
+        delete item;
+    }
+    return;
+}
+
+
 
 void ItemManager::destroyItem(int item)
 {
@@ -101,13 +132,11 @@ void ItemManager::drawItems()
         switch (itemVector[x]->itemUsage)
         {
         case ground:
-            window.draw(itemVector[x]->itemSprite);
+            window.draw(itemVector[x]->inventorySprite.getSprite(0,0));
             break;
-        case invetory:
+        case inventory:
             break;
         case equipped:
-            break;
-        case inUse:
             break;
         default:
             break;
@@ -116,3 +145,9 @@ void ItemManager::drawItems()
     }
 }
 
+void ItemManager::createContainer(int size_x, int size_y)
+{
+    Struct_ItemContainer itemContainer;
+    itemContainer.width = size_x;
+    itemContainer.height = size_y;
+}

@@ -2,7 +2,7 @@
 #include <cmath>
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Player.h"
 
-#define DEBUGMODE false
+#define DEBUGMODE true
 
 Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,  sf::Vector2f coordinates, int ID):
     coordinates(coordinates.x,coordinates.y)
