@@ -14,7 +14,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     window(mWindow)
     //managers
     , resourceManager()
-    , timeManager(0,0)
+    , timeManager(4,0)
     , lightManager(mWindow, timeManager, resourceManager)
     , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager, true)
@@ -30,6 +30,10 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , player_Velocity(1,1)
     , player_MapCoordinates(0,0)
     , playerAngle(0)
+
+    //saves
+    , save_character()
+    , save_test("test.txt")
 
     //keys
     , moveKey0(0)
@@ -49,11 +53,54 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 {
     //std::vector<std::string> path = Data_Desktop::getInstance().getFiles("Maps");
 
+
+
+    if(save_test.readFile())
+    {
+        std::vector<std::string> players = save_test.separateString(save_test.getItem("Players"));
+        players.push_back("Newbie");
+        save_test.saveItem("Players",save_test.conjoinString(players));
+        save_test.writeFile();
+
+    }
+    else
+    {
+        std::vector<std::string> players;
+        players.push_back("Nano");
+        players.push_back("Skul");
+        players.push_back("Xeno");
+
+        save_test.clearSave();
+        save_test.saveItem("Players",save_test.conjoinString(players));
+        save_test.addItem("Zombie", 1);
+        save_test.addItem("Zombie", 2);
+
+        save_test.writeFile();
+    }
+
+
+
+
+
+
+
+
+
+
+
+    ///saves
+    //location
+    std::stringstream sStream;
+    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "location" << ".txt";
+    save_character.setFilePath(sStream.str());
+    sStream.str(std::string());
+
+
     guiManager.addButton(100, true, 0, 0, std::string("Media/Image/Game/Gui/PauseOverlay.png"),std::string(""), 30, 30, 1, 50, sf::Color::Transparent, sf::Color(123, 123, 123, 0));
     guiManager.addButton(101, true, 753, 400, std::string("Media/Image/Game/Gui/Buttons/PauseButton.png"),std::string("Main Menu"), 845, 410, 1, 50, sf::Color::Black, sf::Color(123, 123, 123, 100));
     guiManager.addButton(102, true, 753, 600, std::string("Media/Image/Game/Gui/Buttons/PauseButton.png"),std::string("Exit Game"), 845, 610, 1, 50, sf::Color::Black, sf::Color(123, 123, 123, 100));
 
-    //views
+    ///views
     gameView.setSize(1920,1080);
     gameView.setCenter(960,540);
     gameView.zoom(0.5);
@@ -62,17 +109,17 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     overlayView.setCenter(960,540);
     overlayView.zoom(1);
 
-    //character
+    ///character
     entityManager.createEntity("entity:player", sf::Vector2f(std::atoi(Data_Desktop::getInstance().getSaved_coordinates_x().c_str()),std::atoi(Data_Desktop::getInstance().getSaved_coordinates_y().c_str())));
 
-    //light init
+    ///light init
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
 
-    //loading the map
+    ///loading the map
     tileEngine.loadMap(Data_Desktop::getInstance().getMapSelection(), true);
     spawnManager.loadSpawnFile(Data_Desktop::getInstance().getMapSelection());
 
-    //rebindable keys
+    ///rebindable keys
     moveKey0.keyType = 0;
     moveKey0.keyInput = Data_Desktop::getInstance().getKey(0);
     keybindVector.push_back(moveKey0);

@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 
+
 #include "StateManager/State.h"
 
 #include "TimeManager/TimeManager.h"
@@ -18,7 +19,10 @@
 #include "Data/CommandsManager.h"
 #include "MultiplayerManager/MultiplayerManager.h"
 
+#include "Data/SaveFile.h"
 #include "Data/Data_Desktop.h"
+
+
 
 class State_Game : public State
 {
@@ -58,6 +62,10 @@ private:
     int tempCoords_x, tempCoords_y;
     float playerAngle;
 
+    ///Saves
+    SaveFile save_character;
+    SaveFile save_test;
+
     ///Key binds
 
     enum keyEnum {mouse, keyboard, joystick};
@@ -94,6 +102,8 @@ private:
 
     //TEMP
     sf::Sprite alignment;
+
+
 };
 
 #endif // STATE_GAME_H

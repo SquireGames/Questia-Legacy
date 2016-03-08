@@ -7,45 +7,59 @@
 
 #include "ItemManager/Struct_Item.h"
 
-//enum ContainerHolder {inventory, equiptmnet};
+enum ContainerHolder {inv, equipt};
 
 struct Struct_ItemContainer
 {
+    Struct_ItemContainer(ContainerHolder _containerHolder, int _height, int _width):
+        containerHolder(_containerHolder)
+        , height(_height)
+        , width (_width)
+        , usedSlotsVector()
+    {
+        for(int x = 0; x != width; x++)
+        {
+            for(int y = 0; y != height; y++)
+            {
+                usedSlotsVector[x][y] = -1;
+            }
+        }
+    }
+
+    ContainerHolder containerHolder;
+
     std::vector <Struct_Item*> itemContainer;
-    std::map <int,std::map <int, bool> > usedSlotsVector;
+    std::map <int,std::map <int, int> > usedSlotsVector;
 
     unsigned int height;
     unsigned int width;
-
-
-//    ContainerHolder containerHolder;
 };
 
 #endif // STRUCT_ITEMCONTAINER_H
 
-  /*
-    int itemID;
-    int storageID;
+/*
+  int itemID;
+  int storageID;
 
-    ItemType itemType;
-    AttackType attackType;
-    ItemUsage itemUsage;
+  ItemType itemType;
+  AttackType attackType;
+  ItemUsage itemUsage;
 
-    std::string itemName;
-    std::string itemDescription;
+  std::string itemName;
+  std::string itemDescription;
 
-    sf::Sprite itemSprite;
-    int coord_x;
-    int coord_y;
+  sf::Sprite itemSprite;
+  int coord_x;
+  int coord_y;
 
-    //inv grid
-    int grid_x;
-    int grid_y;
+  //inv grid
+  int grid_x;
+  int grid_y;
 
-    //std::map <int, std::map < > >
+  //std::map <int, std::map < > >
 
-    //future implementation
-    int quality;
-    int subType;
-    int price;
-    */
+  //future implementation
+  int quality;
+  int subType;
+  int price;
+  */

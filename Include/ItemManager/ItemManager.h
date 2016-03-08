@@ -16,7 +16,7 @@ public:
     void spawnItem(std::string itemName, ItemUsage itemUsage, int coord_x, int coord_y);
     void destroyItem(int item);
 
-    void createContainer(int size_x, int size_y);
+    void createContainer(ContainerHolder containerHolder, int size_x, int size_y);
 
     void drawItems();
 

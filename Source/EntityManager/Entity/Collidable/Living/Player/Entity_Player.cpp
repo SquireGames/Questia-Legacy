@@ -2,7 +2,7 @@
 #include <cmath>
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Player.h"
 
-#define DEBUGMODE true
+#define DEBUGMODE false
 
 Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,  sf::Vector2f coordinates, int ID):
     coordinates(coordinates.x,coordinates.y)
@@ -42,7 +42,7 @@ Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager,
     , wasRunning(false)
     , runningTick(0)
 
-    , animation(res, "Media/Image/Game/Player/Character_Base.png", 8, 3)
+    , animation(res, "Media/Image/Game/Player/Customization/Skin/White.png", 8, 3)
     , colRect()
 {
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Player/Character_Base.png"));

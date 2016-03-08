@@ -12,6 +12,9 @@ ItemManager::~ItemManager()
 
 }
 
+
+
+// Items
 int ItemManager::getStorageID()
 {
     int IDNumber;
@@ -103,8 +106,6 @@ void ItemManager::spawnItem(std::string itemName, ItemUsage itemUsage, int coord
     return;
 }
 
-
-
 void ItemManager::destroyItem(int item)
 {
     int e = 0;
@@ -125,6 +126,15 @@ void ItemManager::destroyItem(int item)
     }
 }
 
+// Container
+
+void ItemManager::createContainer(ContainerHolder containerHolder, int size_x, int size_y)
+{
+    Struct_ItemContainer itemContainer(containerHolder, size_x, size_y);
+}
+
+// Draw
+
 void ItemManager::drawItems()
 {
     for(int x = 0; x < itemVector.size(); x++)
@@ -140,14 +150,6 @@ void ItemManager::drawItems()
             break;
         default:
             break;
-
         }
     }
-}
-
-void ItemManager::createContainer(int size_x, int size_y)
-{
-    Struct_ItemContainer itemContainer;
-    itemContainer.width = size_x;
-    itemContainer.height = size_y;
 }

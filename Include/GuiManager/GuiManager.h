@@ -29,7 +29,8 @@ public:
 
     int statLayers;
 
-    template <class T> void addStats(std::string statName, T stat)
+    template <class T>
+    void addStats(std::string statName, T stat)
     {
         bool dupe = false;
         for(auto mapIterator = gameDebuggerStrings.begin(); mapIterator!= gameDebuggerStrings.end(); mapIterator++)
@@ -60,7 +61,8 @@ public:
         }
     }
 
-    template <class T1, class T2> void addStats(std::string statName1, T1 stat1, std::string statName2, T2 stat2)
+    template <class T1, class T2>
+    void addStats(std::string statName1, T1 stat1, std::string statName2, T2 stat2)
     {
         bool dupe = false;
         for(auto mapIterator = gameDebuggerStrings.begin(); mapIterator!= gameDebuggerStrings.end(); mapIterator++)
@@ -90,7 +92,8 @@ public:
         }
 
     }
-    template <class T1, class T2, class T3> void addStats(std::string statName1, T1 stat1, std::string statName2, T2 stat2, std::string statName3, T3 stat3)
+    template <class T1, class T2, class T3>
+    void addStats(std::string statName1, T1 stat1, std::string statName2, T2 stat2, std::string statName3, T3 stat3)
     {
         bool dupe = false;
         for(auto mapIterator = gameDebuggerStrings.begin(); mapIterator!= gameDebuggerStrings.end(); mapIterator++)

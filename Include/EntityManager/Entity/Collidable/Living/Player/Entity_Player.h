@@ -23,6 +23,7 @@ public:
 
     ///get's
     int returnID();
+
     unsigned char getClass() {return playerClass;}
     std::string getName();
     void getNumb(int a, sf::Vector2i entityCoords);
@@ -62,7 +63,14 @@ private:
     sf::Vector2f velocity;
     const sf::Vector2f sideRadius;
 
-    Struct_Animation animation;
+
+    ///layers
+    Struct_Animation animation;//Temp
+    //Struct_Animation skin;
+    //Struct_Animation hair;
+    //Struct_Animation under;
+
+
 
     ///class
     enum PlayerClass{rogue, archer};
