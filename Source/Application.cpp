@@ -12,31 +12,11 @@ const sf::Time Application::timePerFrame = sf::seconds(1.f/144.f);
 Application::Application():
     mStatisticsUpdateTime()
     , mStatisticsFramesCount(0)
-    , save_options("options1.cfg")
+
 {
-    save_options.addComment("window mode", "0 - fullscreen, 1 - windowed");
-    save_options.addComment("FPS cap", "0 - V-Sync, 1+ - FPS max");
-    save_options.addComment("music volume", "percent");
-    save_options.addComment("font", "0 - default.ttf, 1+ - in game fonts");
+    Data_Desktop::getInstance().loadOptions();
 
-    if(save_options.readFile())
-    {
-        //save_options.saveItem("window mode", 1);
-        save_options.writeFile();
-    }
-    else
-    {
-        save_options.clearSave();
-        save_options.saveItem ("window mode",0);
-        save_options.saveItem ("FPS cap",0);
-        save_options.saveItem ("music volume",0);
-        save_options.saveItem ("font",1);
-        save_options.writeFile();
-    }
-
-    int mode = Data_Desktop::getInstance().loadOptions();
-
-    switch (mode)
+    switch (Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))
     {
     case 0:
         mWindow.create(sf::VideoMode(1920, 1080),"Questia",sf::Style::Fullscreen);
@@ -58,13 +38,13 @@ void Application::run()
 {
     Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(mWindow.getSize().x,mWindow.getSize().y),mWindow.getPosition());
 
-    if (Data_Desktop::getInstance().getMaxFPS() == 0)
+    if(Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")) == 0)
     {
         mWindow.setVerticalSyncEnabled(true);
     }
     else
     {
-        mWindow.setFramerateLimit(Data_Desktop::getInstance().getMaxFPS());
+        mWindow.setFramerateLimit(Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")));
         mWindow.setVerticalSyncEnabled(false);
     }
 

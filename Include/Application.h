@@ -25,8 +25,6 @@ private:
     static const sf::Time timePerFrame;
     sf::Time mStatisticsUpdateTime;
     int mStatisticsFramesCount;
-
-    SaveFile save_options;
 };
 
 #endif // APPLICATION_H

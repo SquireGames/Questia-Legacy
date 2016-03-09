@@ -30,7 +30,8 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
 
     if(!musicBuffer.loadFromFile("Media/Music/gameMenu.ogg")) {}
     musicSound.setBuffer(musicBuffer);
-    musicSound.setVolume(Data_Desktop::getInstance().getMusicVolume());
+
+    musicSound.setVolume(Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")));
     musicSound.play();
 
     guiManager.addStats(std::string(" "), std::string("Version 0.0.14 Alpha"));

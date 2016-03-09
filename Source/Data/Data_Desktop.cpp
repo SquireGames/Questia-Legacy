@@ -18,6 +18,7 @@ Data_Desktop::Data_Desktop():
     , mapSelection("NO MAP SELECTED")
     , characterSelection("NO CHARACTER SELECTED")
     , isDebuggerMode(false)
+    , save_options("options.cfg")
 {
     std::cout<<std::endl;
     std::cout<<"DEBUG: Data_Desktop Initialized"<<std::endl;
@@ -49,7 +50,7 @@ void Data_Desktop::set_FPS(int f)
 void Data_Desktop::setDesktopResolution(sf::Vector2i newRes, sf::Vector2i Position)
 {
     desktopResolution = newRes;
-    scaleFactor = sf::Vector2f(((float) 1920 / (float) desktopResolution.x) , ((float) 1080 / (float) desktopResolution.y));
+    scaleFactor = sf::Vector2f(((float) 1920 / (float) desktopResolution.x), ((float) 1080 / (float) desktopResolution.y));
 }
 
 Data_Desktop &Data_Desktop::getInstance()
@@ -86,134 +87,57 @@ std::vector<std::string> Data_Desktop::getFiles(std::string directory, bool isWi
     return fileNames;
 }
 
-int Data_Desktop::loadOptions()
+void Data_Desktop::loadOptions()
 {
-    std::string config("options.cfg");
-    std::ifstream openFile;
-    openFile.open(config);
-    if(openFile.is_open() && openFile.good())
+    if(!save_options.readFile()) // New save
     {
-
-        std::stringstream sStream;
-        std::map <int, std::string> optionsVector;
-        int level = 0;
-
-        while(!openFile.eof())
-        {
-            char line[200];
-            for(int y = 0; y!= 200; y++)
-            {
-                line[y] = ' ';
-            }
-            openFile.getline(line, 200);
-            int it = 0;
-
-            for(it; it != 200; it++)
-            {
-                if(line[it] == ':')
-                {
-                    for(int x = 1; x < 10; x++)
-                    {
-                        if(line[it+x] != '(' &&line[it+x] != ' ')
-                        {
-                            sStream << line[it+x];
-                        }
-                        else
-                        {
-                            x = 10;
-                        }
-                    }
-                    std::string optionString;
-                    sStream >> optionString;
-                    optionsVector[level] = optionString;
-                    it = 199;
-                    sStream.clear();
-                }
-            }
-            level++;
-        }
-
-        std::cout<< "Window mode:  " << optionsVector[0] << std::endl << "Sound mode:  " << optionsVector[1] << std::endl;
-
-        windowType = std::atoi(optionsVector[0].c_str());
-        maxFPS = std::atoi(optionsVector[1].c_str());
-        musicVolume = std::atoi(optionsVector[2].c_str());
-        fontType = std::atoi(optionsVector[3].c_str());
-
-        keyMap[0] = getConvertedKey(optionsVector[5].at(0));
-        keyMap[1] = getConvertedKey(optionsVector[6].at(0));
-        keyMap[2] = getConvertedKey(optionsVector[7].at(0));
-        keyMap[3] = getConvertedKey(optionsVector[8].at(0));
-
-        keyMap[4] = getConvertedKey(optionsVector[9].at(0));
-        keyMap[5] = getConvertedKey(optionsVector[10].at(0));
-        keyMap[6] = getConvertedKey(optionsVector[11].at(0));
-
-
-        key_moveUp = optionsVector[5].at(0);
-        key_moveDown = optionsVector[6].at(0);
-        key_moveLeft = optionsVector[7].at(0);
-        key_moveRight = optionsVector[8].at(0);
-
-        key_skill4 = optionsVector[9].at(0);
-        key_skill5 = optionsVector[10].at(0);
-        key_skill6 = optionsVector[11].at(0);
-
-        changeFont(fontType);
-
-        switch(std::atoi(optionsVector[0].c_str()))
-        {
-        case 0:
-            return 0;
-            break;
-        case 1:
-            return 1;
-            break;
-        default:
-            break;
-        }
+        save_options.clearSave();
+        save_options.saveItem("window mode"     ,0);
+        save_options.saveItem("FPS cap"         ,0);
+        save_options.saveItem("music volume"    ,0);
+        save_options.saveItem("font"            ,1);
+        save_options.saveItem("key_moveUp",    'w');
+        save_options.saveItem("key_moveDown",  's');
+        save_options.saveItem("key_moveLeft",  'a');
+        save_options.saveItem("key_moveRight", 'd');
+        save_options.saveItem("key_skill4",    'S');
+        save_options.saveItem("key_skill5",    'A');
+        save_options.saveItem("key_skill6",    'B');
+        save_options.writeFile();
     }
-    writeOptions(0, 0, 50, 1, 'w', 's', 'a', 'd', 'S', 'A', 'B');
-    font1.loadFromFile("Media/Fonts/Lato-Medium.ttf");
-    return 0;
+
+    save_options.addComment("window mode", "0 - fullscreen, 1 - windowed");
+    save_options.addComment("FPS cap", "0 - V-Sync, 1+ - FPS max");
+    save_options.addComment("music volume", "percent");
+    save_options.addComment("font", "0 - default.ttf, 1+ - in game fonts");
+
+    keyMap[0] = getConvertedKey(save_options.getItem("key_moveUp").at(0));
+    keyMap[1] = getConvertedKey(save_options.getItem("key_moveDown").at(0));
+    keyMap[2] = getConvertedKey(save_options.getItem("key_moveLeft").at(0));
+    keyMap[3] = getConvertedKey(save_options.getItem("key_moveRight").at(0));
+    keyMap[4] = getConvertedKey(save_options.getItem("key_skill4").at(0));
+    keyMap[5] = getConvertedKey(save_options.getItem("key_skill5").at(0));
+    keyMap[6] = getConvertedKey(save_options.getItem("key_skill6").at(0));
+    changeFont(save_options.asNumber(save_options.getItem("font")));
 }
 
 void Data_Desktop::writeOptions(int windowMode, int fps, int soundVolume, int font,
                                 char moveUpKey, char moveDownKey, char moveLeftKey, char moveRightKey,
                                 char skill4Key, char skill5Key, char skill6Key)
 {
-    std::string config("options.cfg");
-    std::ofstream newConfig;
-    newConfig.open(config, std::ofstream::out);
-    newConfig << "windowMode:"<< windowMode <<" (0 - Fullscreen, 1 - Windowed)" << std::endl;
-    newConfig << "fps:"<< fps <<" (0 - V-Sync, 1+ - FPS Max)" << std::endl;
-    newConfig << "sound:"<< soundVolume <<" (Percent)" << std::endl;
-    newConfig << "font:"<< font <<" (0 - default.ttf, 1+ - in game fonts)" << std::endl;
 
-    newConfig << std::endl;
-
-    newConfig << "key_moveUp:" << moveUpKey << " (key)"<< std::endl;
-    newConfig << "key_moveDown:" << moveDownKey << " (key)"<< std::endl;
-    newConfig << "key_moveLeft:" << moveLeftKey << " (key)"<< std::endl;
-    newConfig << "key_moveRight:" << moveRightKey << " (key)"<< std::endl;
-
-    newConfig << "key_skill4:" << skill4Key << " (key)"<< std::endl;
-    newConfig << "key_skill5:" << skill5Key << " (key)"<< std::endl;
-    newConfig << "key_skill6:" << skill6Key << " (key)"<< std::endl;
-
-    musicVolume = soundVolume;
-    windowType = windowMode;
-    maxFPS = fps;
-    fontType = font;
-
-    key_moveUp = moveUpKey;
-    key_moveDown = moveDownKey;
-    key_moveLeft = moveLeftKey;
-    key_moveRight = moveRightKey;
-
-    key_skill4 = skill4Key;
-    key_skill5 = skill5Key;
-    key_skill6 = skill6Key;
+    save_options.saveItem("window mode",   windowMode);
+    save_options.saveItem("FPS cap",       fps);
+    save_options.saveItem("music volume",  soundVolume);
+    save_options.saveItem("font",          font);
+    save_options.saveItem("key_moveUp",    moveUpKey);
+    save_options.saveItem("key_moveDown",  moveDownKey);
+    save_options.saveItem("key_moveLeft",  moveLeftKey);
+    save_options.saveItem("key_moveRight", moveRightKey);
+    save_options.saveItem("key_skill4",    skill4Key);
+    save_options.saveItem("key_skill5",    skill5Key);
+    save_options.saveItem("key_skill6",    skill6Key);
+    save_options.writeFile();
 
     keyMap[0] = getConvertedKey(moveUpKey);
     keyMap[1] = getConvertedKey(moveDownKey);

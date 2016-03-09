@@ -57,8 +57,7 @@ public:
 
     std::string getItem(std::string itemName);
 
-    template <class T>
-    T asNumber (std::string _string)
+    int asNumber (std::string _string)
     {
         return atoi(_string.c_str());
     }
