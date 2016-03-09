@@ -53,13 +53,12 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 {
     //std::vector<std::string> path = Data_Desktop::getInstance().getFiles("Maps");
 
-
-
     if(save_test.readFile())
     {
         std::vector<std::string> players = save_test.separateString(save_test.getItem("Players"));
         players.push_back("Newbie");
         save_test.saveItem("Players",save_test.conjoinString(players));
+        save_test.addComment("Players", "Amount of players");
         save_test.writeFile();
 
     }
@@ -77,16 +76,6 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
         save_test.writeFile();
     }
-
-
-
-
-
-
-
-
-
-
 
     ///saves
     //location

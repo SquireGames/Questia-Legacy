@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Data_Desktop.h"
+#include "Data/SaveFile.h"
 
 class Application
 {
@@ -22,10 +23,10 @@ private:
     sf::RenderWindow mWindow;
 
     static const sf::Time timePerFrame;
-
     sf::Time mStatisticsUpdateTime;
-
     int mStatisticsFramesCount;
+
+    SaveFile save_options;
 };
 
 #endif // APPLICATION_H

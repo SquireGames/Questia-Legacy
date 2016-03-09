@@ -39,9 +39,18 @@ bool SaveFile::readFile()
             {
                 std::string entry;
                 std::getline(sStream, entry, ':');
-                lineSeperator[iter] = entry;
-                iter++;
+                char firstCharacter = entry.at(0);
+                if(firstCharacter != '(')
+                {
+                    lineSeperator[iter] = entry;
+                    iter++;
+                }
+                else
+                {
+                    goto escapeStream;
+                }
             }
+escapeStream:
             sStream.str(std::string());
             sStream.clear();
             saveList.push_back(std::make_pair(lineSeperator[0], lineSeperator[1]));
@@ -65,6 +74,11 @@ void SaveFile::writeFile()
         for(int it = 0; it != saveList.size(); it++)
         {
             fileStream << saveList[it].first << ":" << saveList[it].second;
+
+            if(commentList.count(saveList[it].first))
+            {
+               fileStream << commentList[saveList[it].first];
+            }
 
             if(it != saveList.size()-1)
             {
@@ -120,4 +134,12 @@ std::string SaveFile::conjoinString (std::vector <std::string> stringParts)
     sStream.str(std::string());
     sStream.clear();
     return conjoinedString;
+}
+
+void SaveFile::addComment(std::string item, std::string _comment)
+{
+    sStream << ':' << '(' << _comment << ')';
+    commentList[item] = sStream.str();
+    sStream.str(std::string());
+    sStream.clear();
 }

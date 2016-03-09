@@ -53,6 +53,8 @@ public:
     void writeFile(); // saves changes
     void clearSave(); // clears map
 
+    void addComment(std::string item, std::string _comment); // only works on saveItems, wont save on reload
+
     std::string getItem(std::string itemName);
 
     template <class T>
@@ -79,6 +81,7 @@ private:
     std::string fileName;
 
     std::vector <std::pair <std::string, std::string> > saveList;
+    std::map <std::string, std::string> commentList;
     std::fstream fileStream;
     std::stringstream sStream;
 };

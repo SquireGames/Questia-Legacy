@@ -12,8 +12,28 @@ const sf::Time Application::timePerFrame = sf::seconds(1.f/144.f);
 Application::Application():
     mStatisticsUpdateTime()
     , mStatisticsFramesCount(0)
+    , save_options("options1.cfg")
 {
-    std::cout << "??1";
+    save_options.addComment("window mode", "0 - fullscreen, 1 - windowed");
+    save_options.addComment("FPS cap", "0 - V-Sync, 1+ - FPS max");
+    save_options.addComment("music volume", "percent");
+    save_options.addComment("font", "0 - default.ttf, 1+ - in game fonts");
+
+    if(save_options.readFile())
+    {
+        //save_options.saveItem("window mode", 1);
+        save_options.writeFile();
+    }
+    else
+    {
+        save_options.clearSave();
+        save_options.saveItem ("window mode",0);
+        save_options.saveItem ("FPS cap",0);
+        save_options.saveItem ("music volume",0);
+        save_options.saveItem ("font",1);
+        save_options.writeFile();
+    }
+
     int mode = Data_Desktop::getInstance().loadOptions();
 
     switch (mode)

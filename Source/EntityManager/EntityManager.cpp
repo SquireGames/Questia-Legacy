@@ -274,7 +274,6 @@ void EntityManager::createInteravtiveEntity(int entity, int x, int y, int type, 
 {
     int IDNumber = getIDNumber();
 
-
     switch (entity)
     {
     case 1:
