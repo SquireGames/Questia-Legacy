@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 
-Entity_Chicken::Entity_Chicken( ResourceManager& res, EntityManager& entityManager,sf::Vector2f coordinates, int aID):
+Entity_Chicken::Entity_Chicken( ResourceManager& res, EntityManager& entityManager,sf::Vector2f coordinates, int aID, std::string _entityType):
     coordinates(coordinates.x,coordinates.y)
     , sideRadius(12.5, 12.5)
     , velocity(1.f, 1.f)
@@ -13,13 +13,15 @@ Entity_Chicken::Entity_Chicken( ResourceManager& res, EntityManager& entityManag
     , maxMP(0)
     , maxST(50)
 
+    , entityType(_entityType)
+
     , mIsMovingUp(false)
     , mIsMovingDown(false)
     , mIsMovingLeft(false)
     , mIsMovingRight(false)
     , entityManager(entityManager)
 
-    ,AIInt(0)
+    , AIInt(0)
 
     , ID(aID)
 

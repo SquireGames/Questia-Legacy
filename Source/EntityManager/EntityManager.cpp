@@ -22,14 +22,13 @@
 #include "ResourceManager.h"
 
 
-EntityManager::EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager, sf::Vector2f coordinates):
+EntityManager::EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager):
     window (mWindow)
     , spawnTick(0)
     , entityNumber(0)
     , timer1(25)
     , resourceManager(res)
     , lightManager(_lightManager)
-    , playerSpawn(coordinates)
     , playerID(-1)
 {
     std::cout<<"DEBUG: Entity Manager Initialized"<<std::endl;
@@ -98,28 +97,9 @@ int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
 
     switch (entity)
     {
-    case 0:
-    {
-        Entity_Player* entity= new Entity_Player(resourceManager, *this, lightManager, coordinates, IDNumber);
-        std::cout<<"DEBUG: Created entity: " << "Player     ID: " << IDNumber <<std::endl;
-        if(playerID == -1)
-        {
-            playerID = IDNumber;
-        }
-        else
-        {
-            playerID_2 = IDNumber;
-        }
-
-        entityStack.push_back(entity);
-        entityCollidableStack.push_back(entity);
-        entityLivingStack.push_back(entity);
-        entityPlayableStack.push_back(entity);
-        break;
-    }
     case 1:
     {
-        Entity_Chicken* entity= new Entity_Chicken(resourceManager, *this, coordinates, IDNumber);
+        Entity_Chicken* entity= new Entity_Chicken(resourceManager, *this, coordinates, IDNumber, "chicken");
 
         std::cout<<"DEBUG: Created entity: " << "Chicken     ID: " << IDNumber <<std::endl;
 
@@ -131,7 +111,7 @@ int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
     }
     case 2:
     {
-        Hostile_Goblin* entity= new Hostile_Goblin(resourceManager, *this, coordinates, IDNumber);
+        Hostile_Goblin* entity= new Hostile_Goblin(resourceManager, *this, coordinates, IDNumber, "goblin");
 
         std::cout<<"DEBUG: Created entity: " << "Goblin     ID: " << IDNumber <<std::endl;
 
@@ -159,33 +139,41 @@ int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
     return IDNumber;
 }
 
+int EntityManager::createPlayer(std::string playerName, sf::Vector2f coordinates,
+                                int hp, int maxHp,
+                                int mp, int maxMp,
+                                int st, int maxSt)
+{
+    int IDNumber = getIDNumber();
+
+    Entity_Player* entity= new Entity_Player(resourceManager, *this, lightManager, coordinates, IDNumber, "player", hp, maxHp, mp, maxMp, st, maxSt);
+    std::cout<<"DEBUG: Created entity: " << "Player     ID: " << IDNumber <<std::endl;
+    if(playerID == -1)
+    {
+        playerID = IDNumber;
+    }
+    else
+    {
+        playerID_2 = IDNumber;
+    }
+
+    entityStack.push_back(entity);
+    entityCollidableStack.push_back(entity);
+    entityLivingStack.push_back(entity);
+    entityPlayableStack.push_back(entity);
+
+    return IDNumber;
+}
+
 int EntityManager::createEntity(std::string entityName, sf::Vector2f coordinates)
 {
     spawnTick = 35;
     int IDNumber = getIDNumber();
     //Temporary way
 
-    if(entityName == "entity:player")
+    if(entityName == "chicken")
     {
-        Entity_Player* entity= new Entity_Player(resourceManager, *this, lightManager, coordinates, IDNumber);
-        std::cout<<"DEBUG: Created entity: " << "Player     ID: " << IDNumber <<std::endl;
-        if(playerID == -1)
-        {
-            playerID = IDNumber;
-        }
-        else
-        {
-            playerID_2 = IDNumber;
-        }
-
-        entityStack.push_back(entity);
-        entityCollidableStack.push_back(entity);
-        entityLivingStack.push_back(entity);
-        entityPlayableStack.push_back(entity);
-    }
-    else if(entityName == "entity:chicken")
-    {
-        Entity_Chicken* entity= new Entity_Chicken(resourceManager, *this, coordinates, IDNumber);
+        Entity_Chicken* entity= new Entity_Chicken(resourceManager, *this, coordinates, IDNumber, "chicken");
 
         std::cout<<"DEBUG: Created entity: " << "Chicken     ID: " << IDNumber <<std::endl;
 
@@ -194,9 +182,9 @@ int EntityManager::createEntity(std::string entityName, sf::Vector2f coordinates
         entityCollidableStack.push_back(entity);
         entityLivingStack.push_back(entity);
     }
-    else if(entityName == "entity:goblin")
+    else if(entityName == "goblin")
     {
-        Hostile_Goblin* entity= new Hostile_Goblin(resourceManager, *this, coordinates, IDNumber);
+        Hostile_Goblin* entity= new Hostile_Goblin(resourceManager, *this, coordinates, IDNumber, "goblin");
 
         std::cout<<"DEBUG: Created entity: " << "Goblin     ID: " << IDNumber <<std::endl;
 
@@ -588,7 +576,6 @@ void EntityManager::attackCheck()
     }
 }
 
-
 void EntityManager::update(TileEngine& tileEngine, sf::Vector2f player_MapCoordinates, sf::Vector2f mouseCoordinates, float angle)
 {
     for(int x = 0; x < entityPlayableStack.size(); x++)
@@ -742,3 +729,27 @@ std::vector <int> EntityManager::getDeadIDs()
     return IDs;
 }
 
+void EntityManager::saveEntities(SaveFile& save_entity)
+{
+    for(int it = 0; it != entityLivingStack.size(); it++)
+    {
+        if(entityLivingStack[it]->returnID() != playerID && entityLivingStack[it]->returnID() != playerID_2)
+        {
+            std::string entityType = entityLivingStack[it]->getEntityType();
+
+            int coords_x = entityLivingStack[it]->getCoordinates().x;
+            int coords_y = entityLivingStack[it]->getCoordinates().y;
+            int hp = entityLivingStack[it]->getHP();
+
+            std::vector<std::string> entityCharacteristics;
+            entityCharacteristics.push_back(save_entity.asString(coords_x));
+            entityCharacteristics.push_back(save_entity.asString(coords_y));
+            entityCharacteristics.push_back(save_entity.asString(hp));
+
+            std::string entityString = save_entity.conjoinString(entityCharacteristics);
+
+            save_entity.addItem(entityType, entityString);
+        }
+    }
+    save_entity.writeFile();
+}

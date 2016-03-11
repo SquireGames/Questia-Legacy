@@ -63,8 +63,9 @@ private:
     float playerAngle;
 
     ///Saves
+    SaveFile save_location;
     SaveFile save_character;
-    SaveFile save_test;
+    SaveFile save_entities;
 
     ///Key binds
 

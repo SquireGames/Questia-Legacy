@@ -18,7 +18,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , lightManager(mWindow, timeManager, resourceManager)
     , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager, true)
-    , entityManager (mWindow, resourceManager, lightManager, sf::Vector2f(800,2400))
+    , entityManager (mWindow, resourceManager, lightManager)
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)
@@ -32,8 +32,9 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , playerAngle(0)
 
     //saves
+    , save_location()
     , save_character()
-    , save_test("test.txt")
+    , save_entities()
 
     //keys
     , moveKey0(0)
@@ -53,37 +54,37 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 {
     //std::vector<std::string> path = Data_Desktop::getInstance().getFiles("Maps");
 
-    if(save_test.readFile())
-    {
-        std::vector<std::string> players = save_test.separateString(save_test.getItem("Players"));
-        players.push_back("Newbie");
-        save_test.saveItem("Players",save_test.conjoinString(players));
-        save_test.addComment("Players", "Amount of players");
-        save_test.writeFile();
-
-    }
-    else
-    {
-        std::vector<std::string> players;
-        players.push_back("Nano");
-        players.push_back("Skul");
-        players.push_back("Xeno");
-
-        save_test.clearSave();
-        save_test.saveItem("Players",save_test.conjoinString(players));
-        save_test.addItem("Zombie", 1);
-        save_test.addItem("Zombie", 2);
-
-        save_test.writeFile();
-    }
-
     ///saves
     //location
     std::stringstream sStream;
     sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "location" << ".txt";
+    save_location.setFilePath(sStream.str());
+    sStream.str(std::string());
+
+    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "character" << ".txt";
     save_character.setFilePath(sStream.str());
     sStream.str(std::string());
 
+    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "entities" << ".txt";
+    save_entities.setFilePath(sStream.str());
+    sStream.str(std::string());
+
+    save_location.readFile();
+    save_character.readFile();
+
+    if(save_entities.readFile())
+    {
+        std::vector<std::pair<std::string, std::string> >& entityVector = save_entities.getSaveList();
+        for(int it = 0; it != entityVector.size(); it++)
+        {
+            std::vector<std::string> entityInfo = save_entities.separateString(entityVector[it].second);
+            entityManager.createEntity(entityVector[it].first, sf::Vector2f(save_entities.asNumber(entityInfo[0]), save_entities.asNumber(entityInfo[1])));
+        }
+    }
+    else
+    {
+        save_entities.clearSave();
+    }
 
     guiManager.addButton(100, true, 0, 0, std::string("Media/Image/Game/Gui/PauseOverlay.png"),std::string(""), 30, 30, 1, 50, sf::Color::Transparent, sf::Color(123, 123, 123, 0));
     guiManager.addButton(101, true, 753, 400, std::string("Media/Image/Game/Gui/Buttons/PauseButton.png"),std::string("Main Menu"), 845, 410, 1, 50, sf::Color::Black, sf::Color(123, 123, 123, 100));
@@ -99,7 +100,11 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     overlayView.zoom(1);
 
     ///character
-    entityManager.createEntity("entity:player", sf::Vector2f(std::atoi(Data_Desktop::getInstance().getSaved_coordinates_x().c_str()),std::atoi(Data_Desktop::getInstance().getSaved_coordinates_y().c_str())));
+    entityManager.createPlayer(Data_Desktop::getInstance().getCharacterSelection(),
+                               sf::Vector2f(save_location.asNumber(save_location.getItem("coords_x")),save_location.asNumber(save_location.getItem("coords_y"))),
+                               save_character.asNumber(save_character.getItem("hp")), save_character.asNumber(save_character.getItem("maxHp")),
+                               save_character.asNumber(save_character.getItem("mp")), save_character.asNumber(save_character.getItem("maxMp")),
+                               save_character.asNumber(save_character.getItem("st")), save_character.asNumber(save_character.getItem("maxSt")));
 
     ///light init
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
@@ -197,7 +202,26 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 
     if(key == sf::Keyboard::Escape)
     {
-        Data_Desktop::getInstance().writeGameOptions(entityManager.getPlayerCoordinates());
+        save_location.saveItem("map", Data_Desktop::getInstance().getMapSelection());
+        save_location.saveItem("coords_x", entityManager.getPlayerCoordinates().x);
+        save_location.saveItem("coords_y", entityManager.getPlayerCoordinates().y);
+        save_location.writeFile();
+
+        int HP, MP, ST;
+        int maxHP, maxMP, maxST;
+        std::tie(HP,MP,ST,maxHP,maxMP,maxST) = entityManager.getPlayerStats();
+
+        save_character.saveItem("hp", HP);
+        save_character.saveItem("mp", MP);
+        save_character.saveItem("st", ST);
+        save_character.saveItem("maxHp", maxHP);
+        save_character.saveItem("maxMp", maxMP);
+        save_character.saveItem("maxSt", maxST);
+        save_character.writeFile();
+
+        save_entities.clearSave();
+        entityManager.saveEntities(save_entities);
+
         if(guiManager.buttonTimer())
         {
             if(!pause)
@@ -278,24 +302,8 @@ void State_Game::update(sf::Time elapsedTime)
     entityManager.update(tileEngine, player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
     spawnManager.checkSpawns();
 
-
-
     gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
-
-
-    //lightManager.moveLightSource(1,entityManager.getPlayerCoordinates());
-    /*
-    lightManager.moveLightSource(2,entityManager.getPlayerCoordinates());
-    lightManager.moveLightSource(3,entityManager.getPlayerCoordinates());
-    lightManager.moveLightSource(4,entityManager.getPlayerCoordinates());
-    lightManager.moveLightSource(5,entityManager.getPlayerCoordinates());
-    lightManager.moveLightSource(6,entityManager.getPlayerCoordinates());
-    lightManager.moveLightSource(7,entityManager.getPlayerCoordinates());
-    lightManager.moveLightSource(8,entityManager.getPlayerCoordinates());
-    */
-
-
 
     //Multi-player
     if(multiplayerManager.isRunningServer())

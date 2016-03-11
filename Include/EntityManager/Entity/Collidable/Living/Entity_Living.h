@@ -18,6 +18,7 @@ public:
     virtual void setST(int ST) = 0;
 
     virtual std::string getName() = 0;
+    virtual std::string getEntityType() = 0;
     virtual int getType() = 0;
 
     virtual void getNumb(int a, sf::Vector2i b) = 0;

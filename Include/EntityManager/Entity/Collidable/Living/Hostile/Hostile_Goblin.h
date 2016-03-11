@@ -8,7 +8,7 @@
 class Hostile_Goblin : public Entity_Living
 {
 public:
-    Hostile_Goblin(ResourceManager &res,EntityManager &entityManager, sf::Vector2f coordinates, int ID);
+    Hostile_Goblin(ResourceManager &res,EntityManager &entityManager, sf::Vector2f coordinates, int ID, std::string _entityType);
 
     ///default
     void drawEntity(sf::RenderWindow &mWindow);
@@ -28,6 +28,7 @@ public:
     int getMaxHP(){return maxHP;}
     int getMaxMP(){return maxMP;}
     int getMaxST(){return maxST;}
+    std::string getEntityType(){return entityType;}
 
     ///sets
     void getNumb(int distance, sf::Vector2i  entityCoords);
@@ -38,6 +39,8 @@ public:
 
 private:
     ///default
+    std::string entityType;
+
     int ID;
     sf::Sprite entitySprite;
     sf::Sprite entitySprite_HP;

@@ -13,7 +13,11 @@
 class Entity_Player : public Entity_Playable
 {
 public:
-    Entity_Player(ResourceManager &res,EntityManager &entityManager, LightManager& _lightManager, sf::Vector2f coordinates, int ID);
+    Entity_Player(ResourceManager &res,EntityManager &entityManager, LightManager& _lightManager,
+                sf::Vector2f coordinates, int ID, std::string _entityType,
+                int _hp, int _maxHp,
+                int _mp, int _maxMp,
+                int _st, int _maxSt);
     ~Entity_Player();
 
     ///default
@@ -39,6 +43,7 @@ public:
     int getMaxHP(){return maxHP;}
     int getMaxMP(){return maxMP;}
     int getMaxST(){return maxST;}
+    std::string getEntityType(){return entityType;}
 
     ///set's
     void setAngleToMouse(float angle);
@@ -62,6 +67,8 @@ private:
     float angleToMouse;
     sf::Vector2f velocity;
     const sf::Vector2f sideRadius;
+
+    std::string entityType;
 
 
     ///layers

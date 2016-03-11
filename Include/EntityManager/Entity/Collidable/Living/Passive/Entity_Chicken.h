@@ -8,7 +8,7 @@
 class Entity_Chicken : public Entity_Living
 {
 public:
-    Entity_Chicken(ResourceManager &res,EntityManager &entityManager, sf::Vector2f coordinates, int ID);
+    Entity_Chicken(ResourceManager &res,EntityManager &entityManager, sf::Vector2f coordinates, int ID, std::string _entityType);
 
     sf::Vector2f getSideRadius();
     sf::Vector2f getVelocity();
@@ -22,12 +22,15 @@ public:
     std::string getName();
     int getType();
     void getNumb(int a, sf::Vector2i  b);
+    std::string getEntityType(){return entityType;}
 
     void setCoordinates(sf::Vector2f coords) {coordinates = coords;}
 
     int ID;
 
 private:
+    std::string entityType;
+
     int hp;
     int mp;
     int stamina;

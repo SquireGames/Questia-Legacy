@@ -8,6 +8,7 @@
 #include "GuiManager.h"
 #include "ClassManager.h"
 #include "Namespace_Character.h"
+#include "Data/SaveFile.h"
 
 class State_CharacterSelection : public State
 {
@@ -58,6 +59,9 @@ private:
     std::vector <std::string> hairTypes;
     std::vector <std::string> eyeTypes;
     std::vector <std::string> skinTypes;
+
+    SaveFile save_location;
+    SaveFile save_character;
 };
 
 #endif // STATE_CHARACTERSELECTION_H

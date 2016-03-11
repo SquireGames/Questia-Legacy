@@ -42,8 +42,15 @@ bool SaveFile::readFile()
                 char firstCharacter = entry.at(0);
                 if(firstCharacter != '(')
                 {
-                    lineSeperator[iter] = entry;
-                    iter++;
+                    if(firstCharacter != ' ')
+                    {
+                        lineSeperator[iter] = entry;
+                        iter++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -51,9 +58,9 @@ bool SaveFile::readFile()
                 }
             }
 escapeStream:
+            saveList.push_back(std::make_pair(lineSeperator[0], lineSeperator[1]));
             sStream.str(std::string());
             sStream.clear();
-            saveList.push_back(std::make_pair(lineSeperator[0], lineSeperator[1]));
         }
     }
     else //file does not exist
@@ -77,7 +84,7 @@ void SaveFile::writeFile()
 
             if(commentList.count(saveList[it].first))
             {
-               fileStream << commentList[saveList[it].first];
+                fileStream << commentList[saveList[it].first];
             }
 
             if(it != saveList.size()-1)

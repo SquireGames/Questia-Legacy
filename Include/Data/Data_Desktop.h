@@ -39,32 +39,13 @@ public:
 
     sf::Keyboard::Key getKey(int keyNumber);
 
-    void setMostRecentChar(char c)
-    {
-        mostRecentChar = c;
-    }
-    char getMostRecentChar()
-    {
-        char temp = mostRecentChar;
-        mostRecentChar = ' ';
-        return temp;
-    }
+    void setMostRecentChar(char c){mostRecentChar = c;}
+    char getMostRecentChar(){char temp = mostRecentChar; mostRecentChar = ' ';return temp;}
 
-    void setMouseWheelDelta(int delta)
-    {
-        mouseWheelDelta = delta;
-    }
-    int getMouseWheelDelta()
-    {
-        int tempMouseWheelDelta = mouseWheelDelta;
-        mouseWheelDelta = 0;
-        return tempMouseWheelDelta;
-    }
+    void setMouseWheelDelta(int delta){mouseWheelDelta = delta;}
+    int  getMouseWheelDelta(){int tempMouseWheelDelta = mouseWheelDelta; mouseWheelDelta = 0; return tempMouseWheelDelta;}
 
-    SaveFile& getSaveOptions()
-    {
-        return save_options;
-    }
+    SaveFile& getSaveOptions(){return save_options;}
 
 private:
     SaveFile save_options;
@@ -90,14 +71,8 @@ private:
 
     // map selection
 public:
-    std::string getMapSelection()
-    {
-        return mapSelection;
-    }
-    void setMapSelection(std::string newMap)
-    {
-        mapSelection = newMap;
-    }
+    std::string getMapSelection(){return mapSelection;}
+    void setMapSelection(std::string newMap){mapSelection = newMap;}
 private:
     std::string mapSelection;
 
@@ -105,32 +80,14 @@ private:
 public:
     void writeGameOptions(sf::Vector2f coordinates);
 
-    std::string getCharacterSelection()
-    {
-        return characterSelection;
-    }
-    void setCharacterSelection(std::string newCharacter)
-    {
-        characterSelection = newCharacter;
-    }
+    std::string getCharacterSelection(){return characterSelection;}
+    void setCharacterSelection(std::string newCharacter){characterSelection = newCharacter;}
 
-    std::string getSaved_coordinates_x()
-    {
-        return saved_coordinates_x;
-    }
-    void setSaved_coordinates_x(std::string _saved_coordinates_x)
-    {
-        saved_coordinates_x = _saved_coordinates_x;
-    }
+    std::string getSaved_coordinates_x(){return saved_coordinates_x;}
+    void setSaved_coordinates_x(std::string _saved_coordinates_x){saved_coordinates_x = _saved_coordinates_x;}
 
-    std::string getSaved_coordinates_y()
-    {
-        return saved_coordinates_y;
-    }
-    void setSaved_coordinates_y(std::string _saved_coordinates_y)
-    {
-        saved_coordinates_y = _saved_coordinates_y;
-    }
+    std::string getSaved_coordinates_y(){return saved_coordinates_y;}
+    void setSaved_coordinates_y(std::string _saved_coordinates_y){saved_coordinates_y = _saved_coordinates_y;}
 
 private:
     std::string characterSelection;

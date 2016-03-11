@@ -11,6 +11,8 @@
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Playable.h"
 #include "Entity_Interactable.h"
 
+#include "SaveFile.h"
+
 #include "ResourceManager.h"
 #include "TileEngine.h"
 #include "LightManager.h"
@@ -18,7 +20,7 @@
 class EntityManager
 {
 public:
-    EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager,  sf::Vector2f coordinates);
+    EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager);
     ~EntityManager();
 
     void handleInput(int actionType,bool isPressed,int player);
@@ -31,12 +33,17 @@ public:
     int getPlayerID() {return playerID;}
     int getPlayerID_2() {return playerID_2;}
 
+    void saveEntities(SaveFile& save_entity);
 
     int getEntityCount();
 
     int createEntity(int entity, sf::Vector2f coordinates);
     int createEntity(std::string entityName, sf::Vector2f coordinates);
 
+    int createPlayer(std::string playerName, sf::Vector2f coordinates,
+                    int hp, int maxHp,
+                    int mp, int maxMp,
+                    int st, int maxSt);
 
     int createSpecialEntity(int entity, int _attackerID, std::string _attackerName,
                              sf::Vector2f _coordinates, sf::Vector2f _velocity, float _angle,
@@ -59,8 +66,6 @@ private:
 
     int playerID;
     int playerID_2;
-
-    sf::Vector2f playerSpawn;
 
     int spawnTick;
 

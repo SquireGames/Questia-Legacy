@@ -25,6 +25,8 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     , deleteProgress (0)
 
     , selectedClassType(Character::ClassType::none)
+
+    , save_location()
 {
     background.setTexture(resourceManager.getTexture("Media/Image/Menu/Options.png"));
 
@@ -435,28 +437,6 @@ void State_CharacterSelection::displayTextures()
 
 bool State_CharacterSelection::local_createCharacter()
 {
-    //std::string skills;
-    //std::string inventory;
-    //std::string quests;
-
-    std::string fileName_character  = "character";
-    std::string fileName_mapInfo    = "mapInfo";
-    std::string fileName_tempInfo   = "tempInfo";
-
-    std::string result_name;
-    std::string result_mapInfo;
-    std::string result_tempInfo;
-
-    std::stringstream ss;
-    ss << "Saves/Characters/" << options[0] << "/" << fileName_character << ".txt";
-    ss >> result_name;
-    std::stringstream ss2;
-    ss2 << "Saves/Characters/" << options[0] << "/" << fileName_mapInfo << ".txt";
-    ss2 >> result_mapInfo;
-    std::stringstream ss3;
-    ss3 << "Saves/Characters/" << options[0] << "/" << fileName_tempInfo << ".txt";
-    ss3 >> result_tempInfo;
-
     boost::filesystem::path directory("Saves/Characters/" + options[0]);
     if(!(boost::filesystem::exists(directory)))
     {
@@ -488,43 +468,31 @@ bool State_CharacterSelection::local_createCharacter()
         break;
     }
 
-    std::ofstream characterTxt;
-    characterTxt.open(result_name, std::ofstream::out);
-    if(characterTxt.is_open())
-    {
-        characterTxt << "Name:" << options[0] << std::endl;
-        characterTxt << "Class:" << options[1] << std::endl;
-    }
-    else
-    {
-        return false;
-    }
+    std::stringstream sStream;
+    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "location" << ".txt";
+    save_location.setFilePath(sStream.str());
+    sStream.str(std::string());
+    sStream.clear();
+    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "character" << ".txt";
+    save_character.setFilePath(sStream.str());
+    sStream.str(std::string());
+    sStream.clear();
 
-    std::ofstream characterMapInfo;
-    characterMapInfo.open(result_mapInfo, std::ofstream::out);
-    if(characterMapInfo.is_open())
-    {
-        characterMapInfo << "Map:" << "Tutorial_1" << std::endl;
-        characterMapInfo << "Coordinates_x:" << "800" << std::endl;
-        characterMapInfo << "Coordinates_y:" << "2400" << std::endl;
-    }
-    else
-    {
-        return false;
-    }
 
-    std::ofstream characterTempInfo;
-    characterTempInfo.open(result_tempInfo, std::ofstream::out);
-    if(characterTempInfo.is_open())
-    {
-        characterTempInfo << "HP:" << "unassigned" << std::endl;
-        characterTempInfo << "SP:" << "unassigned" << std::endl;
-        characterTempInfo << "MP:" << "unassigned" << std::endl;
-    }
-    else
-    {
-        return false;
-    }
+    save_location.clearSave();
+    save_location.saveItem("map", "Tutorial_1");
+    save_location.saveItem("coords_x", 800);
+    save_location.saveItem("coords_y", 2400);
+    save_location.writeFile();
+
+    save_character.clearSave();
+    save_character.saveItem("hp",    100);
+    save_character.saveItem("maxHp", 100);
+    save_character.saveItem("mp",    50);
+    save_character.saveItem("maxMp", 50);
+    save_character.saveItem("st",    100);
+    save_character.saveItem("maxSt", 100);
+    save_character.writeFile();
 
     return true;
 }
@@ -560,57 +528,21 @@ bool State_CharacterSelection::local_deleteCharacter()
 
 bool State_CharacterSelection::local_loadCharacter()
 {
-    std::stringstream ss;
-    ss << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/mapInfo.txt";
-    std::ifstream openFile;
-    openFile.open(ss.str());
-    if(openFile.is_open() && openFile.good())
+    std::stringstream sStream;
+    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "location" << ".txt";
+    save_location.setFilePath(sStream.str());
+    sStream.str(std::string());
+    sStream.clear();
+
+    if(save_location.readFile())
     {
-        std::stringstream sStream;
-        std::map <int, std::string> optionsVector;
-        int level = 0;
-        while(!openFile.eof())
-        {
-            char line[200];
-            for(int y = 0; y!= 200; y++)
-            {
-                line[y] = ' ';
-            }
-            openFile.getline(line, 200);
-            int it = 0;
-
-            for(it; it != 200; it++)
-            {
-                if(line[it] == ':')
-                {
-                    for(int x = 1; x < 20; x++)
-                    {
-                        if(line[it+x] != '(' && line[it+x] != ' ' && line[it+x] != '\0')
-                        {
-                            sStream << line[it+x];
-                        }
-                        else
-                        {
-                            x = 20;
-                        }
-                    }
-                    std::string optionString;
-                    sStream >> optionString;
-                    optionsVector[level] = optionString;
-                    it = 199;
-                    sStream.clear();
-                }
-            }
-            level++;
-        }
-
-        Data_Desktop::getInstance().setMapSelection(optionsVector[0]);
-        Data_Desktop::getInstance().setSaved_coordinates_x(optionsVector[1]);
-        Data_Desktop::getInstance().setSaved_coordinates_y(optionsVector[2]);
-
+        Data_Desktop::getInstance().setMapSelection(save_location.getItem("map"));
         return true;
     }
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 

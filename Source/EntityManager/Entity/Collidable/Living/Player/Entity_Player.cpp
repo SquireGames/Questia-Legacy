@@ -4,7 +4,11 @@
 
 #define DEBUGMODE false
 
-Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,  sf::Vector2f coordinates, int ID):
+Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,
+                             sf::Vector2f coordinates, int ID, std::string _entityType,
+                             int _hp, int _maxHp,
+                             int _mp, int _maxMp,
+                             int _st, int _maxSt):
     coordinates(coordinates.x,coordinates.y)
     , ID(ID)
     , entityManager(entityManager)
@@ -16,12 +20,14 @@ Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager,
     , sideRadius(12.5, 12.5)
     , velocity(12, 12)
 
-    , maxHP(100)
-    , maxMP(50)
-    , maxST(100)
-    , hp(100)
-    , mp(50)
-    , stamina(100)
+    , maxHP(_maxHp)
+    , maxMP(_maxMp)
+    , maxST(_maxSt)
+    , hp(_hp)
+    , mp(_mp)
+    , stamina(_st)
+
+    , entityType(_entityType)
 
     , mIsMovingUp(false)
     , mIsMovingDown(false)

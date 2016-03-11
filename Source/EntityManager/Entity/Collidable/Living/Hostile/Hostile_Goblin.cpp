@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 
-Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManager,sf::Vector2f coordinates, int aID):
+Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManager,sf::Vector2f coordinates, int aID, std::string _entityType):
     coordinates(coordinates.x,coordinates.y)
     , ID(aID)
     , sideRadius(12.5, 12.5)
@@ -16,6 +16,8 @@ Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManag
     , maxMP(0)
     , maxST(50)
 
+    , entityType(_entityType)
+
     , entityManager(entityManager)
     , res(res)
 
@@ -27,7 +29,7 @@ Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManag
     , direction(0)
     , entityStep(1)
 
-    , entityState(passive)
+    , entityState(melee)
 {
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Hostile/hostile_goblin.png"));
     entitySprite.setTextureRect(sf::IntRect(27,0,24,50));
