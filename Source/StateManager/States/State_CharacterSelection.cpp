@@ -115,6 +115,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
         }
         if(optionsIterator == questions.size())
         {
+            Data_Desktop::getInstance().setCharacterSelection(options[0]);
             if(local_createCharacter())
             {
                 characterFiles = Data_Desktop::getInstance().getFiles("Saves/Characters", false);

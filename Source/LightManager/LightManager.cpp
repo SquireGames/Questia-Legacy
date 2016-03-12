@@ -432,9 +432,9 @@ void LightManager::flickerLight(int id, float lowerBound, float upperBound)
                     lightingList[x]->lightSprite.setScale(newScale, newScale);
                     lightingList[x]->lightSpriteColor.setScale(newScale, newScale);
 
-                    std::cout << "Upper: " << upper << std::endl;
-                    std::cout << "Lower: " << lower << std::endl;
-                    std::cout << "Scale: " << scale << std::endl;
+                    //std::cout << "Upper: " << upper << std::endl;
+                    //std::cout << "Lower: " << lower << std::endl;
+                    //std::cout << "Scale: " << scale << std::endl;
                     //std::cout << "Flicker: " << lightingList[x]->lightSprite.getScale().x << std::endl;
                 }
                 return;

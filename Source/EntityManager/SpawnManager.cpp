@@ -2,7 +2,6 @@
 #include <sstream>
 #include <fstream>
 
-
 SpawnManager::SpawnManager(bool game, EntityManager &entityManage):
     entityManager(entityManage)
 {
@@ -16,148 +15,75 @@ SpawnManager::~SpawnManager()
 
 void SpawnManager::loadSpawnFile(std::string mapName)
 {
-    std::stringstream ss;
-    std::string naturalSpawnSt;
-    ss << "Maps/";
-    ss << mapName;
-    ss << "/spawn.txt";
-    ss >> naturalSpawnSt;
-    ss.clear();
+    std::vector <spawnInfo> spawns;
 
-    std::ifstream openfile;
+    SaveFile save_spawn;
 
-    openfile.open(naturalSpawnSt);
+    std::stringstream sStream;
+    sStream << "Maps/" << mapName << "/spawn.txt";
+    save_spawn.setFilePath(sStream.str());
+    sStream.str(std::string());
 
-    if (!openfile.is_open())
+    if(save_spawn.readFile())
     {
-        std::cout<<"DEBUG: Map "<<naturalSpawnSt<<"Spawns failed to load"<<std::endl;
-        std::cout<<"DEBUG: Creating spawn file: "<< naturalSpawnSt <<std::endl;
-        std::ofstream newFile;
-        newFile.open(naturalSpawnSt, std::ofstream::out);
-    }
-
-    if(openfile.is_open())
-    {
-        std::vector<std::tuple<int, sf::Vector2i> > spawns;
-        while(!openfile.eof())
+        std::vector <std::pair <std::string, std::string> > spawnVector = save_spawn.getSaveList();
+        for(int it = 0; it != spawnVector.size(); it++)
         {
-            std::string entity;
-            std::string x;
-            std::string y;
-            std::string type;
-            std::string subType;
+            std::vector <std::string> entityData = save_spawn.separateString(spawnVector[it].second);
 
-
-            char line[200];
-            for(int y = 0; y!= 200; y++)
+            if(spawnVector[it].first != "entityName")
             {
-                line[y] = ' ';
-            }
-            openfile.getline(line, 200);
+                spawnInfo entitySpawn;
+                entitySpawn.entityType = spawnVector[it].first;
+                entitySpawn.coords_x = (save_spawn.asNumber(entityData[0]) * 32) + 15;
+                entitySpawn.coords_y = (save_spawn.asNumber(entityData[1]) * 32) + 15;
+                entitySpawn.cooldown = save_spawn.asNumber(entityData[2]);
+                // Temporary
+                entitySpawn.ID = -1;
+                entitySpawn.dead = false;
+                entitySpawn.cooldown_current = 0;
 
-            int character = 0;
-            for(char it = '?'; it != ' ';)
-            {
-                it = line[character];
-                ss << line[character];
-                character++;
-            }
-            ss >> entity;
-            ss.clear();
+                std::cout << "Spawn:" << entitySpawn.entityType << "," << entitySpawn.coords_x << "," << entitySpawn.coords_y << std::endl;
 
-            for(char it = '?'; it != ' ';)
-            {
-                it = line[character];
-                ss << line[character];
-                character++;
-            }
-
-            ss >> x;
-            ss.clear();
-
-            for(char it = '?'; it != ' ';)
-            {
-                it = line[character];
-                ss << line[character];
-                character++;
-            }
-
-            ss >> y;
-            ss.clear();
-
-            for(char it = '?'; it != ' ';)
-            {
-                it = line[character];
-                ss << line[character];
-                character++;
-            }
-
-            ss >> type;
-            ss.clear();
-
-            for(char it = '?'; it != ' ' && it != '\0';)
-            {
-                it = line[character];
-                ss << line[character];
-                character++;
-            }
-
-            ss >> subType;
-            ss.clear();
-
-            int entityInt, xInt, yInt;
-
-            if(entity == "chicken")
-            {
-                entityInt = 1;
-            }
-            else if(entity == "goblin")
-            {
-                entityInt = 2;
-            }
-
-            else if(entity == "roof")
-            {
-                entityInt = 0;
-                entityManager.createInteravtiveEntity(1, std::atoi(x.c_str()) * 32,std::atoi(y.c_str()) * 32,std::atoi(type.c_str()), std::atoi(subType.c_str()));
-            }
-            else if(entity == "door")
-            {
-                entityInt = 0;
-                entityManager.createInteravtiveEntity(2, std::atoi(x.c_str()) * 32,std::atoi(y.c_str()) * 32,std::atoi(type.c_str()), std::atoi(subType.c_str()));
-            }
-
-            else
-            {
-                entityInt = 0;
-            }
-
-            if(entityInt != 0)
-            {
-                spawns.push_back(std::make_tuple(entityInt, sf::Vector2i((std::atoi(x.c_str())* 32) +15,(std::atoi(y.c_str())* 32) +15)));
+                spawns.push_back(entitySpawn);
             }
         }
-        setNaturalSpawns(spawns);
     }
-}
-
-void SpawnManager::setNaturalSpawns(std::vector<std::tuple<int, sf::Vector2i> > naturalSpawns)
-{
-    for(int x = 0; x < naturalSpawns.size(); x++)
+    else
     {
-        int entity;
-        sf::Vector2i coords;
+        save_spawn.saveItem("entityName","tile_x,tile_y,cooldown");
+        save_spawn.writeFile();
+    }
+    spawningInfo = spawns;
 
-        std::tie(entity, coords) = naturalSpawns[x];
+    SaveFile save_interactive;
 
-        spawnInfo info;
-        info.entity = entity;
-        info.coordinates = coords;
-        info.cooldown = 0;
-        info.ID = -1;
-        info.dead = false;
+    sStream << "Maps/" << mapName << "/interactive.txt";
+    save_interactive.setFilePath(sStream.str());
+    sStream.str(std::string());
 
-        spawningInfo.push_back(info);
+    if(save_interactive.readFile())
+    {
+        std::vector <std::pair <std::string, std::string> > spawnVector = save_interactive.getSaveList();
+        for(int it = 0; it != spawnVector.size(); it++)
+        {
+            std::vector <std::string> entityData = save_interactive.separateString(spawnVector[it].second);
+
+            std::string entityType = spawnVector[it].first;
+            int coord_x = save_interactive.asNumber(entityData[0]) * 32;
+            int coord_y = save_interactive.asNumber(entityData[1]) * 32;
+
+            if(entityType != "objectName")
+            {
+                //Do stuff
+                //entityManager.createInteravtiveEntity(1, std::atoi(x.c_str()) * 32,std::atoi(y.c_str()) * 32,std::atoi(type.c_str()), std::atoi(subType.c_str()));
+            }
+        }
+    }
+    else
+    {
+        save_interactive.saveItem("objectName","tile_x,tile_y");
+        save_interactive.writeFile();
     }
 }
 
@@ -175,34 +101,19 @@ void SpawnManager::checkSpawns()
         }
     }
 
-
     sf::Vector2i coords = sf::Vector2i(entityManager.getPlayerCoordinates().x, entityManager.getPlayerCoordinates().y);
 
     for(int x = 0; x < spawningInfo.size(); x++)
     {
-        if(spawningInfo[x].cooldown == 0)
+        if(spawningInfo[x].cooldown_current == 0)
         {
-            if(std::abs(coords.x - spawningInfo[x].coordinates.x) < 3000 )
+            if(std::abs(coords.x - spawningInfo[x].coords_x) < 3000 )
             {
-                if(std::abs(coords.y - spawningInfo[x].coordinates.y) < 2000 )
+                if(std::abs(coords.y - spawningInfo[x].coords_y) < 2000 )
                 {
-                    switch(spawningInfo[x].entity)
-                    {
-                    case 1:
-                        spawningInfo[x].dead = false;
-                        spawningInfo[x].cooldown = 500;
-                        spawningInfo[x].ID = entityManager.createEntity(1, sf::Vector2f(spawningInfo[x].coordinates.x,spawningInfo[x].coordinates.y));
-                        //std::cout<<"SPAWNMAMAGER -- LIFE  "<< spawningInfo[x].ID  << std::endl;
-                        break;
-                    case 2:
-                        spawningInfo[x].dead = false;
-                        spawningInfo[x].cooldown = 500;
-                        spawningInfo[x].ID = entityManager.createEntity(2, sf::Vector2f(spawningInfo[x].coordinates.x,spawningInfo[x].coordinates.y));
-                        break;
-                    default:
-                        std::cout<<"No entity: " <<spawningInfo[x].entity<< std::endl;
-                        break;
-                    }
+                    spawningInfo[x].dead = false;
+                    spawningInfo[x].cooldown_current = spawningInfo[x].cooldown;
+                    spawningInfo[x].ID = entityManager.createEntity(spawningInfo[x].entityType,sf::Vector2f(spawningInfo[x].coords_x,spawningInfo[x].coords_y));
                 }
             }
         }
@@ -210,7 +121,7 @@ void SpawnManager::checkSpawns()
         {
             if(spawningInfo[x].dead == true)
             {
-                spawningInfo[x].cooldown =  spawningInfo[x].cooldown - 1;
+                spawningInfo[x].cooldown_current =  spawningInfo[x].cooldown_current - 1;
             }
         }
     }

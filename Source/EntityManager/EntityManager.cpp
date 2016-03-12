@@ -188,7 +188,6 @@ int EntityManager::createEntity(std::string entityName, sf::Vector2f coordinates
 
         std::cout<<"DEBUG: Created entity: " << "Goblin     ID: " << IDNumber <<std::endl;
 
-
         entityStack.push_back(entity);
         entityCollidableStack.push_back(entity);
         entityLivingStack.push_back(entity);

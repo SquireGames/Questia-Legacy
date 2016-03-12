@@ -23,8 +23,6 @@ public:
 
     void setFilePath(std::string _fileName) {fileName = _fileName;}
 
-
-
     template <class T>
     void addItem  (std::string itemName, T item) // saving lists of entities, things with the same type
     {
