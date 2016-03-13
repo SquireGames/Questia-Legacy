@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <tuple>
+#include <map>
 
 #include "SaveFile.h"
 #include "EntityManager/EntityManager.h"
@@ -14,13 +15,17 @@ public:
     ~SpawnManager();
 
     void checkSpawns();
+    void saveSpawns(SaveFile& save_spawn);
+    void loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, std::vector <int> savedID, std::map <int, int> newID);
     void loadSpawnFile(std::string mapName);
+    void addSpawnInfo();
 
 private:
     ///Natural spawns
     struct spawnInfo
     {
         std::string entityType;
+        int spawnNumber;
         int coords_x;
         int coords_y;
         int ID;

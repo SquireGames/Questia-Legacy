@@ -34,6 +34,7 @@ public:
     int getPlayerID_2() {return playerID_2;}
 
     void saveEntities(SaveFile& save_entity);
+    void setCharacteristic(int ID, std::string characteristic, int amount);
 
     int getEntityCount();
 
@@ -49,7 +50,7 @@ public:
                              sf::Vector2f _coordinates, sf::Vector2f _velocity, float _angle,
                              int _duration, int _attackDamage, float _sizeMultiplier, float _timeMultiplier,
                              int _extra);
-    void createInteravtiveEntity(int entity, int x, int y, int type, int subtype);
+    void createInteravtiveEntity(std::string entity, int x, int y, int type, int subtype);
 
     void destroyEntity(int entityID);
     void drawEntity();

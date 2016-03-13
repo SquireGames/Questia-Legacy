@@ -484,6 +484,7 @@ bool State_CharacterSelection::local_createCharacter()
     save_location.saveItem("map", "Tutorial_1");
     save_location.saveItem("coords_x", 800);
     save_location.saveItem("coords_y", 2400);
+    save_location.saveItem("time", 360);
     save_location.writeFile();
 
     save_character.clearSave();

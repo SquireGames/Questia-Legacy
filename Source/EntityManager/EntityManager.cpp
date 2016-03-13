@@ -139,6 +139,7 @@ int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
     return IDNumber;
 }
 
+
 int EntityManager::createPlayer(std::string playerName, sf::Vector2f coordinates,
                                 int hp, int maxHp,
                                 int mp, int maxMp,
@@ -257,36 +258,25 @@ int EntityManager::createSpecialEntity(int entity, int _attackerID, std::string 
     return IDNumber;
 }
 
-void EntityManager::createInteravtiveEntity(int entity, int x, int y, int type, int subtype)
+void EntityManager::createInteravtiveEntity(std::string entity, int x, int y, int type, int subtype)
 {
     int IDNumber = getIDNumber();
 
-    switch (entity)
-    {
-    case 1:
+    if(entity == "roof")
     {
         Interact_Roof* entity = new Interact_Roof(resourceManager, IDNumber, x, y, type, subtype);
         std::cout<<"DEBUG: Created entity: " << "Item     ID: " << IDNumber <<std::endl;
 
         entityStack.push_back(entity);
         entityInteractStack.push_back(entity);
-
-        break;
     }
-    case 2:
+    else if(entity == "door")
     {
         Interact_Door* entity = new Interact_Door(resourceManager, IDNumber, x, y, type, subtype);
         std::cout<<"DEBUG: Created entity: " << "Item     ID: " << IDNumber <<std::endl;
 
         entityStack.push_back(entity);
         entityInteractStack.push_back(entity);
-
-        break;
-    }
-    default:
-    {
-        break;
-    }
     }
 }
 
@@ -728,11 +718,26 @@ std::vector <int> EntityManager::getDeadIDs()
     return IDs;
 }
 
+void EntityManager::setCharacteristic(int ID, std::string characteristic, int amount)
+{
+    for(int it = 0; it != entityLivingStack.size(); it++)
+    {
+        if(entityLivingStack[it]->returnID() == ID)
+        {
+            if(characteristic == "hp")
+            {
+                entityLivingStack[it]->setHP(amount);
+            }
+        }
+    }
+}
+
+
 void EntityManager::saveEntities(SaveFile& save_entity)
 {
     for(int it = 0; it != entityLivingStack.size(); it++)
     {
-        if(entityLivingStack[it]->returnID() != playerID && entityLivingStack[it]->returnID() != playerID_2)
+        if(entityLivingStack[it]->returnID() != playerID)// && entityLivingStack[it]->returnID() != playerID_2)
         {
             std::string entityType = entityLivingStack[it]->getEntityType();
 
@@ -741,6 +746,7 @@ void EntityManager::saveEntities(SaveFile& save_entity)
             int hp = entityLivingStack[it]->getHP();
 
             std::vector<std::string> entityCharacteristics;
+            entityCharacteristics.push_back(save_entity.asString(entityLivingStack[it]->returnID()));
             entityCharacteristics.push_back(save_entity.asString(coords_x));
             entityCharacteristics.push_back(save_entity.asString(coords_y));
             entityCharacteristics.push_back(save_entity.asString(hp));

@@ -47,6 +47,16 @@ public:
         addItem(itemName, item);
     }
 
+    std::vector<std::string> getItemList()
+    {
+        std::vector<std::string> itemList;
+        for(int it = 0; it != saveList.size(); it++)
+        {
+            itemList.push_back(saveList[it].first);
+        }
+        return itemList;
+    }
+
     bool readFile();  // gets updated vector
     void writeFile(); // saves changes
     void clearSave(); // clears map

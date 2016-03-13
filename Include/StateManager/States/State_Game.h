@@ -66,6 +66,7 @@ private:
     SaveFile save_location;
     SaveFile save_character;
     SaveFile save_entities;
+    SaveFile save_spawn;
 
     ///Key binds
 

@@ -35,6 +35,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , save_location()
     , save_character()
     , save_entities()
+    , save_spawn()
 
     //keys
     , moveKey0(0)
@@ -69,8 +70,17 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     save_entities.setFilePath(sStream.str());
     sStream.str(std::string());
 
+    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "spawn" << ".txt";
+    save_spawn.setFilePath(sStream.str());
+    sStream.str(std::string());
+
     save_location.readFile();
     save_character.readFile();
+
+    timeManager.setTime(save_location.asNumber(save_location.getItem("time")));
+
+    std::vector <int> savedID;
+    std::map <int, int> newID; //old ID, new ID
 
     if(save_entities.readFile())
     {
@@ -78,7 +88,10 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
         for(int it = 0; it != entityVector.size(); it++)
         {
             std::vector<std::string> entityInfo = save_entities.separateString(entityVector[it].second);
-            entityManager.createEntity(entityVector[it].first, sf::Vector2f(save_entities.asNumber(entityInfo[0]), save_entities.asNumber(entityInfo[1])));
+            int entityID = entityManager.createEntity(entityVector[it].first, sf::Vector2f(save_entities.asNumber(entityInfo[1]), save_entities.asNumber(entityInfo[2])));
+            entityManager.setCharacteristic(entityID,"hp", save_entities.asNumber(entityInfo[3]));
+            savedID.push_back(save_entities.asNumber(entityInfo[0]));
+            newID[save_entities.asNumber(entityInfo[0])] = entityID;
         }
     }
     else
@@ -111,7 +124,16 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
     ///loading the map
     tileEngine.loadMap(Data_Desktop::getInstance().getMapSelection(), true);
-    spawnManager.loadSpawnFile(Data_Desktop::getInstance().getMapSelection());
+    if(save_spawn.readFile())
+    {
+        spawnManager.loadSpawnFile(Data_Desktop::getInstance().getMapSelection(), save_spawn, savedID, newID);
+    }
+    else
+    {
+        save_spawn.clearSave();
+        spawnManager.loadSpawnFile(Data_Desktop::getInstance().getMapSelection(), save_spawn, savedID, newID);
+    }
+
 
     ///rebindable keys
     moveKey0.keyType = 0;
@@ -205,6 +227,7 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         save_location.saveItem("map", Data_Desktop::getInstance().getMapSelection());
         save_location.saveItem("coords_x", entityManager.getPlayerCoordinates().x);
         save_location.saveItem("coords_y", entityManager.getPlayerCoordinates().y);
+        save_location.saveItem("time", timeManager.getTime());
         save_location.writeFile();
 
         int HP, MP, ST;
@@ -221,6 +244,8 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 
         save_entities.clearSave();
         entityManager.saveEntities(save_entities);
+        save_spawn.clearSave();
+        spawnManager.saveSpawns(save_spawn);
 
         if(guiManager.buttonTimer())
         {

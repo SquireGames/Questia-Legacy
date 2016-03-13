@@ -5,7 +5,7 @@
 Entity_Chicken::Entity_Chicken( ResourceManager& res, EntityManager& entityManager,sf::Vector2f coordinates, int aID, std::string _entityType):
     coordinates(coordinates.x,coordinates.y)
     , sideRadius(12.5, 12.5)
-    , velocity(1.f, 1.f)
+    , velocity(0.85f, 0.85f)
     , hp(30)
     , mp(0)
     , stamina(50.f)
@@ -145,6 +145,10 @@ void Entity_Chicken::update(int effect, int (&returnCollision)[4])
     if(returnCollision[1] == 0 && mIsMovingRight)
     {
         coordinates.x = coordinates.x + velocity.x;
+    }
+    if((returnCollision[0] == 1 && mIsMovingUp)||(returnCollision[2] == 1 && mIsMovingDown)||(returnCollision[3] == 1 && mIsMovingLeft)||(returnCollision[1] == 1 && mIsMovingRight))
+    {
+        AIInt+=200;
     }
 
 

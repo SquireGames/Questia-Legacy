@@ -3,7 +3,7 @@
 TimeManager::TimeManager(unsigned char _hour, unsigned char _minute):
     hour(_hour)
     , minute(_minute)
-    , timeStep (1)
+    , timeStep (30)
 {
 
 }
