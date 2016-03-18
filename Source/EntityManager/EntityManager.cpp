@@ -21,6 +21,8 @@
 #include "EntityManager/Entity/Collidable/Entity_Collidable.h"
 #include "ResourceManager.h"
 
+#include "Utl.h"
+
 
 EntityManager::EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager):
     window (mWindow)
@@ -454,7 +456,7 @@ void EntityManager::attackCheck()
 {
     for(int x = 0; x < entityLivingStack.size(); x++)
     {
-        if(entityLivingStack[x]->getType() == 10)
+        if(entityLivingStack[x]->getCategory() == hostile)
         {
             sf::Vector2f coords (-1000, -1000);
             int distance = 1000000;
@@ -465,7 +467,7 @@ void EntityManager::attackCheck()
 
             for(int y = 0; y < entityLivingStack.size(); y++)
             {
-                if(entityLivingStack[y]->getType() == 5 || entityLivingStack[y]->getType() == 1)
+                if(entityLivingStack[y]->getCategory() == passive || entityLivingStack[y]->getCategory() == player)
                 {
                     int X2, Y2;
                     int distanceTemp;
@@ -525,13 +527,13 @@ void EntityManager::attackCheck()
                         {
                             entityLivingStack[y]->setHP(entityLivingStack[y]->getHP() - entityDamageStack[x]->getDamage(entityLivingStack[y]->returnID()));
                         }
-                        if(entityLivingStack[y]->getType() == 5)
+                        if(entityLivingStack[y]->getCategory() == passive)
                         {
                             for(int z = 0; z < entityLivingStack.size(); z++)
                             {
                                 if(entityDamageStack[x]->getAttackerID() == entityLivingStack[z]->returnID())
                                 {
-                                    if(entityLivingStack[z]->getType() == 10)
+                                    if(entityLivingStack[z]->getCategory() == hostile)
                                     {
                                         entityLivingStack[y]->setHP(entityLivingStack[y]->getHP() - entityDamageStack[x]->getDamage(entityLivingStack[y]->returnID()));
                                     }
@@ -737,6 +739,9 @@ void EntityManager::saveEntities(SaveFile& save_entity)
 {
     for(int it = 0; it != entityLivingStack.size(); it++)
     {
+        entityLivingStack[it]->saveEntity();
+        std::map <std::string, std::string>& characteristicMap = entityLivingStack[it]->getSaveCharacteristics();
+
         if(entityLivingStack[it]->returnID() != playerID)// && entityLivingStack[it]->returnID() != playerID_2)
         {
             std::string entityType = entityLivingStack[it]->getEntityType();
@@ -746,12 +751,12 @@ void EntityManager::saveEntities(SaveFile& save_entity)
             int hp = entityLivingStack[it]->getHP();
 
             std::vector<std::string> entityCharacteristics;
-            entityCharacteristics.push_back(save_entity.asString(entityLivingStack[it]->returnID()));
-            entityCharacteristics.push_back(save_entity.asString(coords_x));
-            entityCharacteristics.push_back(save_entity.asString(coords_y));
-            entityCharacteristics.push_back(save_entity.asString(hp));
+            entityCharacteristics.push_back(utl::asString(entityLivingStack[it]->returnID()));
+            entityCharacteristics.push_back(utl::asString(coords_x));
+            entityCharacteristics.push_back(utl::asString(coords_y));
+            entityCharacteristics.push_back(utl::asString(hp));
 
-            std::string entityString = save_entity.conjoinString(entityCharacteristics);
+            std::string entityString = utl::conjoinString(entityCharacteristics, ',');
 
             save_entity.addItem(entityType, entityString);
         }

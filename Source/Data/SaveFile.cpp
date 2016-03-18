@@ -112,36 +112,6 @@ std::string SaveFile::getItem(std::string itemName)
         }
     }
 }
-std::vector <std::string> SaveFile::separateString (std::string saveString)
-{
-    std::vector <std::string> returnVector;
-
-    sStream << saveString;
-    while (sStream.good())
-    {
-        std::string entry;
-        std::getline(sStream, entry, ',');
-        returnVector.push_back(entry);
-    }
-    sStream.str(std::string());
-    sStream.clear();
-    return returnVector;
-}
-std::string SaveFile::conjoinString (std::vector <std::string> stringParts)
-{
-    for(int it = 0; it != stringParts.size(); it++)
-    {
-        sStream << stringParts[it];
-        if(it != stringParts.size()-1)
-        {
-            sStream << ",";
-        }
-    }
-    std::string conjoinedString = sStream.str();
-    sStream.str(std::string());
-    sStream.clear();
-    return conjoinedString;
-}
 
 void SaveFile::addComment(std::string item, std::string _comment)
 {

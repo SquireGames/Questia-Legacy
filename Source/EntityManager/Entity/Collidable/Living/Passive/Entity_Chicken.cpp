@@ -14,6 +14,7 @@ Entity_Chicken::Entity_Chicken( ResourceManager& res, EntityManager& entityManag
     , maxST(50)
 
     , entityType(_entityType)
+    , entityCategory(passive)
 
     , mIsMovingUp(false)
     , mIsMovingDown(false)
@@ -213,10 +214,6 @@ void Entity_Chicken::update(int effect, int (&returnCollision)[4])
     }
 }
 
-int Entity_Chicken::getType()
-{
-    return 5;
-}
 
 void Entity_Chicken::getNumb(int a, sf::Vector2i  b)
 {

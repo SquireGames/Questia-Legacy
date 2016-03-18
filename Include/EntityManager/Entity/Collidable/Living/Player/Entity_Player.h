@@ -25,13 +25,14 @@ public:
     void handleImput(int actionType, bool isPressed);
     void update(int effect, int (&returnCollision)[4]);
 
+    void saveEntity() {};
+
     ///get's
     int returnID();
 
     unsigned char getClass() {return playerClass;}
     std::string getName();
     void getNumb(int a, sf::Vector2i entityCoords);
-    int getType();
     sf::Vector2f getCoordinates();
     sf::Vector2i getMapCoordinates();
     sf::Vector2f getSideRadius();
@@ -44,6 +45,13 @@ public:
     int getMaxMP(){return maxMP;}
     int getMaxST(){return maxST;}
     std::string getEntityType(){return entityType;}
+    EntityCategory getCategory(){return entityCategory;}
+
+    std::vector <std::pair <std::string, std::string> > characteristics;
+    ///saved characteristics
+    std::vector <std::pair <std::string, std::string> > getCharacteristics() {return characteristics;}
+    std::string getCharacteristic(std::string characteristic) {}
+    void setCharacteristics( std::vector <std::pair <std::string, std::string> > getCharacteristics()) {};
 
     ///set's
     void setAngleToMouse(float angle);
@@ -69,6 +77,7 @@ private:
     const sf::Vector2f sideRadius;
 
     std::string entityType;
+    EntityCategory entityCategory;
 
 
     ///layers

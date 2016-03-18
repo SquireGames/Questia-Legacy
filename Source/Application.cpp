@@ -7,6 +7,8 @@
 
 #include "Data_Desktop.h"
 
+#include "Utl.h"
+
 const sf::Time Application::timePerFrame = sf::seconds(1.f/144.f);
 
 Application::Application():
@@ -16,7 +18,7 @@ Application::Application():
 {
     Data_Desktop::getInstance().loadOptions();
 
-    switch (Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))
+    switch (utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))
     {
     case 0:
         mWindow.create(sf::VideoMode(1920, 1080),"Questia",sf::Style::Fullscreen);
@@ -38,13 +40,13 @@ void Application::run()
 {
     Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(mWindow.getSize().x,mWindow.getSize().y),mWindow.getPosition());
 
-    if(Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")) == 0)
+    if(utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")) == 0)
     {
         mWindow.setVerticalSyncEnabled(true);
     }
     else
     {
-        mWindow.setFramerateLimit(Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")));
+        mWindow.setFramerateLimit(utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")));
         mWindow.setVerticalSyncEnabled(false);
     }
 

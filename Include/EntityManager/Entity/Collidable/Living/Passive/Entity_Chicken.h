@@ -19,10 +19,12 @@ public:
     void update(int effect, int (&returnCollision)[4]);
     int returnID();
 
+    void saveEntity() {};
+
     std::string getName();
-    int getType();
     void getNumb(int a, sf::Vector2i  b);
     std::string getEntityType(){return entityType;}
+    EntityCategory getCategory(){return entityCategory;}
 
     void setCoordinates(sf::Vector2f coords) {coordinates = coords;}
 
@@ -30,6 +32,7 @@ public:
 
 private:
     std::string entityType;
+    EntityCategory entityCategory;
 
     int hp;
     int mp;

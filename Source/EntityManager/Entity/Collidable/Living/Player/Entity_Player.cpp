@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Player.h"
+#include "Utl.h"
 
 #define DEBUGMODE false
 
@@ -50,6 +51,8 @@ Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager,
 
     , animation(res, "Media/Image/Game/Player/Customization/Skin/White.png", 8, 3)
     , colRect()
+
+    , entityCategory(player)
 {
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Player/Character_Base.png"));
     entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Gui/Health.png"));
@@ -69,7 +72,6 @@ void Entity_Player::drawEntity(sf::RenderWindow &window)
 {
     animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x-(animation.getSheetWidth()/2.f), coordinates.y-(animation.getSheetHeight()/2.f)-12.5);
     window.draw(animation.getSprite(animationDirection-1, animationStep-1));
-
 
     if(DEBUGMODE)
     {
@@ -427,8 +429,4 @@ sf::Vector2f Entity_Player::getCoordinates()
 std::tuple<int, int, int, int, int, int> Entity_Player::getStats()
 {
     return std::make_tuple(hp,mp,stamina, maxHP, maxMP, maxST);
-}
-int Entity_Player::getType()
-{
-    return 1;
 }

@@ -10,6 +10,8 @@
 
 #include "MultiplayerManager/Struct_Character.h"
 
+#include "Utl.h"
+
 State_Game::State_Game(sf::RenderWindow &mWindow):
     window(mWindow)
     //managers
@@ -77,7 +79,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     save_location.readFile();
     save_character.readFile();
 
-    timeManager.setTime(save_location.asNumber(save_location.getItem("time")));
+    timeManager.setTime(utl::asNumber(save_location.getItem("time")));
 
     std::vector <int> savedID;
     std::map <int, int> newID; //old ID, new ID
@@ -87,11 +89,11 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
         std::vector<std::pair<std::string, std::string> >& entityVector = save_entities.getSaveList();
         for(int it = 0; it != entityVector.size(); it++)
         {
-            std::vector<std::string> entityInfo = save_entities.separateString(entityVector[it].second);
-            int entityID = entityManager.createEntity(entityVector[it].first, sf::Vector2f(save_entities.asNumber(entityInfo[1]), save_entities.asNumber(entityInfo[2])));
-            entityManager.setCharacteristic(entityID,"hp", save_entities.asNumber(entityInfo[3]));
-            savedID.push_back(save_entities.asNumber(entityInfo[0]));
-            newID[save_entities.asNumber(entityInfo[0])] = entityID;
+            std::vector<std::string> entityInfo = utl::separateString(entityVector[it].second, ',');
+            int entityID = entityManager.createEntity(entityVector[it].first, sf::Vector2f(utl::asNumber(entityInfo[1]),utl::asNumber(entityInfo[2])));
+            entityManager.setCharacteristic(entityID,"hp", utl::asNumber(entityInfo[3]));
+            savedID.push_back(utl::asNumber(entityInfo[0]));
+            newID[utl::asNumber(entityInfo[0])] = entityID;
         }
     }
     else
@@ -114,10 +116,10 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
     ///character
     entityManager.createPlayer(Data_Desktop::getInstance().getCharacterSelection(),
-                               sf::Vector2f(save_location.asNumber(save_location.getItem("coords_x")),save_location.asNumber(save_location.getItem("coords_y"))),
-                               save_character.asNumber(save_character.getItem("hp")), save_character.asNumber(save_character.getItem("maxHp")),
-                               save_character.asNumber(save_character.getItem("mp")), save_character.asNumber(save_character.getItem("maxMp")),
-                               save_character.asNumber(save_character.getItem("st")), save_character.asNumber(save_character.getItem("maxSt")));
+                               sf::Vector2f(utl::asNumber(save_location.getItem("coords_x")),utl::asNumber(save_location.getItem("coords_y"))),
+                               utl::asNumber(save_character.getItem("hp")), utl::asNumber(save_character.getItem("maxHp")),
+                               utl::asNumber(save_character.getItem("mp")), utl::asNumber(save_character.getItem("maxMp")),
+                               utl::asNumber(save_character.getItem("st")), utl::asNumber(save_character.getItem("maxSt")));
 
     ///light init
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());

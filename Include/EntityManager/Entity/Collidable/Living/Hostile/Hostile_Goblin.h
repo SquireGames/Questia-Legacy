@@ -14,10 +14,11 @@ public:
     void drawEntity(sf::RenderWindow &mWindow);
     void update(int effect, int (&returnCollision)[4]);
 
+    void saveEntity() {};
+
     ///gets
     int returnID();
     std::string getName();
-    int getType();
     sf::Vector2f getSideRadius();
     sf::Vector2f getVelocity();
     sf::Vector2f getCoordinates();
@@ -28,7 +29,8 @@ public:
     int getMaxHP(){return maxHP;}
     int getMaxMP(){return maxMP;}
     int getMaxST(){return maxST;}
-    std::string getEntityType(){return entityType;}
+    std::string getEntityType() {return entityType;}
+    EntityCategory getCategory(){return entityCategory;}
 
     ///sets
     void getNumb(int distance, sf::Vector2i  entityCoords);
@@ -40,6 +42,7 @@ public:
 private:
     ///default
     std::string entityType;
+    EntityCategory entityCategory;
 
     int ID;
     sf::Sprite entitySprite;

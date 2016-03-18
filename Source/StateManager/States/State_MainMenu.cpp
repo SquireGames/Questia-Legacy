@@ -7,6 +7,8 @@
 #include "StateManager/States/State_Transition.h"
 #include "EntityManager/SpawnManager.h"
 
+#include "Utl.h"
+
 State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     window(mWindow)
     , resourceManager()
@@ -31,7 +33,7 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     if(!musicBuffer.loadFromFile("Media/Music/gameMenu.ogg")) {}
     musicSound.setBuffer(musicBuffer);
 
-    musicSound.setVolume(Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")));
+    musicSound.setVolume(utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")));
     musicSound.play();
 
     guiManager.addStats(std::string(" "), std::string("Version 0.0.14 Alpha"));

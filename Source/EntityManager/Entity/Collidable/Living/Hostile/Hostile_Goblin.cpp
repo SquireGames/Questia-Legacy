@@ -3,6 +3,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "Utl.h"
+
 Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManager,sf::Vector2f coordinates, int aID, std::string _entityType):
     coordinates(coordinates.x,coordinates.y)
     , ID(aID)
@@ -30,11 +32,14 @@ Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManag
     , entityStep(1)
 
     , entityState(melee)
+    , entityCategory(hostile)
 {
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Hostile/hostile_goblin.png"));
     entitySprite.setTextureRect(sf::IntRect(27,0,24,50));
 
     entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Gui/Health.png"));
+
+    getSaveCharacteristics()["animationStep"] = utl::asString(count_entityStep);
 }
 
 void Hostile_Goblin::drawEntity(sf::RenderWindow &window)
@@ -160,7 +165,7 @@ void Hostile_Goblin::getNumb(int distance, sf::Vector2i entityCoords)
                 entityState = charge;
                 stateDuration = 50;
             }
-            else if(distance < 400 && distance > 150)
+            else if(distance < 800 && distance > 150)
             {
                 entityState = ranged;
                 stateDuration = 30;
@@ -199,7 +204,7 @@ void Hostile_Goblin::getNumb(int distance, sf::Vector2i entityCoords)
                 entityState = melee;
                 stateDuration = 50;
             }
-            else if(distance < 400 && distance > 75)
+            else if(distance < 800 && distance > 75)
             {
                 entityState = ranged;
                 stateDuration = 50;
@@ -218,7 +223,7 @@ void Hostile_Goblin::getNumb(int distance, sf::Vector2i entityCoords)
         {
             if(cooldown == 0)
             {
-                entityManager.createSpecialEntity(2,ID,getName(),coordinates,sf::Vector2f(4,4),angle,200,10,0,0,0);
+                entityManager.createSpecialEntity(2,ID,getName(),coordinates,sf::Vector2f(4 + (((distance % 6) - 3)/ 10),4 + (((distance % 6) - 3)/ 10)),angle + ((distance % 8) - 4),200,10,0,0,0);
                 cooldown = 144;
             }
         }
@@ -239,7 +244,7 @@ void Hostile_Goblin::getNumb(int distance, sf::Vector2i entityCoords)
                 entityState = charge;
                 stateDuration = 50;
             }
-            else if(distance < 400 && distance > 150)
+            else if(distance < 800 && distance > 150)
             {
                 stateDuration = 30;
             }
@@ -501,7 +506,4 @@ sf::Vector2f Hostile_Goblin::getVelocity()
 {
     return velocity;
 }
-int Hostile_Goblin::getType()
-{
-    return 10;
-}
+

@@ -5,6 +5,8 @@
 #include "StateManager/StateManager.h"
 #include "StateManager/States/State_Transition.h"
 
+#include "Utl.h"
+
 State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
     window(mWindow)
     , resourceManager()
@@ -19,10 +21,10 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
     , keyboard_up(false)
     , keyboard_down(false)
 
-    , videoMode  (Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))
-    , font       (Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("font")))
-    , musicVolume(Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")))
-    , fps        (Data_Desktop::getInstance().getSaveOptions().asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")))
+    , videoMode  (utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))
+    , font       (utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("font")))
+    , musicVolume(utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")))
+    , fps        (utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")))
 
     , key_moveUp   (Data_Desktop::getInstance().getSaveOptions().getItem("key_moveUp").at(0))
     , key_moveDown (Data_Desktop::getInstance().getSaveOptions().getItem("key_moveDown").at(0))
