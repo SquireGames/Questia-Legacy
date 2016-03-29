@@ -3,7 +3,7 @@
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Player.h"
 #include "Utl.h"
 
-#define DEBUGMODE false
+extern bool isInDebugMode;
 
 Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,
                              sf::Vector2f coordinates, int ID, std::string _entityType,
@@ -73,7 +73,7 @@ void Entity_Player::drawEntity(sf::RenderWindow &window)
     animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x-(animation.getSheetWidth()/2.f), coordinates.y-(animation.getSheetHeight()/2.f)-12.5);
     window.draw(animation.getSprite(animationDirection-1, animationStep-1));
 
-    if(DEBUGMODE)
+    if(isInDebugMode)
     {
         colRect.setPosition(sf::Vector2f(coordinates.x - sideRadius.x, coordinates.y - sideRadius.y));
         window.draw(colRect);
@@ -86,7 +86,7 @@ void Entity_Player::drawEntity(sf::RenderWindow &window)
     entitySprite_HP.setTextureRect(sf::IntRect(0,0,(394*(HPP))/16,5));
     window.draw(entitySprite_HP);
 
-    if(DEBUGMODE)
+    if(isInDebugMode)
     {
         stamina = 100;
     }

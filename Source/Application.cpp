@@ -16,6 +16,7 @@ Application::Application():
     , mStatisticsFramesCount(0)
 
 {
+
     Data_Desktop::getInstance().loadOptions();
 
     switch (utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))

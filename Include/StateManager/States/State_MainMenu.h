@@ -35,6 +35,7 @@ private:
 
     ResourceManager resourceManager;
     GuiManager guiManager;
+    GuiManagerNew guiManagerNew;
 };
 
 #endif // STATE_MAINMENU_H

@@ -133,7 +133,7 @@ private:
     EntityManager& entityManager;
     LightManager& lightManager;
 
-    ///Collision visual
+    ///collision visual
     sf::RectangleShape colRect;
 };
 

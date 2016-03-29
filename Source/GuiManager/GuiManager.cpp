@@ -16,18 +16,6 @@ GuiManager::GuiManager(sf::RenderWindow &_window,  ResourceManager &res, bool ga
         guiSprite.setTexture(guiTexture);
         guiSprite.setPosition(0,973);
 
-        /*if(!hpTexture.loadFromFile("Media/Image/Game/Gui/Health.png")) {}
-        hpSprite.setTexture(hpTexture);
-        hpSprite.setPosition(52, 1055);
-        if(!mpTexture.loadFromFile("Media/Image/Game/Gui/Mana.png")) {}
-        mpSprite.setTexture(mpTexture);
-        mpSprite.setPosition(760, 1055);
-        if(!stTexture.loadFromFile("Media/Image/Game/Gui/Stamina.png")) {}
-        stSprite.setTexture(stTexture);
-        stSprite.setPosition(1469, 1055);
-        */
-
-
         statisticsTextHP.setFont(Data_Desktop::getInstance().font1);
         statisticsTextHP.setCharacterSize(25);
         statisticsTextHP.setColor(sf::Color::Black);

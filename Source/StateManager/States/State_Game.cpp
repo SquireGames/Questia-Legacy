@@ -12,6 +12,9 @@
 
 #include "Utl.h"
 
+//Global variable
+bool isInDebugMode = false;
+
 State_Game::State_Game(sf::RenderWindow &mWindow):
     window(mWindow)
     //managers
@@ -221,6 +224,14 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         else if(key == sf::Keyboard::J)
         {
             multiplayerManager.joinServer("192.168.2.77", 7777);
+        }
+        else if(key == sf::Keyboard::T)
+        {
+            isInDebugMode = true;
+        }
+        else if(key == sf::Keyboard::U)
+        {
+            isInDebugMode = false;
         }
     }
 

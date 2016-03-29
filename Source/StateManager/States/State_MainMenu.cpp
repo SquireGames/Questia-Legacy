@@ -13,6 +13,7 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     window(mWindow)
     , resourceManager()
     , guiManager(mWindow, resourceManager, false)
+    , guiManagerNew(mWindow, resourceManager)
 
 {
     aMenuImage.setTexture(resourceManager.getTexture("Media/Image/Menu/aMenu.png"));
@@ -36,7 +37,18 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     musicSound.setVolume(utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")));
     musicSound.play();
 
-    guiManager.addStats(std::string(" "), std::string("Version 0.0.14 Alpha"));
+    guiManager.addStats(std::string(" "), std::string("Version 0.1.0 Alpha"));
+
+    guiManagerNew.createButton("Test");
+
+    guiManagerNew.addButtonAtr("Test", "sprite", gui::ButtonAtr::Sprite);
+    guiManagerNew.setButtonAtr("Test", "sprite", gui::ButtonAtrCharacteristic::resLocation, "Media/Image/Menu/Buttons/Options_Arrow.png");
+    guiManagerNew.setButtonAtr("Test", "sprite", gui::ButtonAtrCharacteristic::coords, std::make_pair(10,10));
+
+    guiManagerNew.addButtonAtr("Test", "sprite2", gui::ButtonAtr::Sprite);
+    guiManagerNew.setButtonAtr("Test", "sprite2", gui::ButtonAtrCharacteristic::resLocation, "Media/Image/Menu/Buttons/Options_Arrow.png");
+    guiManagerNew.setButtonAtr("Test", "sprite2", gui::ButtonAtrCharacteristic::coords, std::make_pair(100,100));
+
 }
 
 State_MainMenu::~State_MainMenu()
@@ -69,6 +81,11 @@ void State_MainMenu::update(sf::Time elapsedTime)
         {
             StateManager::getInstance().changeState(new State_Transition(window, 6));
         }
+
+        if(guiManagerNew.isClicked("Test"))
+        {
+
+        }
     }
 }
 
@@ -78,6 +95,7 @@ void State_MainMenu::displayTextures()
 
     guiManager.buttonCheck();
     guiManager.drawGui();
+    guiManagerNew.drawButtons();
 
     window.draw(aButton_PlayImage);
     window.draw(aButton_OptionsImage);
