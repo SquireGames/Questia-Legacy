@@ -40,6 +40,7 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     guiManager.addStats(std::string(" "), std::string("Version 0.1.0 Alpha"));
 
     guiManagerNew.createButton("Test");
+    guiManagerNew.setButton("Test", gui::ButtonCharacteristic::coords, std::make_pair(10,10));
 
     guiManagerNew.addButtonAtr("Test", "sprite", gui::ButtonAtr::Sprite);
     guiManagerNew.setButtonAtr("Test", "sprite", gui::ButtonAtrCharacteristic::resLocation, "Media/Image/Menu/Buttons/Options_Arrow.png");
