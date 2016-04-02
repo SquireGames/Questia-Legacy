@@ -40,16 +40,20 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     guiManager.addStats(std::string(" "), std::string("Version 0.1.0 Alpha"));
 
     guiManagerNew.createButton("Test");
-    guiManagerNew.setButton("Test", gui::ButtonCharacteristic::coords, std::make_pair(10,10));
+    guiManagerNew.setButton(gui::ButtonCharacteristic::coords, std::make_pair(10,10));
 
-    guiManagerNew.addButtonAtr("Test", "sprite", gui::ButtonAtr::Sprite);
-    guiManagerNew.setButtonAtr("Test", "sprite", gui::ButtonAtrCharacteristic::resLocation, "Media/Image/Menu/Buttons/Options_Arrow.png");
-    guiManagerNew.setButtonAtr("Test", "sprite", gui::ButtonAtrCharacteristic::coords, std::make_pair(10,10));
+    guiManagerNew.createButtonAtr("Test", "sprite", gui::ButtonAtr::Sprite);
+    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::resLocation, "Media/Image/Menu/Buttons/Options_Arrow.png");
+    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(10,10));
 
-    guiManagerNew.addButtonAtr("Test", "sprite2", gui::ButtonAtr::Sprite);
-    guiManagerNew.setButtonAtr("Test", "sprite2", gui::ButtonAtrCharacteristic::resLocation, "Media/Image/Menu/Buttons/Options_Arrow.png");
-    guiManagerNew.setButtonAtr("Test", "sprite2", gui::ButtonAtrCharacteristic::coords, std::make_pair(100,100));
+    guiManagerNew.createButtonAtr("Test", "sprite2", gui::ButtonAtr::Sprite);
+    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::resLocation, "Media/Image/Menu/Buttons/Options_Arrow.png");
+    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(100,100));
 
+    guiManagerNew.setButton(gui::ButtonCharacteristic::bounds, "sprite");
+
+    guiManagerNew.createButton("Test2", "Test");
+    guiManagerNew.setButton("Test2", gui::ButtonCharacteristic::coords, std::make_pair(30,30));
 }
 
 State_MainMenu::~State_MainMenu()

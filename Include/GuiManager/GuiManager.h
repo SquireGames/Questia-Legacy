@@ -13,16 +13,17 @@
 #include "ResourceManager.h"
 #include "Data_Desktop.h"
 
+
 namespace gui
 {
 enum Direction {none = 0, up = 1, right = 2, down = 3, left = 4};
 
 enum class ButtonCharacteristic {coords,
-                           bounds,
-                           scroll_x, scroll_y,
-                           addToScroll_x, addToScroll_y,
-                           isVisible
-                          };
+                                 bounds,
+                                 scroll_x, scroll_y,
+                                 addToScroll_x, addToScroll_y,
+                                 isVisible
+                                };
 enum ButtonAtr {Sprite,
                 Percent,
                 Hover,
@@ -30,13 +31,14 @@ enum ButtonAtr {Sprite,
                };
 
 enum class ButtonAtrCharacteristic {sprite,
-                              visibilityPercentage,
-                              resLocation,
-                              coords,
-                              color
-                             };
+                                    visibilityPercentage,
+                                    resLocation,
+                                    coords,
+                                    color
+                                   };
 };
 
+//{ class attributeTypes
 struct RegularSprite
 {
     sf::Sprite normalSprite;
@@ -77,25 +79,79 @@ struct PercentSprite
 
     bool isChanged;
 };
+//}
+
 
 struct Button
 {
-    Button(sf::RenderWindow& _window, ResourceManager &_resourceManager):
+    //{ Button() + copy constructors
+    Button(sf::RenderWindow& _window, ResourceManager &_resourceManager, bool _isTemplate):
         window(_window)
         , resourceManager(_resourceManager)
+        , scrollAmount_x (0)
+        , scrollAmount_y (0)
+        , buttonPosition (std::make_pair(0,0))
+        , buttonBounds (std::make_pair(0,0))
+        , isCoordsChanged(true)
+        , isVisible(true)
+        , isTemplate(_isTemplate)
+    {}
+
+    // copy constructor
+    Button(const Button& oldButton): // const to make sure there are no changes to the original
+        window(oldButton.window)
+        , resourceManager(oldButton.resourceManager)
+        , scrollAmount_x (0)
+        , scrollAmount_y (0)
+        , buttonPosition (std::make_pair(0,0))
+        , buttonBounds (oldButton.buttonBounds)
+        , isCoordsChanged(true)
+        , isVisible(oldButton.isVisible)
+        , isTemplate(false)
     {
-        buttonPosition = std::make_pair(0,0);
-        buttonBounds = std::make_pair(0,0);
+        copyToThisButton(*this, oldButton);
+
+        if(oldButton.isTemplate)
+        {
+            isVisible = true;
+        }
     }
 
-    //Deletes all objects
+    // copies attributes
+    void copyToThisButton(Button& newButton, const Button& oldButton)
+    {
+        for(std::map<std::string, RegularSprite*>::const_iterator it = oldButton.heldSprites.begin(); it != oldButton.heldSprites.end(); ++it)
+        {
+            newButton.addButtonAtr(it->first, gui::ButtonAtr::Sprite);
+            newButton.heldSprites[it->first]->normalSprite = oldButton.heldSprites.at(it->first)->normalSprite;
+            newButton.heldSprites[it->first]->position =     oldButton.heldSprites.at(it->first)->position;
+            newButton.heldSprites[it->first]->isChanged =    oldButton.heldSprites.at(it->first)->isChanged;
+        }
+        for(std::map<std::string, Text*>::const_iterator it = oldButton.heldText.begin(); it != oldButton.heldText.end(); ++it)
+        {
+
+        }
+        for(std::map<std::string, OverlaySprite*>::const_iterator it = oldButton.heldOverlaySprites.begin(); it != oldButton.heldOverlaySprites.end(); ++it)
+        {
+
+        }
+        for(std::map<std::string, PercentSprite*>::const_iterator it = oldButton.heldPercentSprites.begin(); it != oldButton.heldPercentSprites.end(); ++it)
+        {
+
+        }
+    }
+
+
+    //}
+
+    // deletes attributes
     ~Button()
     {
-        for(std::map<std::string, Text*>::iterator it = heldText.begin(); it != heldText.end(); ++it)
+        for(std::map<std::string, RegularSprite*>::iterator it = heldSprites.begin(); it != heldSprites.end(); ++it)
         {
             delete it->second;
         }
-        for(std::map<std::string, RegularSprite*>::iterator it = heldSprites.begin(); it != heldSprites.end(); ++it)
+        for(std::map<std::string, Text*>::iterator it = heldText.begin(); it != heldText.end(); ++it)
         {
             delete it->second;
         }
@@ -109,26 +165,65 @@ struct Button
         }
     }
 
+    // required
     sf::RenderWindow& window;
     ResourceManager& resourceManager;
 
+    // variables
     std::pair <int, int> buttonPosition;
     std::pair <int, int> buttonBounds;
     bool isCoordsChanged;
     int scrollAmount_x;
     int scrollAmount_y;
     bool isVisible;
+    bool isTemplate;
 
-    std::map<std::string, Text*> heldText;
+    // holds attributes
     std::map<std::string, RegularSprite*> heldSprites;
+    std::map<std::string, Text*> heldText;
     std::map<std::string, OverlaySprite*> heldOverlaySprites;
     std::map<std::string, PercentSprite*> heldPercentSprites;
 
+    //{ setButton()
+    void setButton(gui::ButtonCharacteristic buttonChar, std::string value)
+    {
+        switch (buttonChar)
+        {
+        case gui::ButtonCharacteristic::bounds:
+        {
+            if(heldSprites.count(value))
+            {
+                buttonBounds = std::make_pair(heldSprites[value]->normalSprite.getLocalBounds().width, heldSprites[value]->normalSprite.getLocalBounds().height);
+            }
+        }
+        break;
+        default:
+            break;
+        }
+    }
+    void setButton(gui::ButtonCharacteristic buttonChar, const char* value)
+    {
+        std::string atrName = static_cast <std::string> (value);
+        switch (buttonChar)
+        {
+        case gui::ButtonCharacteristic::bounds:
+        {
+            if(heldSprites.count(value))
+            {
+                buttonBounds = std::make_pair(heldSprites[value]->normalSprite.getLocalBounds().width, heldSprites[value]->normalSprite.getLocalBounds().height);
+            }
+        }
+        break;
+        default:
+            break;
+        }
+    }
     void setButton(gui::ButtonCharacteristic buttonChar, bool value)
     {
         switch (buttonChar)
         {
         case gui::ButtonCharacteristic::isVisible:
+            isVisible = value;
             break;
         default:
             break;
@@ -156,11 +251,10 @@ struct Button
     }
     void setButton(gui::ButtonCharacteristic buttonChar, std::pair <int, int> value)
     {
-        isCoordsChanged = true;
-
         switch (buttonChar)
         {
         case gui::ButtonCharacteristic::coords:
+            isCoordsChanged = true;
             buttonPosition = value;
             break;
         case gui::ButtonCharacteristic::bounds:
@@ -170,45 +264,9 @@ struct Button
             break;
         }
     }
+    //}
 
-    void addButtonAtr (std::string atrName, gui::ButtonAtr buttonAtr)
-    {
-        switch(buttonAtr)
-        {
-        case gui::ButtonAtr::Sprite:
-        {
-            RegularSprite* newSprite = new RegularSprite;
-            newSprite->isChanged = true;
-            newSprite->position = std::make_pair(0,0);
-            newSprite->normalSprite.setPosition(newSprite->position.first  + buttonPosition.first,
-                                                newSprite->position.second + buttonPosition.second);
-
-            heldSprites[atrName] = newSprite;
-        }
-        break;
-        case gui::ButtonAtr::Text:
-        {
-
-        }
-        break;
-        case gui::ButtonAtr::Hover:
-        {
-
-        }
-        break;
-        case gui::ButtonAtr::Percent:
-        {
-
-        }
-        break;
-        default:
-        {
-
-        }
-        break;
-        }
-    }
-
+    //{ setButtonAtr()
     void setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrChar, std::string value)
     {
         if(heldText.count(atrName))
@@ -226,7 +284,6 @@ struct Button
             case gui::ButtonAtrCharacteristic::resLocation:
                 heldSprites[atrName]->normalSprite.setTexture(resourceManager.getTexture(value));
                 break;
-
             default:
                 break;
             }
@@ -250,7 +307,6 @@ struct Button
             }
         }
     }
-
     void setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrChar, std::pair<int, int> value)
     {
         if(heldText.count(atrName))
@@ -293,28 +349,66 @@ struct Button
         }
     }
 
-    void showButton(bool _isVisible)
-    {
+    //}
 
+    void addButtonAtr (std::string atrName, gui::ButtonAtr buttonAtr)
+    {
+        switch(buttonAtr)
+        {
+        case gui::ButtonAtr::Sprite:
+        {
+            RegularSprite* newSprite = new RegularSprite;
+            newSprite->isChanged = true;
+            newSprite->position = std::make_pair(0,0);
+            newSprite->normalSprite.setPosition(newSprite->position.first  + buttonPosition.first,
+                                                newSprite->position.second + buttonPosition.second);
+
+            heldSprites[atrName] = newSprite;
+        }
+        break;
+        case gui::ButtonAtr::Text:
+        {
+
+        }
+        break;
+        case gui::ButtonAtr::Hover:
+        {
+
+        }
+        break;
+        case gui::ButtonAtr::Percent:
+        {
+
+        }
+        break;
+        default:
+        {
+
+        }
+        break;
+        }
     }
 
     void drawButton()
     {
-        for(std::map<std::string, RegularSprite*>::iterator it = heldSprites.begin(); it != heldSprites.end(); it++)
+        if(isVisible)
         {
-            if(it->second->isChanged || isCoordsChanged)
+            for(std::map<std::string, RegularSprite*>::iterator it = heldSprites.begin(); it != heldSprites.end(); it++)
             {
-                it->second->normalSprite.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
-                                                     buttonPosition.second + it->second->position.second + scrollAmount_y);
-                it->second->isChanged = false;
-                window.draw(it->second->normalSprite);
+                if(it->second->isChanged || isCoordsChanged)
+                {
+                    it->second->normalSprite.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
+                                                         buttonPosition.second + it->second->position.second + scrollAmount_y);
+                    it->second->isChanged = false;
+                    window.draw(it->second->normalSprite);
+                }
+                else
+                {
+                    window.draw(it->second->normalSprite);
+                }
             }
-            else
-            {
-                window.draw(it->second->normalSprite);
-            }
+            isCoordsChanged = false;
         }
-        isCoordsChanged = false;
     }
 };
 
@@ -324,6 +418,8 @@ public:
     GuiManagerNew(sf::RenderWindow &_window, ResourceManager &_resourceManager):
         window(_window)
         , resourceManager(_resourceManager)
+        , currentButtonEdit ("NOBUTTON")
+        , currentButtonAtrEdit ("NOBUTTONATR")
     {
 
     }
@@ -335,34 +431,82 @@ public:
         }
     }
 
+    //{ createButton(), createButtonTemplate()
+    void createButtonTemplate(std::string buttonName)
+    {
+        if(!buttonMap.count(buttonName))
+        {
+            Button* newButton = new Button(window, resourceManager, true);
+            buttonMap[buttonName] = newButton;
+            buttonMap[buttonName]->setButton(gui::ButtonCharacteristic::isVisible, false);
+
+            currentButtonEdit = buttonName;
+        }
+    }
 
     void createButton(std::string buttonName)
     {
-        Button* newButton = new Button(window, resourceManager);
-        buttonMap[buttonName] = newButton;
+        if(!buttonMap.count(buttonName))
+        {
+            Button* newButton = new Button(window, resourceManager, false);
+            buttonMap[buttonName] = newButton;
+
+            currentButtonEdit = buttonName;
+        }
     }
 
+    void createButton(std::string copyName, std::string originalName)
+    {
+        if(buttonMap.count(originalName))
+        {
+            if(!buttonMap.count(copyName))
+            {
+                Button* newButton = new Button(*buttonMap[originalName]);
+                buttonMap[copyName] = newButton;
+
+                currentButtonEdit = copyName;
+            }
+        }
+    }
+    //}
+
+    void createButtonAtr(std::string buttonName, std::string atrName, gui::ButtonAtr buttonAtr)
+    {
+        buttonMap[buttonName]->addButtonAtr(atrName, buttonAtr);
+        currentButtonEdit = buttonName;
+        currentButtonAtrEdit = atrName;
+    }
+
+
+    //{ setButton()
     template <class T>
     void setButton(std::string buttonName, gui::ButtonCharacteristic buttonChar, T value)
     {
         buttonMap[buttonName]->setButton(buttonChar, value);
     }
 
-    void addButtonAtr(std::string buttonName, std::string atrName, gui::ButtonAtr buttonAtr)
+    template <class T>
+    void setButton(gui::ButtonCharacteristic buttonChar, T value)
     {
-        buttonMap[buttonName]->addButtonAtr(atrName, buttonAtr);
-    }
+        buttonMap[currentButtonEdit]->setButton(buttonChar, value);
 
+    }
+    //}
+
+    //{ setButtonAtr()
     template <class T>
     void setButtonAtr(std::string buttonName, std::string atrName, gui::ButtonAtrCharacteristic atrChar, T value)
     {
         buttonMap[buttonName]->setButtonAtr(atrName, atrChar, value);
     }
-
-    void copyButton(std::string copyName, std::string originalName)
+    template <class T>
+    void setButtonAtr(gui::ButtonAtrCharacteristic atrChar, T value)
     {
-
+        buttonMap[currentButtonEdit]->setButtonAtr(currentButtonAtrEdit, atrChar, value);
     }
+    //}
+
+
 
     void createGroup(std::string groupName)
     {
@@ -394,6 +538,9 @@ public:
     }
 
 private:
+    std::string currentButtonEdit;
+    std::string currentButtonAtrEdit;
+
     std::map <std::string, Button*> buttonMap;
 
     sf::RenderWindow& window;
