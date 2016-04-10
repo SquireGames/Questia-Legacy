@@ -59,15 +59,15 @@ struct ButtonText
 
 struct OverlaySprite
 {
-    sf::Sprite normalSprite;
     sf::RectangleShape rectOverlay;
-
-    float overlayPercentage;
-    gui::Direction directionOfOverlay;
+    sf::Sprite spriteOverlay;
 
     std::pair <int, int> position;
 
     bool isChanged;
+    bool isHoveredOver;
+    enum OverlayMode {rect, spr};
+    OverlayMode overlayMode;
 };
 
 struct PercentSprite
@@ -279,7 +279,7 @@ struct Button
         {
             switch (atrChar)
             {
-                case gui::ButtonAtrCharacteristic::text:
+            case gui::ButtonAtrCharacteristic::text:
                 heldText[atrName]->text.setString(value);
                 break;
             default:
@@ -472,7 +472,15 @@ struct Button
         break;
         case gui::ButtonAtr::Hover:
         {
+            OverlaySprite* newHover = new OverlaySprite;
+            newHover->isChanged = true;
+            newHover->position = std::make_pair(0,0);
 
+            newHover->rectOverlay.setFillColor(sf::Color(0,0,0, 100));
+
+            newHover->rectOverlay.setPosition(buttonPosition.first, buttonPosition.second);
+            newHover->rectOverlay.setSize(sf::Vector2f(buttonBounds.first,buttonBounds.second));
+            heldOverlaySprites[atrName] = newHover;
         }
         break;
         case gui::ButtonAtr::Percent:
@@ -485,6 +493,24 @@ struct Button
 
         }
         break;
+        }
+    }
+
+    void update(std::pair <int, int> mouseCoords)
+    {
+        for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
+        {
+            if(mouseCoords.first >  buttonPosition.first  && mouseCoords.first  < buttonPosition.first  + buttonBounds.first &&
+               mouseCoords.second > buttonPosition.second && mouseCoords.second < buttonPosition.second + buttonBounds.second)
+            {
+                it->second->isChanged = true;
+                it->second->isHoveredOver = true;
+            }
+            else
+            {
+                it->second->isChanged = true;
+                it->second->isHoveredOver = false;
+            }
         }
     }
 
@@ -520,6 +546,27 @@ struct Button
                     window.draw(it->second->text);
                 }
             }
+            for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
+            {
+                if(it->second->isChanged || isCoordsChanged)
+                {
+                    if(it->second->isHoveredOver)
+                    {
+                        it->second->rectOverlay.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
+                                                            buttonPosition.second + it->second->position.second + scrollAmount_y);
+                        it->second->isChanged = false;
+                        window.draw(it->second->rectOverlay);
+                    }
+                }
+                else
+                {
+                    if(it->second->isHoveredOver)
+                    {
+                        window.draw(it->second->rectOverlay);
+                    }
+                }
+            }
+
             isCoordsChanged = false;
         }
     }
@@ -635,8 +682,8 @@ public:
         {
             std::pair <int, int> buttonCoords = buttonMap[buttonName]->buttonPosition;
             std::pair <int, int> buttonBounds = buttonMap[buttonName]->buttonBounds;
-            if(mouseCoords.first > buttonCoords.first && mouseCoords.first < buttonCoords.first + buttonBounds.first &&
-                    mouseCoords.second > buttonCoords.second && mouseCoords.second < buttonCoords.second + buttonBounds.second)
+            if(mouseCoords.first  > buttonCoords.first  && mouseCoords.first  < buttonCoords.first  + buttonBounds.first &&
+               mouseCoords.second > buttonCoords.second && mouseCoords.second < buttonCoords.second + buttonBounds.second)
             {
                 return true;
             }
@@ -661,6 +708,11 @@ public:
     void setMousePosition(std::pair <float, float> _mouseCoords)
     {
         mouseCoords = _mouseCoords;
+
+        for(std::map<std::string, Button*>::iterator it = buttonMap.begin(); it != buttonMap.end(); ++it)
+        {
+            it->second->update(static_cast <std::pair <int, int> > (_mouseCoords));
+        }
     }
     void setFont(sf::Font _buttonFont)
     {

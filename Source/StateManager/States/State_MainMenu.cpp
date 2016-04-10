@@ -41,7 +41,7 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
 
     guiManagerNew.setFont(Data_Desktop::getInstance().font1);
 
-    guiManagerNew.createButtonTemplate("Test");
+    guiManagerNew.createButton("Test");
     guiManagerNew.setButton(gui::ButtonCharacteristic::coords, std::make_pair(10,10));
 
     guiManagerNew.createButtonAtr("Test", "sprite", gui::ButtonAtr::Sprite);
@@ -61,6 +61,7 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     guiManagerNew.setButton("Test", gui::ButtonCharacteristic::bounds, "sprite");
 
     guiManagerNew.createButton("Test2", "Test");
+    guiManagerNew.createButtonAtr("Test2", "hover", gui::ButtonAtr::Hover);
     guiManagerNew.setButton("Test2", gui::ButtonCharacteristic::coords, std::make_pair(30,30));
 }
 
@@ -76,9 +77,10 @@ void State_MainMenu::processImput(sf::Keyboard::Key key,bool isPressed)
 
 void State_MainMenu::update(sf::Time elapsedTime)
 {
+    guiManagerNew.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        guiManagerNew.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
         if(guiManager.testButton(1))
         {
             StateManager::getInstance().changeState(new State_Transition(window, 4));

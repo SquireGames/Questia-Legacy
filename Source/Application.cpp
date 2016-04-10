@@ -14,7 +14,6 @@ const sf::Time Application::timePerFrame = sf::seconds(1.f/144.f);
 Application::Application():
     mStatisticsUpdateTime()
     , mStatisticsFramesCount(0)
-
 {
 
     Data_Desktop::getInstance().loadOptions();
