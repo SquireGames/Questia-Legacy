@@ -36,7 +36,8 @@ enum class ButtonAtrCharacteristic {sprite,
                                     coords,
                                     color,
                                     charSize,
-                                    text
+                                    text,
+                                    transparency
                                    };
 };
 
@@ -60,14 +61,14 @@ struct ButtonText
 struct OverlaySprite
 {
     sf::RectangleShape rectOverlay;
-    sf::Sprite spriteOverlay;
+    //sf::Sprite spriteOverlay;
 
     std::pair <int, int> position;
 
     bool isChanged;
     bool isHoveredOver;
-    enum OverlayMode {rect, spr};
-    OverlayMode overlayMode;
+    //enum OverlayMode {rect, spr};
+    //OverlayMode overlayMode;
 };
 
 struct PercentSprite
@@ -140,7 +141,11 @@ struct Button
         }
         for(std::map<std::string, OverlaySprite*>::const_iterator it = oldButton.heldOverlaySprites.begin(); it != oldButton.heldOverlaySprites.end(); ++it)
         {
-
+            newButton.addButtonAtr(it->first, gui::ButtonAtr::Hover);
+            newButton.heldOverlaySprites[it->first]->rectOverlay   = oldButton.heldOverlaySprites.at(it->first)->rectOverlay;
+            newButton.heldOverlaySprites[it->first]->isChanged     = oldButton.heldOverlaySprites.at(it->first)->isChanged;
+            newButton.heldOverlaySprites[it->first]->position      = oldButton.heldOverlaySprites.at(it->first)->position;
+            newButton.heldOverlaySprites[it->first]->isHoveredOver = oldButton.heldOverlaySprites.at(it->first)->isHoveredOver;
         }
         for(std::map<std::string, PercentSprite*>::const_iterator it = oldButton.heldPercentSprites.begin(); it != oldButton.heldPercentSprites.end(); ++it)
         {
@@ -386,6 +391,9 @@ struct Button
         {
             switch (atrChar)
             {
+            case gui::ButtonAtrCharacteristic::color:
+                heldOverlaySprites[atrName]->rectOverlay.setFillColor(color);
+                break;
             default:
                 break;
             }
@@ -426,6 +434,15 @@ struct Button
         {
             switch (atrChar)
             {
+            case gui::ButtonAtrCharacteristic::transparency:
+            {
+                sf::Color newColor = heldOverlaySprites[atrName]->rectOverlay.getFillColor();
+                float trans = static_cast <float> (value);
+                trans = trans * 255 / 100;
+                newColor.a = trans;
+                heldOverlaySprites[atrName]->rectOverlay.setFillColor(newColor);
+            }
+            break;
             default:
                 break;
             }
@@ -501,7 +518,7 @@ struct Button
         for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
         {
             if(mouseCoords.first >  buttonPosition.first  && mouseCoords.first  < buttonPosition.first  + buttonBounds.first &&
-               mouseCoords.second > buttonPosition.second && mouseCoords.second < buttonPosition.second + buttonBounds.second)
+                    mouseCoords.second > buttonPosition.second && mouseCoords.second < buttonPosition.second + buttonBounds.second)
             {
                 it->second->isChanged = true;
                 it->second->isHoveredOver = true;
@@ -678,14 +695,17 @@ public:
 
     bool isClicked(std::string buttonName)
     {
-        if(buttonMap[buttonName]->isVisible)
+        if(buttonMap.count(buttonName))
         {
-            std::pair <int, int> buttonCoords = buttonMap[buttonName]->buttonPosition;
-            std::pair <int, int> buttonBounds = buttonMap[buttonName]->buttonBounds;
-            if(mouseCoords.first  > buttonCoords.first  && mouseCoords.first  < buttonCoords.first  + buttonBounds.first &&
-               mouseCoords.second > buttonCoords.second && mouseCoords.second < buttonCoords.second + buttonBounds.second)
+            if(buttonMap[buttonName]->isVisible)
             {
-                return true;
+                std::pair <int, int> buttonCoords = buttonMap[buttonName]->buttonPosition;
+                std::pair <int, int> buttonBounds = buttonMap[buttonName]->buttonBounds;
+                if(mouseCoords.first  > buttonCoords.first  && mouseCoords.first  < buttonCoords.first  + buttonBounds.first &&
+                   mouseCoords.second > buttonCoords.second && mouseCoords.second < buttonCoords.second + buttonBounds.second)
+                {
+                    return true;
+                }
             }
         }
         return false;

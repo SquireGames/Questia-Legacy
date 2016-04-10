@@ -12,58 +12,21 @@
 State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     window(mWindow)
     , resourceManager()
-    , guiManager(mWindow, resourceManager, false)
-    , guiManagerNew(mWindow, resourceManager)
-
+    , guiManager(mWindow, resourceManager)
 {
+    ///background
     aMenuImage.setTexture(resourceManager.getTexture("Media/Image/Menu/aMenu.png"));
 
-    guiManager.addButton(1, false, 150, 400, std::string("Media/Image/Menu/Buttons/aButton.png"), std::string(""), 0,0,0,0, sf::Color::Transparent, sf::Color(153,153,0,111));
-    guiManager.addButton(2, false, 150, 600, std::string("Media/Image/Menu/Buttons/aButton.png"), std::string(""), 0,0,0,0, sf::Color::Transparent, sf::Color(153,153,0,111));
-    guiManager.addButton(3, false, 150, 800, std::string("Media/Image/Menu/Buttons/aButton.png"), std::string(""), 0,0,0,0, sf::Color::Transparent, sf::Color(153,153,0,111));
-    guiManager.addButton(4, false, 1700, 1000, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Editor"), 1750, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-
-    aButton_PlayImage.setTexture(resourceManager.getTexture("Media/Image/Menu/Buttons/aButton_Play.png"));
-    aButton_OptionsImage.setTexture(resourceManager.getTexture("Media/Image/Menu/Buttons/aButton_Options.png"));
-    aButton_ExitImage.setTexture(resourceManager.getTexture("Media/Image/Menu/Buttons/aButton_Exit.png"));
-
-    aButton_PlayImage.setPosition(180,450);
-    aButton_OptionsImage.setPosition(180,650);
-    aButton_ExitImage.setPosition(180,850);
-
+    ///music
     if(!musicBuffer.loadFromFile("Media/Music/gameMenu.ogg")) {}
     musicSound.setBuffer(musicBuffer);
-
     musicSound.setVolume(utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")));
     musicSound.play();
 
-    guiManager.addStats(std::string(" "), std::string("Version 0.1.0 Alpha"));
-
-    guiManagerNew.setFont(Data_Desktop::getInstance().font1);
-
-    guiManagerNew.createButton("Test");
-    guiManagerNew.setButton(gui::ButtonCharacteristic::coords, std::make_pair(10,10));
-
-    guiManagerNew.createButtonAtr("Test", "sprite", gui::ButtonAtr::Sprite);
-    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Menu/Buttons/Options_Arrow.png");
-    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(10,10));
-
-    guiManagerNew.createButtonAtr("Test", "sprite2", gui::ButtonAtr::Sprite);
-    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Menu/Buttons/Options_Arrow.png");
-    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(100,100));
-
-    guiManagerNew.createButtonAtr("Test", "text1", gui::ButtonAtr::Text);
-    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(110,110));
-    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::charSize, 25);
-    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color::Yellow);
-    guiManagerNew.setButtonAtr(gui::ButtonAtrCharacteristic::text, "This is a test");
-
-    guiManagerNew.setButton("Test", gui::ButtonCharacteristic::bounds, "sprite");
-
-    guiManagerNew.createButton("Test2", "Test");
-    guiManagerNew.createButtonAtr("Test2", "hover", gui::ButtonAtr::Hover);
-    guiManagerNew.setButton("Test2", gui::ButtonCharacteristic::coords, std::make_pair(30,30));
+    ///gui
+    createGui();
 }
+
 
 State_MainMenu::~State_MainMenu()
 {
@@ -77,30 +40,25 @@ void State_MainMenu::processImput(sf::Keyboard::Key key,bool isPressed)
 
 void State_MainMenu::update(sf::Time elapsedTime)
 {
-    guiManagerNew.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
+    guiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        if(guiManager.testButton(1))
+        if(guiManager.isClicked("play"))
         {
             StateManager::getInstance().changeState(new State_Transition(window, 4));
         }
-        else if(guiManager.testButton(2))
+        else if(guiManager.isClicked("options"))
         {
             StateManager::getInstance().changeState(new State_Transition(window, 3));
         }
-        else if(guiManager.testButton(3))
+        else if(guiManager.isClicked("exit"))
         {
             window.close();
         }
-        else if(guiManager.testButton(4))
+        else if(guiManager.isClicked("editor"))
         {
             StateManager::getInstance().changeState(new State_Transition(window, 6));
-        }
-
-        if(guiManagerNew.isClicked("Test2"))
-        {
-            window.close();
         }
     }
 }
@@ -108,12 +66,68 @@ void State_MainMenu::update(sf::Time elapsedTime)
 void State_MainMenu::displayTextures()
 {
     window.draw(aMenuImage);
+    guiManager.drawButtons();
+}
 
-    guiManager.buttonCheck();
-    guiManager.drawGui();
-    guiManagerNew.drawButtons();
+void State_MainMenu::createGui()
+{
+    ///font
+    guiManager.setFont(Data_Desktop::getInstance().font1);
 
-    window.draw(aButton_PlayImage);
-    window.draw(aButton_OptionsImage);
-    window.draw(aButton_ExitImage);
+    ///version text
+    guiManager.createButton("versionText");
+    guiManager.createButtonAtr("versionText", "text", gui::ButtonAtr::Text);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::text, "Version 0.1.0 Alpha");
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(25,15));
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::charSize, 30);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color::Yellow);
+
+    ///3 main button template
+    guiManager.createButtonTemplate("mainTemplate");
+    //sprite
+    guiManager.createButtonAtr("mainTemplate", "buttonSprite", gui::ButtonAtr::Sprite);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Menu/Buttons/aButton.png");
+    //text
+    guiManager.createButtonAtr("mainTemplate", "text", gui::ButtonAtr::Text);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(35,35));
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::charSize, 80);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color::Black);
+    //bounds
+    guiManager.setButton("mainTemplate", gui::ButtonCharacteristic::bounds, "buttonSprite");
+    //hover
+    guiManager.createButtonAtr("mainTemplate", "hover", gui::ButtonAtr::Hover);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color (153,153,0,111));
+
+    ///main buttons
+    //play
+    guiManager.createButton("play", "mainTemplate");
+    guiManager.setButton("play", gui::ButtonCharacteristic::coords, std::make_pair(150, 400));
+    guiManager.setButtonAtr("play", "text", gui::ButtonAtrCharacteristic::text, "Play");
+    //options
+    guiManager.createButton("options", "mainTemplate");
+    guiManager.setButton("options", gui::ButtonCharacteristic::coords, std::make_pair(150, 600));
+    guiManager.setButtonAtr("options", "text", gui::ButtonAtrCharacteristic::text, "Options");
+    //exit
+    guiManager.createButton("exit", "mainTemplate");
+    guiManager.setButton("exit", gui::ButtonCharacteristic::coords, std::make_pair(150, 800));
+    guiManager.setButtonAtr("exit", "text", gui::ButtonAtrCharacteristic::text, "Exit");
+
+    ///editor button
+    guiManager.createButton("editor");
+    //sprite
+    guiManager.createButtonAtr("editor", "buttonSprite", gui::ButtonAtr::Sprite);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Menu/Buttons/Button_Editor.png");
+    //text
+    guiManager.createButtonAtr("editor", "text", gui::ButtonAtr::Text);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(53,7));
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::charSize, 30);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color::Black);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::text, "Editor");
+    //bounds
+    guiManager.setButton("editor", gui::ButtonCharacteristic::bounds, "buttonSprite");
+    //hover
+    guiManager.createButtonAtr("editor", "hover", gui::ButtonAtr::Hover);
+    guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color (153,153,0,111));
+    //position
+    guiManager.setButton("editor", gui::ButtonCharacteristic::coords, std::make_pair(1700, 1000));
 }

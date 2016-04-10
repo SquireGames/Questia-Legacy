@@ -21,21 +21,17 @@ public:
     void displayTextures();
 
 private:
+    void createGui();
+
     sf::RenderWindow& window;
 
-
     sf::Sprite aMenuImage;
-
-    sf::Sprite aButton_PlayImage;
-    sf::Sprite aButton_OptionsImage;
-    sf::Sprite aButton_ExitImage;
 
     sf::SoundBuffer musicBuffer;
     sf::Sound musicSound;
 
     ResourceManager resourceManager;
-    GuiManager guiManager;
-    GuiManagerNew guiManagerNew;
+    GuiManagerNew guiManager;
 };
 
 #endif // STATE_MAINMENU_H
