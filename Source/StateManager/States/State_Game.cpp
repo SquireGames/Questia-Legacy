@@ -23,6 +23,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , lightManager(mWindow, timeManager, resourceManager)
     , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager, true)
+    , newGuiManager(mWindow, resourceManager)
     , entityManager (mWindow, resourceManager, lightManager)
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
@@ -104,7 +105,8 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
         save_entities.clearSave();
     }
 
-    guiManager.addButton(100, true, 0, 0, std::string("Media/Image/Game/Gui/PauseOverlay.png"),std::string(""), 30, 30, 1, 50, sf::Color::Transparent, sf::Color(123, 123, 123, 0));
+    guiManager.addButton(100, true, 0, 0,     std::string("Media/Image/Game/Gui/PauseOverlay.png"),std::string(""), 30, 30, 1, 50, sf::Color::Transparent, sf::Color(123, 123, 123, 0));
+
     guiManager.addButton(101, true, 753, 400, std::string("Media/Image/Game/Gui/Buttons/PauseButton.png"),std::string("Main Menu"), 845, 410, 1, 50, sf::Color::Black, sf::Color(123, 123, 123, 100));
     guiManager.addButton(102, true, 753, 600, std::string("Media/Image/Game/Gui/Buttons/PauseButton.png"),std::string("Exit Game"), 845, 610, 1, 50, sf::Color::Black, sf::Color(123, 123, 123, 100));
 
@@ -176,13 +178,39 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     //lightManager.create_lightSource(sf::Vector2f(20,20), 50, 2, sf::Vector2f(120,120));
     //lightManager.create_lightSource(sf::Vector2f(20,20), 50, 2, sf::Vector2f(120,120));
 
-
     //lightManager.delete_lightSource(2);
 
 
     alignment.setTexture(resourceManager.getTexture("Media/Image/Alignment.png"));
 
     itemManager.spawnItem("item:test", ItemUsage::ground, 64, 64);
+
+    newGuiManager.setFont(Data_Desktop::getInstance().font1);
+
+    ///pause button template
+    newGuiManager.createButtonTemplate("pauseButton");
+    //sprite
+    newGuiManager.createButtonAtr("pauseButton", "sprite", gui::ButtonAtr::Sprite);
+    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Game/Gui/Buttons/PauseButton.png");
+    //text
+    newGuiManager.createButtonAtr("pauseButton", "text", gui::ButtonAtr::Text);
+    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::charSize, 50);
+    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color::Black);
+    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(92, 10));
+
+    ///pause buttons
+    //main menu
+    newGuiManager.createButton("mainMenu", "pauseButton");
+    newGuiManager.setButton("mainMenu", gui::ButtonCharacteristic::coords, std::make_pair(753, 400));
+    newGuiManager.setButtonAtr("mainMenu", "text", gui::ButtonAtrCharacteristic::text, "Main Menu");
+    //exit game
+    newGuiManager.createButton("exitGame", "pauseButton");
+    newGuiManager.setButton("exitGame", gui::ButtonCharacteristic::coords, std::make_pair(753, 600));
+    newGuiManager.setButtonAtr("exitGame", "text", gui::ButtonAtrCharacteristic::text, "Exit Game");
+    //group
+    newGuiManager.createGroup("pauseMenu");
+    newGuiManager.addToGroup("mainMenu");
+    newGuiManager.addToGroup("exitGame");
 }
 
 State_Game::~State_Game()
@@ -402,6 +430,8 @@ void State_Game::displayTextures()
     guiManager.buttonCheck();
     commandsManager.drawCommandArea();
     guiManager.drawGui();
+
+    newGuiManager.drawButtons();
 
     //window.draw(alignment);
 }

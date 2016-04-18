@@ -685,8 +685,20 @@ public:
 
     void createGroup(std::string groupName)
     {
-
+        groupMap[groupName];
+        currentGroupEdit = groupName;
     }
+
+    //{ addToGroup()
+    void addToGroup(std::string groupName, std::string entryName)
+    {
+        groupMap[groupName].push_back(entryName);
+    }
+    void addToGroup(std::string entryName)
+    {
+        groupMap[currentGroupEdit].push_back(entryName);
+    }
+    //}
 
     void createList(std::string listName)
     {
@@ -742,9 +754,11 @@ public:
 private:
     std::string currentButtonEdit;
     std::string currentButtonAtrEdit;
+    std::string currentGroupEdit;
 
     std::map <std::string, Button*> buttonMap;
     std::pair <float, float> mouseCoords;
+    std::map <std::string, std::vector <std::string> > groupMap;
     sf::Font buttonFont;
 
     sf::RenderWindow& window;

@@ -51,6 +51,7 @@ private:
     TileEngine tileEngine;
     EntityManager entityManager;
     GuiManager guiManager;
+    GuiManagerNew newGuiManager;
     SpawnManager spawnManager;
     CharacterManager characterManager;
     ItemManager itemManager;
