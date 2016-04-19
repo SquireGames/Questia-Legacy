@@ -597,6 +597,7 @@ public:
         , resourceManager(_resourceManager)
         , currentButtonEdit ("NOBUTTON")
         , currentButtonAtrEdit ("NOBUTTONATR")
+        , currentGroupEdit("NOGROUP")
         , mouseCoords(std::make_pair(0,0))
     {
 
@@ -692,11 +693,46 @@ public:
     //{ addToGroup()
     void addToGroup(std::string groupName, std::string entryName)
     {
-        groupMap[groupName].push_back(entryName);
+        if(groupMap.count(groupName))
+        {
+            groupMap[groupName].push_back(entryName);
+        }
     }
     void addToGroup(std::string entryName)
     {
-        groupMap[currentGroupEdit].push_back(entryName);
+        if(groupMap.count(currentGroupEdit))
+        {
+            groupMap[currentGroupEdit].push_back(entryName);
+        }
+    }
+    //}
+
+    //{ setGroupAtr()
+    template <class T>
+    void setGroupAtr(std::string groupName, gui::ButtonCharacteristic buttonChar, T value)
+    {
+        if(groupMap.count(groupName))
+        {
+            std::vector <std::string>& buttonVec = groupMap[groupName];
+
+            for(int it = 0; it != buttonVec.size(); it++)
+            {
+                buttonMap[buttonVec[it]]->setButton(buttonChar, value);
+            }
+        }
+    }
+    template <class T>
+    void setGroupAtr(gui::ButtonCharacteristic buttonChar, T value)
+    {
+        if(groupMap.count(currentGroupEdit))
+        {
+            std::vector <std::string>& buttonVec = groupMap[currentGroupEdit];
+
+            for(int it = 0; it != buttonVec.size(); it++)
+            {
+                buttonMap[buttonVec[it]]->setButton(buttonChar, value);
+            }
+        }
     }
     //}
 
@@ -714,7 +750,7 @@ public:
                 std::pair <int, int> buttonCoords = buttonMap[buttonName]->buttonPosition;
                 std::pair <int, int> buttonBounds = buttonMap[buttonName]->buttonBounds;
                 if(mouseCoords.first  > buttonCoords.first  && mouseCoords.first  < buttonCoords.first  + buttonBounds.first &&
-                   mouseCoords.second > buttonCoords.second && mouseCoords.second < buttonCoords.second + buttonBounds.second)
+                        mouseCoords.second > buttonCoords.second && mouseCoords.second < buttonCoords.second + buttonBounds.second)
                 {
                     return true;
                 }
@@ -746,6 +782,7 @@ public:
             it->second->update(static_cast <std::pair <int, int> > (_mouseCoords));
         }
     }
+
     void setFont(sf::Font _buttonFont)
     {
         buttonFont = _buttonFont;

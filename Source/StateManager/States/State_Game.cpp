@@ -8,7 +8,6 @@
 #include "StateManager/States/State_Game.h"
 #include "StateManager/States/State_Transition.h"
 
-#include "MultiplayerManager/Struct_Character.h"
 
 #include "Utl.h"
 
@@ -30,7 +29,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , itemManager(mWindow, resourceManager)
     , commandsManager(mWindow, entityManager)
 
-    , multiplayerManager()
+    , multiplayerManager("Temporary server name")
 
     //character info
     , player_Velocity(1,1)
@@ -61,7 +60,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 {
     //std::vector<std::string> path = Data_Desktop::getInstance().getFiles("Maps");
 
-    ///saves
+    //{saves
     //location
     std::stringstream sStream;
     sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "location" << ".txt";
@@ -104,11 +103,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     {
         save_entities.clearSave();
     }
-
-    guiManager.addButton(100, true, 0, 0,     std::string("Media/Image/Game/Gui/PauseOverlay.png"),std::string(""), 30, 30, 1, 50, sf::Color::Transparent, sf::Color(123, 123, 123, 0));
-
-    guiManager.addButton(101, true, 753, 400, std::string("Media/Image/Game/Gui/Buttons/PauseButton.png"),std::string("Main Menu"), 845, 410, 1, 50, sf::Color::Black, sf::Color(123, 123, 123, 100));
-    guiManager.addButton(102, true, 753, 600, std::string("Media/Image/Game/Gui/Buttons/PauseButton.png"),std::string("Exit Game"), 845, 610, 1, 50, sf::Color::Black, sf::Color(123, 123, 123, 100));
+    //}
 
     ///views
     gameView.setSize(1920,1080);
@@ -175,42 +170,52 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     lightManager.create_lightSource(sf::Vector2f(23*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
     lightManager.create_lightSource(sf::Vector2f(30*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
 
-    //lightManager.create_lightSource(sf::Vector2f(20,20), 50, 2, sf::Vector2f(120,120));
-    //lightManager.create_lightSource(sf::Vector2f(20,20), 50, 2, sf::Vector2f(120,120));
-
-    //lightManager.delete_lightSource(2);
-
-
     alignment.setTexture(resourceManager.getTexture("Media/Image/Alignment.png"));
 
     itemManager.spawnItem("item:test", ItemUsage::ground, 64, 64);
 
     newGuiManager.setFont(Data_Desktop::getInstance().font1);
 
+    //{ gui pause buttons
     ///pause button template
-    newGuiManager.createButtonTemplate("pauseButton");
+    newGuiManager.createButtonTemplate("pauseTemplate");
     //sprite
-    newGuiManager.createButtonAtr("pauseButton", "sprite", gui::ButtonAtr::Sprite);
+    newGuiManager.createButtonAtr("pauseTemplate", "sprite", gui::ButtonAtr::Sprite);
     newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Game/Gui/Buttons/PauseButton.png");
     //text
-    newGuiManager.createButtonAtr("pauseButton", "text", gui::ButtonAtr::Text);
+    newGuiManager.createButtonAtr("pauseTemplate", "text", gui::ButtonAtr::Text);
     newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::charSize, 50);
     newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color::Black);
     newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(92, 10));
+    //bounds
+    newGuiManager.setButton("pauseTemplate", gui::ButtonCharacteristic::bounds, "sprite");
+    //hover
+    newGuiManager.createButtonAtr("pauseTemplate", "hover", gui::ButtonAtr::Hover);
+    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color (153,153,0,111));
 
     ///pause buttons
     //main menu
-    newGuiManager.createButton("mainMenu", "pauseButton");
+    newGuiManager.createButton("mainMenu", "pauseTemplate");
     newGuiManager.setButton("mainMenu", gui::ButtonCharacteristic::coords, std::make_pair(753, 400));
     newGuiManager.setButtonAtr("mainMenu", "text", gui::ButtonAtrCharacteristic::text, "Main Menu");
     //exit game
-    newGuiManager.createButton("exitGame", "pauseButton");
+    newGuiManager.createButton("exitGame", "pauseTemplate");
     newGuiManager.setButton("exitGame", gui::ButtonCharacteristic::coords, std::make_pair(753, 600));
     newGuiManager.setButtonAtr("exitGame", "text", gui::ButtonAtrCharacteristic::text, "Exit Game");
-    //group
+
+    ///pause background
+    newGuiManager.createButton("_pauseBackground");
+    newGuiManager.createButtonAtr("_pauseBackground", "sprite", gui::ButtonAtr::Sprite);
+    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Game/Gui/PauseOverlay.png");
+
+    ///groups
+    //pause menu
     newGuiManager.createGroup("pauseMenu");
+    newGuiManager.addToGroup("_pauseBackground");
     newGuiManager.addToGroup("mainMenu");
     newGuiManager.addToGroup("exitGame");
+    newGuiManager.setGroupAtr(gui::ButtonCharacteristic::isVisible, false);
+    //}
 }
 
 State_Game::~State_Game()
@@ -220,7 +225,18 @@ State_Game::~State_Game()
 
 void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 {
-    if(!pause)
+    if(pause)
+    {
+        if(key == sf::Keyboard::Escape)
+        {
+            if(guiManager.buttonTimer())
+            {
+                newGuiManager.setGroupAtr("pauseMenu", gui::ButtonCharacteristic::isVisible, false);
+                pause = false;
+            }
+        }
+    }
+    else
     {
         int currentKey;
         for(unsigned char x = 0; x < keybindVector.size(); x++)
@@ -247,11 +263,11 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         }
         else if(key == sf::Keyboard::H)
         {
-            multiplayerManager.startServer(7777);
+
         }
         else if(key == sf::Keyboard::J)
         {
-            multiplayerManager.joinServer("192.168.2.77", 7777);
+
         }
         else if(key == sf::Keyboard::T)
         {
@@ -260,6 +276,15 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         else if(key == sf::Keyboard::U)
         {
             isInDebugMode = false;
+        }
+
+        else if(key == sf::Keyboard::Escape)
+        {
+            if(guiManager.buttonTimer())
+            {
+                newGuiManager.setGroupAtr("pauseMenu", gui::ButtonCharacteristic::isVisible, true);
+                pause = true;
+            }
         }
     }
 
@@ -287,34 +312,13 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         entityManager.saveEntities(save_entities);
         save_spawn.clearSave();
         spawnManager.saveSpawns(save_spawn);
-
-        if(guiManager.buttonTimer())
-        {
-            if(!pause)
-            {
-                guiManager.changeVisibility(100, false);
-                guiManager.changeVisibility(101, false);
-                guiManager.changeVisibility(102, false);
-
-                entityManager.handleInput(0, false, 0);
-                entityManager.handleInput(1, false, 0);
-                entityManager.handleInput(2, false, 0);
-                entityManager.handleInput(3, false, 0);
-                pause = true;
-            }
-            else
-            {
-                guiManager.changeVisibility(100, true);
-                guiManager.changeVisibility(101, true);
-                guiManager.changeVisibility(102, true);
-                pause = false;
-            }
-        }
     }
 }
 
 void State_Game::update(sf::Time elapsedTime)
 {
+    newGuiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
+
     commandsManager.getCharImput(Data_Desktop::getInstance().getMostRecentChar());
     commandsManager.update();
 
@@ -371,25 +375,6 @@ void State_Game::update(sf::Time elapsedTime)
     gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
 
-    //Multi-player
-    if(multiplayerManager.isRunningServer())
-    {
-        std::string a = "Hosting Server";
-    }
-    else if(multiplayerManager.isClient())
-    {
-        std::string a = "Joining Server";
-    }
-    if(multiplayerManager.isRunningServer())
-    {
-        multiplayerManager.server_recievePackets();
-    }
-    if (multiplayerManager.isClient())
-    {
-        multiplayerManager.client_recievePackets();
-    }
-
-
     /* Gui */
     guiManager.addStats(std::string("FPS: "), Data_Desktop::getInstance().get_FPS());
     guiManager.addStats(std::string("Coordinates: "), tempCoords_x, std::string(" , "), tempCoords_y);
@@ -401,18 +386,15 @@ void State_Game::update(sf::Time elapsedTime)
 
     guiManager.setStats(entityManager.getPlayerStats());
 
-    if(pause)
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        if(newGuiManager.isClicked("mainMenu"))
         {
-            if(guiManager.testButton(101))
-            {
-                StateManager::getInstance().changeState(new State_Transition(window, 1));
-            }
-            else if(guiManager.testButton(102))
-            {
-                window.close();
-            }
+            StateManager::getInstance().changeState(new State_Transition(window, 1));
+        }
+        else if(newGuiManager.isClicked("exitGame"))
+        {
+            window.close();
         }
     }
 }

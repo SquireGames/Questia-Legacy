@@ -48,7 +48,7 @@ void State_Transition::displayTextures()
     window.draw(aLoadingImage);
     window.display();
 
-    //sf::Time loadingTime = sf::seconds(0.5);
+    //sf::Time loadingTime = sf::seconds(0.05);
     //sf::sleep(loadingTime);
 
     window.draw(aLoadingImage);

@@ -30,8 +30,6 @@ void StateManager::deleteState()
     {
         delete stateStack.top();
         stateStack.pop();
-        //std::cout<<std::endl;
-        //std::cout<<"DEBUG: State Deleted"<<std::endl;
     }
 }
 

@@ -1,48 +1,30 @@
 #ifndef MULTIPLAYERMANAGER_H
 #define MULTIPLAYERMANAGER_H
 
-#include "MultiplayerManager/Struct_Character.h"
-
 #include <SFML/Network.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <string>
 #include <iostream>
 #include <map>
 
-///TODO H/ Add Multiplayer component
 class MultiplayerManager
 {
 public:
-    MultiplayerManager();
-    void startServer(unsigned int port);
-    void joinServer(std::string IP, unsigned short port);
+    MultiplayerManager(std::string _serverName)
+    {
+        serverName = _serverName;
+    }
+    ~MultiplayerManager()
+    {
+        //make sure to delete thread safely
+    }
 
-    void server_recievePackets();
-    void client_recievePackets();
+    void startMultiplayer(bool isServerHost);
 
-    void server_sendPackets(sf::Vector2f playerCoordinates, float angleToMouse, int playerStep);
-    void client_sendPackets(sf::Vector2f playerCoordinates, float angleToMouse, int playerStep);
-
-    Struct_Character m_character();
-    Struct_Character struct_Character;
-
-    bool isRunningServer();
-    bool isClient();
-
+    void sendServerData();
 
 private:
-    bool isActive;
-    bool isHost;
-
-    sf::UdpSocket udpSocket;
-    int numberOfClients;
-
-    std::map <short unsigned int, sf::IpAddress> clientMap;
-
-    sf::IpAddress hostIP;
-    unsigned short hostPort;
-
-
+    std::string serverName;
 };
 
 #endif // MULTIPLAYERMANAGER_H
