@@ -263,11 +263,11 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         }
         else if(key == sf::Keyboard::H)
         {
-
+            multiplayerManager.startHostingServer();
         }
-        else if(key == sf::Keyboard::J)
+        else if(key == sf::Keyboard::L)
         {
-
+            multiplayerManager.terminateHost();
         }
         else if(key == sf::Keyboard::T)
         {
