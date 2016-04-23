@@ -10,11 +10,8 @@
 
 #include "Server.h"
 
-struct SharedVariables
-{
-    bool terminate;
-};
-static SharedVariables sharedVariables;
+static sf::Mutex terminateMutex;
+static bool terminateServer;
 
 //server init
 static void hostThreadInit(int ip)
@@ -25,23 +22,25 @@ static void hostThreadInit(int ip)
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
-    while(true)
+    terminateMutex.lock();
+    while(!terminateServer)
     {
+        terminateMutex.unlock();
+
         sf::Time elapsedTime = clock.restart();
         timeSinceLastUpdate += elapsedTime;
+
         while (timeSinceLastUpdate > timePerUpdate)
         {
             timeSinceLastUpdate -= timePerUpdate;
             server.update();
         }
 
-        if(sharedVariables.terminate)
-        {
-
-        }
-
         sf::sleep(timePerUpdate/10.f);
+
+        terminateMutex.lock();
     }
+    terminateMutex.unlock();
 }
 
 class MultiplayerManager
@@ -62,6 +61,10 @@ public:
     {
         if(!isHostingServer && !isRunningServer)
         {
+            terminateMutex.lock();
+            terminateServer = false;
+            terminateMutex.unlock();
+
             serverHostThread = new sf::Thread(&hostThreadInit, 5);
             serverHostThread->launch();
 
@@ -74,7 +77,9 @@ public:
     {
         if(isRunningServer)
         {
-
+            terminateMutex.lock();
+            terminateServer = true;
+            terminateMutex.unlock();
         }
     }
 
@@ -95,10 +100,10 @@ public:
 private:
     std::string serverName;
 
+    sf::Thread* serverHostThread;
+
     bool isHostingServer;
     bool isRunningServer;
-
-    sf::Thread* serverHostThread;
 };
 
 #endif // MULTIPLAYERMANAGER_H

@@ -21,6 +21,7 @@ public:
     }
 
 private:
+
     int count_update;
 };
 
