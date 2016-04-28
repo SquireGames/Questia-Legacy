@@ -2,13 +2,15 @@
 #define SERVER_H
 
 #include <SFML/System.hpp>
+#include <SFML/Network.hpp>
 #include <iostream>
 
 class Server
 {
 public:
     Server():
-        count_update (0)
+        tick(0)
+        , tickRate(64)
     {
 
     }
@@ -16,13 +18,15 @@ public:
 
     void update()
     {
-        count_update++;
-        std::cout << count_update << std::endl;
+        tick++;
     }
 
 private:
+    sf::UdpSocket udpSocket;
+    sf::TcpSocket tcpSocket;
 
-    int count_update;
+    unsigned int tickRate;
+    unsigned int tick;
 };
 
 #endif // SERVER_H

@@ -6,7 +6,6 @@
 #include <string>
 #include <iostream>
 #include <map>
-#include <functional> // std::bind
 
 #include "Server.h"
 
@@ -22,6 +21,7 @@ static void hostThreadInit(int ip)
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
+    sf::Lock mutexLock(terminateMutex);
     terminateMutex.lock();
     while(!terminateServer)
     {
