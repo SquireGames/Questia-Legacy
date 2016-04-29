@@ -4,31 +4,128 @@
 #include <SFML/System.hpp>
 #include <SFML/Network.hpp>
 
-struct Packet_Player
+#include "Packet.h"
+
+struct pkt
+{
+    //packet
+    enum Header { other = 0, player = 1, playerContainer = 2, entity = 3, entityContainer = 4};
+
+    //entities
+    enum Direction {none = 0, up = 1, upRight = 2, right = 3, downRight = 4, down = 5, downLeft = 6, left = 7, upLeft = 8};
+};
+
+// 500 byte max
+struct Packet_Player : public Packet
 {
     Packet_Player(std::pair <float, float> coordinates, int _packetNumber):
         coords_x(static_cast <sf::Int32> (coordinates.first))
         , coords_y(static_cast <sf::Int32> (coordinates.second))
         , packetNumber(static_cast <sf::Int32> (_packetNumber))
     {}
+    Packet_Player(std::pair <float, float> coordinates):
+        coords_x(static_cast <sf::Int32> (coordinates.first))
+        , coords_y(static_cast <sf::Int32> (coordinates.second))
+    {}
     ~Packet_Player();
 
+    ///Variables
+    sf::Int32 packetNumber; // to make sure to organize them in the right order
+    sf::Int32 playerID;
     sf::Int32 coords_x;
     sf::Int32 coords_y;
-
-    sf::Int32 packetNumber; // to make sure to organize them in the right order
-
-    sf::Int32 playerID;
+#define BYTES_PLAYER 20 //4*4 bytes + 4 bytes(header)
 };
 
-sf::Packet& operator >> (sf::Packet& packet, const Packet_Player& player)
+sf::Packet& operator << (sf::Packet& packet, const Packet_Player& player)
 {
-    return packet << player.coords_x << player.coords_y << player.packetNumber;
+    packet << static_cast <sf::Int32> (pkt::Header::player);
+    packet << player.packetNumber;
+
+    packet << player.playerID;
+    packet << player.coords_x;
+    packet << player.coords_y;
+
+    return packet;
 }
 
 sf::Packet& operator >> (sf::Packet& packet, Packet_Player& player)
 {
-    return packet >> player.coords_x >> player.coords_y >> player.packetNumber;
+    int tempHeader;
+
+    packet >> tempHeader;
+    packet >> player.packetNumber;
+
+    packet >> player.playerID;
+    packet >> player.coords_x;
+    packet >> player.coords_y;
+
+    return packet;
 }
+
+struct PacketContainer_Player : public Packet
+{
+    PacketContainer_Player(int _packetNumber):
+        byteCount(0)
+        , packetNumber(static_cast <sf::Int32> (_packetNumber))
+    {}
+    ~PacketContainer_Player() {}
+
+    ///Variables
+    sf::Int32 packetNumber;
+
+    bool add(const Packet_Player& player)
+    {
+        //450 bytes per pack max
+        if((BYTES_PLAYER + 4 + byteCount) < 450) // +4 (container size)
+        {
+            byteCount += BYTES_PLAYER + 4;
+            playerContainer.push_back(player);
+            return true;
+        }
+        return false;
+    }
+
+    std::vector <Packet_Player> playerContainer;
+    int byteCount;
+};
+
+sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player& packetContainer)
+{
+    packet << static_cast <sf::Int32> (pkt::Header::playerContainer);
+    packet << packetContainer.packetNumber;
+
+    packet << packetContainer.playerContainer.size();
+
+    for(int it = 0; it != packetContainer.playerContainer.size(); it++)
+    {
+        packet << packetContainer.playerContainer[it].playerID;
+        packet << packetContainer.playerContainer[it].coords_x;
+        packet << packetContainer.playerContainer[it].coords_y;
+    }
+    return packet;
+}
+
+sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& packetContainer)
+{
+    int packetCount;
+    packet >> packetCount;
+
+    int* packetNumber;
+    int* playerID;
+    int* coords_x;
+    int* coords_y;
+
+    for(int it = 0; it != packetCount; it++)
+    {
+        packet >> packetContainer.playerContainer[it].packetNumber;
+        packet >> packetContainer.playerContainer[it].playerID;
+        packet >> packetContainer.playerContainer[it].coords_x;
+        packet >> packetContainer.playerContainer[it].coords_y;
+    }
+    return packet;
+}
+
+
 
 #endif // PACKET_PLAYER_H
