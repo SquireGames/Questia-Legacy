@@ -15,17 +15,19 @@ struct pkt
     enum Direction {none = 0, up = 1, upRight = 2, right = 3, downRight = 4, down = 5, downLeft = 6, left = 7, upLeft = 8};
 };
 
-// 500 byte max
+//{ Packet_Player
 struct Packet_Player : public Packet
 {
-    Packet_Player(std::pair <float, float> coordinates, int _packetNumber):
-        coords_x(static_cast <sf::Int32> (coordinates.first))
+    Packet_Player(int _packetNumber, std::pair <float, float> coordinates, int _playerID):
+        packetNumber(static_cast <sf::Int32> (_packetNumber))
+        , coords_x(static_cast <sf::Int32> (coordinates.first))
         , coords_y(static_cast <sf::Int32> (coordinates.second))
-        , packetNumber(static_cast <sf::Int32> (_packetNumber))
+        , playerID(static_cast <sf::Int32> (_playerID))
     {}
-    Packet_Player(std::pair <float, float> coordinates):
+    Packet_Player(std::pair <float, float> coordinates, int _playerID):
         coords_x(static_cast <sf::Int32> (coordinates.first))
         , coords_y(static_cast <sf::Int32> (coordinates.second))
+        , playerID(static_cast <sf::Int32> (_playerID))
     {}
     ~Packet_Player();
 
@@ -62,6 +64,10 @@ sf::Packet& operator >> (sf::Packet& packet, Packet_Player& player)
 
     return packet;
 }
+//}
+
+
+//{PacketContainer_Player
 
 struct PacketContainer_Player : public Packet
 {
@@ -76,10 +82,12 @@ struct PacketContainer_Player : public Packet
 
     bool add(const Packet_Player& player)
     {
+        int bytes_container = BYTES_PLAYER + 4;
+
         //450 bytes per pack max
-        if((BYTES_PLAYER + 4 + byteCount) < 450) // +4 (container size)
+        if((bytes_container + byteCount) < 450) // +4 (container size)
         {
-            byteCount += BYTES_PLAYER + 4;
+            byteCount += bytes_container;
             playerContainer.push_back(player);
             return true;
         }
@@ -108,24 +116,28 @@ sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player& packe
 
 sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& packetContainer)
 {
+    int tempHeader;
+    packet >> tempHeader;
+    int packetNumber;
+    packet >> packetContainer.packetNumber;
+
     int packetCount;
     packet >> packetCount;
 
-    int* packetNumber;
-    int* playerID;
-    int* coords_x;
-    int* coords_y;
+    int playerID;
+    int coords_x;
+    int coords_y;
 
     for(int it = 0; it != packetCount; it++)
     {
-        packet >> packetContainer.playerContainer[it].packetNumber;
-        packet >> packetContainer.playerContainer[it].playerID;
-        packet >> packetContainer.playerContainer[it].coords_x;
-        packet >> packetContainer.playerContainer[it].coords_y;
+        packet >> playerID;
+        packet >> coords_x;
+        packet >> coords_y;
+        packetContainer.add(Packet_Player(std::make_pair(coords_x, coords_y), playerID));
     }
     return packet;
 }
-
+//}
 
 
 #endif // PACKET_PLAYER_H

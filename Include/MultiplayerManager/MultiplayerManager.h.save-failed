@@ -9,6 +9,9 @@
 
 #include "Server.h"
 
+
+//}
+
 class MultiplayerManager
 {
 public:
@@ -18,10 +21,9 @@ public:
         , thread_host_main  (&MultiplayerManager::host_mainThread,   this)
         , thread_host_tcp   (&MultiplayerManager::host_udpThread,    this)
         , host_terminate  (false)
-        , host_alive_main (false)
-        , host_alive_tcp  (false)
+        , host_dead_main  (true)
+        , host_dead_tcp   (true)
         , isRunningServer (false)
-        , isKillingServer (false)
     {
 
     }
@@ -35,14 +37,15 @@ public:
     //main thread, handles tcp
     void host_mainThread()
     {
-        std::cout << "host_mainThread()" << std::endl;
         Server server;
 
-        float tickRate = 1.f;
+        float tickRate = 5.f;
 
         sf::Time timePerUpdate = sf::seconds(1.f/tickRate);
         sf::Clock clock;
         sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
+        sf::Lock mutexLock(host_terminateMutex);
 
         host_terminateMutex.lock();
         while(!host_terminate)
@@ -56,8 +59,6 @@ public:
             {
                 timeSinceLastUpdate -= timePerUpdate;
                 server.update();
-
-                std::cout << "tick" << std::endl;
             }
 
             sf::sleep(timePerUpdate/10.f);
@@ -65,33 +66,26 @@ public:
             host_terminateMutex.lock();
         }
         host_terminateMutex.unlock();
-
-        host_aliveMutex.lock();
-        host_alive_main = false;
-        host_aliveMutex.unlock();
-
-        std::cout << "host_mainThread() ded" << std::endl;
     }
     //secondary thread, handles udp
     void host_udpThread()
     {
-        std::cout << "host_udpThread" << std::endl;
-        host_aliveMutex.lock();
-        host_alive_tcp = false;
-        host_aliveMutex.unlock();
+
     }
     void startHostingServer()
     {
         if(!isRunningServer)
         {
-            thread_host_main.launch();
-            thread_host_tcp .launch();
-            isRunningServer = true;
+            host_terminateMutex.lock();
+            host_terminate = false;
+            host_terminateMutex.unlock();
 
-            host_aliveMutex.lock();
-            host_alive_main = true;
-            host_alive_tcp =  true;
-            host_aliveMutex.unlock();
+            host_deadMutex.lock();
+            host_dead_main = true;
+            host_dead_tcp = true;
+
+            thread_host_main.launch();
+            isRunningServer = true;
         }
     }
     void terminateHost()
@@ -101,7 +95,6 @@ public:
             host_terminateMutex.lock();
             host_terminate = true;
             host_terminateMutex.unlock();
-            isKillingServer = true;
         }
     }
 
@@ -123,47 +116,36 @@ public:
 
     void update()
     {
-        if(isRunningServer && isKillingServer)
+        if(isRunningServer)
         {
-            host_aliveMutex.lock();
-            if(!host_alive_main && !host_alive_tcp)
+            host_deadMutex.lock();
+            if(host_dead_main && host_dead_tcp)
             {
-                std::cout << "SERVER TERMINATED" << std::endl;
                 isRunningServer = false;
-                isKillingServer = false;
-
-                //just to make sure, should already be dead
-                thread_host_main.terminate();
-                thread_host_tcp.terminate();
-
-                //threads are dead, should be safe
-                host_terminate = false;
             }
-            host_aliveMutex.unlock();
+            host_deadMutex.unlock();
         }
     }
-
 
 private:
     Server* server;
 
-///server
-//terminate
+    ///server
+    //terminate
     sf::Mutex host_terminateMutex;
     bool      host_terminate;
-//check if alive
-    sf::Mutex host_aliveMutex;
-    bool      host_alive_main;
-    bool      host_alive_tcp;
+    //check if alive
+    sf::Mutex host_deadMutex;
+    bool      host_dead_main;
+    bool      host_dead_tcp;
 
-///threads
+    ///threads
     sf::Thread thread_host_main;
     sf::Thread thread_host_tcp;
     sf::Thread thread_client_main;
 
-///thread safe
+    ///thread safe
     bool isRunningServer;
-    bool isKillingServer;
 };
 
 #endif // MULTIPLAYERMANAGER_H
