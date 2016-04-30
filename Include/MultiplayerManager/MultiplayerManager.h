@@ -14,12 +14,12 @@ class MultiplayerManager
 public:
     MultiplayerManager(std::string _serverName):
         server(nullptr)
-        , thread_client_main(&MultiplayerManager::client_mainThread, this)
-        , thread_host_main  (&MultiplayerManager::host_mainThread,   this)
-        , thread_host_tcp   (&MultiplayerManager::host_udpThread,    this)
+        , thread_client_main  (&MultiplayerManager::client_mainThread,  this)
+        , thread_host_send    (&MultiplayerManager::host_sendThread,    this)
+        , thread_host_recieve (&MultiplayerManager::host_recieveThread, this)
         , host_terminate  (false)
-        , host_alive_main (false)
-        , host_alive_tcp  (false)
+        , host_alive_send (false)
+        , host_alive_recieve  (false)
         , isRunningServer (false)
         , isKillingServer (false)
         , tickRate(5) // no active thread at this point
@@ -31,19 +31,18 @@ public:
         terminateHost(); // just to make sure
     }
 
-    ///Server
+///Server
 
-    //main thread, handles tcp
-    void host_mainThread()
+    //handles sending
+    void host_sendThread()
     {
+        std::cout << "host_sendThread() init" << std::endl;
         Server* svr = server; //saved to delete the server
 
-        std::cout << "host_mainThread() init" << std::endl;
-
+        ///tick rate
         host_changeTickRateMutex.lock();
         float threadTickRate = tickRate;
         host_changeTickRateMutex.unlock();
-
         sf::Time timePerUpdate = sf::seconds(1.f/threadTickRate);
         sf::Clock clock;
         sf::Time timeSinceLastUpdate = sf::Time::Zero;
@@ -53,17 +52,17 @@ public:
         {
             host_terminateMutex.unlock();
 
-            //check for changes in tick rate
+            ///check for changes in tick rate
             host_changeTickRateMutex.lock();
-            if(host_tickChange_tcp)
+            if(host_tickChange)
             {
-                host_tickChange_tcp = false;
+                host_tickChange = false;
                 threadTickRate = tickRate;
                 timePerUpdate = sf::seconds(1.f/threadTickRate);
             }
             host_changeTickRateMutex.unlock();
 
-            //update
+            ///update
             sf::Time elapsedTime = clock.restart();
             timeSinceLastUpdate += elapsedTime;
             while (timeSinceLastUpdate > timePerUpdate)
@@ -78,71 +77,56 @@ public:
         }
         host_terminateMutex.unlock();
 
-        ///death of tcp
+        ///death
         host_aliveMutex.lock();
-        if(!host_alive_tcp)
+        if(!host_alive_recieve)
         {
             delete svr;
         }
-        host_alive_main = false;
+        host_alive_send = false;
         host_aliveMutex.unlock();
-        std::cout << "host_mainThread() ded" << std::endl;
+        std::cout << "host_sendThread() ded" << std::endl;
     }
-    //secondary thread, handles udp
-    void host_udpThread()
+
+    //handles receiving
+    void host_recieveThread()
     {
+        std::cout << "host_recieveThread() init" << std::endl;
         Server* svr = server; //saved to delete the server
 
-        std::cout << "host_udpThread init" << std::endl;
-
-        host_changeTickRateMutex.lock();
-        float threadTickRate = tickRate;
-        host_changeTickRateMutex.unlock();
-
-        sf::Time timePerUpdate = sf::seconds(1.f/threadTickRate);
-        sf::Clock clock;
-        sf::Time timeSinceLastUpdate = sf::Time::Zero;
+        sf::UdpSocket tempSocket;
+        sf::SocketSelector selector;
 
         host_terminateMutex.lock();
         while(!host_terminate)
         {
             host_terminateMutex.unlock();
 
-            //check for changes in tick rate
-            host_changeTickRateMutex.lock();
-            if(host_tickChange_udp)
+            if(selector.wait(sf::Time(sf::milliseconds(sf::Int32(100)))))
             {
-                host_tickChange_udp = false;
-                threadTickRate = tickRate;
-                timePerUpdate = sf::seconds(1.f/threadTickRate);
-            }
-            host_changeTickRateMutex.unlock();
+                if(selector.isReady(tempSocket))
+                {
 
-            //update
-            sf::Time elapsedTime = clock.restart();
-            timeSinceLastUpdate += elapsedTime;
-            while (timeSinceLastUpdate > timePerUpdate)
-            {
-                timeSinceLastUpdate -= timePerUpdate;
-                svr->update();
-                std::cout << "tick" << std::endl;
+                }
             }
-            sf::sleep(timePerUpdate/10.f);
 
             host_terminateMutex.lock();
         }
         host_terminateMutex.unlock();
 
-        ///death of udp
+
+        ///death
         host_aliveMutex.lock();
-        if(!host_alive_main)
+        if(!host_alive_send)
         {
             delete svr;
         }
-        host_alive_tcp = false;
+        host_alive_recieve = false;
         host_aliveMutex.unlock();
-        std::cout << "host_udpThread ded" << std::endl;
+        std::cout << "host_recieveThread() ded" << std::endl;
     }
+
+
     void startHostingServer()
     {
         if(!isRunningServer)
@@ -152,13 +136,13 @@ public:
                 server = new Server();
             }
 
-            thread_host_main.launch();
-            thread_host_tcp .launch();
+            thread_host_send   .launch();
+            thread_host_recieve.launch();
             isRunningServer = true;
 
             host_aliveMutex.lock();
-            host_alive_main = true;
-            host_alive_tcp =  true;
+            host_alive_send =    true;
+            host_alive_recieve = true;
             host_aliveMutex.unlock();
         }
     }
@@ -173,7 +157,7 @@ public:
         }
     }
 
-    ///client
+///client
 
     void client_mainThread()
     {
@@ -187,22 +171,22 @@ public:
         }
     }
 
-    ///manager
+///manager
 
     void update()
     {
         if(isRunningServer && isKillingServer)
         {
             host_aliveMutex.lock();
-            if(!host_alive_main && !host_alive_tcp)
+            if(!host_alive_send && !host_alive_recieve)
             {
                 std::cout << "SERVER TERMINATED" << std::endl;
                 isRunningServer = false;
                 isKillingServer = false;
 
                 //just to make sure, should already be dead
-                thread_host_main.terminate();
-                thread_host_tcp.terminate();
+                thread_host_send.terminate();
+                thread_host_recieve.terminate();
 
                 //threads are dead, should be safe
                 host_terminate = false;
@@ -219,8 +203,7 @@ public:
         host_changeTickRateMutex.lock();
         if(_tickRate != tickRate)
         {
-            host_tickChange_tcp = true;
-            host_tickChange_udp = true;
+            host_tickChange = true;
             tickRate = _tickRate;
         }
         host_changeTickRateMutex.unlock();
@@ -236,18 +219,17 @@ private:
     bool      host_terminate;
 //check if alive
     sf::Mutex host_aliveMutex;
-    bool      host_alive_main;
-    bool      host_alive_tcp;
+    bool      host_alive_send;
+    bool      host_alive_recieve;
 //tick rate
     sf::Mutex host_changeTickRateMutex;
-    bool      host_tickChange_udp;
-    bool      host_tickChange_tcp;
+    bool      host_tickChange;
     float tickRate;
 
 
 ///threads
-    sf::Thread thread_host_main;
-    sf::Thread thread_host_tcp;
+    sf::Thread thread_host_send;
+    sf::Thread thread_host_recieve;
     sf::Thread thread_client_main;
 
 ///thread safe
