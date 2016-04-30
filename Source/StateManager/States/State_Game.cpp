@@ -221,6 +221,13 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 State_Game::~State_Game()
 {
     std::cout<<"DEBUG: State_Game Destroyed"<<std::endl;
+
+    multiplayerManager.terminateHost();
+    while(!multiplayerManager.isServerDead())
+    {
+        multiplayerManager.update();
+        sf::sleep(sf::Time(sf::milliseconds(sf::Int32(100))));
+    }
 }
 
 void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
@@ -273,9 +280,13 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         {
             isInDebugMode = true;
         }
-        else if(key == sf::Keyboard::U)
+        else if(key == sf::Keyboard::Y)
         {
             isInDebugMode = false;
+        }
+        else if(key == sf::Keyboard::C)
+        {
+            multiplayerManager.host_changeTickRate(64.f);
         }
 
         else if(key == sf::Keyboard::Escape)
