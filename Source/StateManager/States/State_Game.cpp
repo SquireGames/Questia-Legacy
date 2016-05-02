@@ -27,7 +27,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)
-    , commandsManager(mWindow, entityManager)
+    , commandsManager(mWindow, entityManager, multiplayerManager, timeManager)
 
     , multiplayerManager("Temporary server name")
 
@@ -268,14 +268,6 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         {
             guiManager.toggleOverlay();
         }
-        else if(key == sf::Keyboard::H)
-        {
-            multiplayerManager.startHostingServer();
-        }
-        else if(key == sf::Keyboard::L)
-        {
-            multiplayerManager.terminateHost();
-        }
         else if(key == sf::Keyboard::T)
         {
             isInDebugMode = true;
@@ -283,10 +275,6 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         else if(key == sf::Keyboard::Y)
         {
             isInDebugMode = false;
-        }
-        else if(key == sf::Keyboard::C)
-        {
-            multiplayerManager.host_changeTickRate(64.f);
         }
 
         else if(key == sf::Keyboard::Escape)

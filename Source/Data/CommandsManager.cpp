@@ -1,4 +1,5 @@
 #include "CommandsManager.h"
+#include "Utl.h"
 #include <string>
 
 // Amount of commands saved in memory to press up to find
@@ -10,14 +11,16 @@
 #define COUNT_VISIBLE 20
 #define COUNT_VISIVLE_FIT 7
 
-CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager):
+CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, MultiplayerManager& _multiplayerManager, TimeManager& _timeManager):
     isCommandsActive(false)
     , window(_window)
     , entityManager(_entityManager)
+    , multiplayerManager(_multiplayerManager)
     , textImput()
     , timer (0)
     , isGood(true)
     , currentCommand(-1)
+    , timeManager(_timeManager)
 {
     for (int it = 0; it != COUNT_HISTORY; it++)
     {
@@ -227,8 +230,48 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
                 param[it].erase(std::remove(param[it].begin(), param[it].end(), '\0'), param[it].end());
             }
 
+
+            if(param[0] == "host")
+            {
+                if(param[1] == "true")
+                {
+                    multiplayerManager.startHostingServer();
+                }
+                else if(param[1] == "false")
+                {
+                    multiplayerManager.terminateHost();
+                }
+                else if(param[1] == "tick")
+                {
+                    multiplayerManager.host_changeTickRate(static_cast<float>(utl::asNumber(param[2])));
+                }
+
+            }
+            else if(param[0] == "client")
+            {
+                if(param[1] == "join")
+                {
+
+
+                }
+                else if(param[1] == "leave")
+                {
+
+                }
+            }
+            else if(param[0] == "time")
+            {
+                if(param[1] == "set")
+                {
+                    timeManager.setTime(static_cast<char> (utl::asNumber(param[2])), static_cast<char> (utl::asNumber(param[3])));
+                }
+                else if(param[1] == "step")
+                {
+                    timeManager.setTimeStep(static_cast<char>(utl::asNumber(param[2])));
+                }
+            }
             // commands involving coordinates
-            if(param[0] == "spawn" || param[0] == "tp" ||  param[0] == "teleport")
+            else if(param[0] == "spawn" || param[0] == "tp" ||  param[0] == "teleport")
             {
                 if(param[0] == "tp" ||  param[0] == "teleport")
                 {

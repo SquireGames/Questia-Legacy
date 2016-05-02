@@ -10,16 +10,14 @@ struct Packet_Entity : public Packet
 {
     Packet_Entity();
     ~Packet_Entity();
-
-
 };
 
-sf::Packet& operator >> (sf::Packet& packet, const Packet_Entity& player)
+static sf::Packet& operator << (sf::Packet& packet, const Packet_Entity& player)
 {
 //    return packet << player.coords_x << player.coords_y << player.packetNumber;
 }
 
-sf::Packet& operator >> (sf::Packet& packet, Packet_Entity& player)
+static sf::Packet& operator >> (sf::Packet& packet, Packet_Entity& player)
 {
   //  return packet >> player.coords_x >> player.coords_y >> player.packetNumber;
 }

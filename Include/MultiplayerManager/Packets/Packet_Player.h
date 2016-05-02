@@ -39,7 +39,7 @@ struct Packet_Player : public Packet
 #define BYTES_PLAYER 20 //4*4 bytes + 4 bytes(header)
 };
 
-sf::Packet& operator << (sf::Packet& packet, const Packet_Player& player)
+static sf::Packet& operator << (sf::Packet& packet, const Packet_Player& player)
 {
     packet << static_cast <sf::Int32> (pkt::Header::player);
     packet << player.packetNumber;
@@ -51,7 +51,7 @@ sf::Packet& operator << (sf::Packet& packet, const Packet_Player& player)
     return packet;
 }
 
-sf::Packet& operator >> (sf::Packet& packet, Packet_Player& player)
+static sf::Packet& operator >> (sf::Packet& packet, Packet_Player& player)
 {
     int tempHeader;
 
@@ -98,7 +98,7 @@ struct PacketContainer_Player : public Packet
     int byteCount;
 };
 
-sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player& packetContainer)
+static sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player& packetContainer)
 {
     packet << static_cast <sf::Int32> (pkt::Header::playerContainer);
     packet << packetContainer.packetNumber;
@@ -114,7 +114,7 @@ sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player& packe
     return packet;
 }
 
-sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& packetContainer)
+static sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& packetContainer)
 {
     int tempHeader;
     packet >> tempHeader;

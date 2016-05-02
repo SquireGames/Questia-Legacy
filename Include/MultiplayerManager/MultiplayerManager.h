@@ -9,6 +9,9 @@
 
 #include "Server.h"
 
+#include "Packet.h"
+#include "Packet_Player.h"
+
 class MultiplayerManager
 {
 public:
@@ -17,11 +20,11 @@ public:
         , thread_client_main  (&MultiplayerManager::client_mainThread,  this)
         , thread_host_send    (&MultiplayerManager::host_sendThread,    this)
         , thread_host_recieve (&MultiplayerManager::host_recieveThread, this)
-        , host_terminate  (false)
-        , host_alive_send (false)
-        , host_alive_recieve  (false)
-        , isRunningServer (false)
-        , isKillingServer (false)
+        , host_terminate     (false)
+        , host_alive_send    (false)
+        , host_alive_recieve (false)
+        , isRunningServer    (false)
+        , isKillingServer    (false)
         , tickRate(5) // no active thread at this point
     {
 
@@ -31,8 +34,84 @@ public:
         terminateHost(); // just to make sure
     }
 
-///Server
+///server
+    void startHostingServer()
+    {
+        if(!isRunningServer)
+        {
+            server = new Server();
 
+            thread_host_send   .launch();
+            thread_host_recieve.launch();
+            isRunningServer = true;
+
+            host_aliveMutex.lock();
+            host_alive_send =    true;
+            host_alive_recieve = true;
+            host_aliveMutex.unlock();
+        }
+    }
+    void terminateHost()
+    {
+        if(isRunningServer)
+        {
+            host_terminateMutex.lock();
+            host_terminate = true;
+            host_terminateMutex.unlock();
+            isKillingServer = true;
+        }
+    }
+
+///client
+    void joinServer()
+    {
+
+    }
+
+///manager
+
+    void update()
+    {
+        //send client information
+
+
+        if(isRunningServer && isKillingServer)
+        {
+            host_aliveMutex.lock();
+            if(!host_alive_send && !host_alive_recieve)
+            {
+                std::cout << "SERVER TERMINATED" << std::endl;
+                isRunningServer = false;
+                isKillingServer = false;
+
+                //just to make sure, should already be dead
+                thread_host_send.terminate();
+                thread_host_recieve.terminate();
+
+                //threads are dead, should be safe
+                host_terminate = false;
+            }
+            host_aliveMutex.unlock();
+        }
+    }
+    bool isServerDead()
+    {
+        return !isRunningServer;
+    }
+    void host_changeTickRate(float _tickRate)
+    {
+        host_changeTickRateMutex.lock();
+        if(_tickRate != tickRate)
+        {
+            host_tickChange = true;
+            tickRate = _tickRate;
+        }
+        host_changeTickRateMutex.unlock();
+    }
+
+
+private:
+    ///Threads
     //handles sending
     void host_sendThread()
     {
@@ -82,12 +161,12 @@ public:
         if(!host_alive_recieve)
         {
             delete svr;
+            svr = nullptr;
         }
         host_alive_send = false;
         host_aliveMutex.unlock();
         std::cout << "host_sendThread() ded" << std::endl;
     }
-
     //handles receiving
     void host_recieveThread()
     {
@@ -120,97 +199,19 @@ public:
         if(!host_alive_send)
         {
             delete svr;
+            svr = nullptr;
         }
         host_alive_recieve = false;
         host_aliveMutex.unlock();
         std::cout << "host_recieveThread() ded" << std::endl;
     }
-
-
-    void startHostingServer()
-    {
-        if(!isRunningServer)
-        {
-            if(!server) //server is a pointer, checking if it exists
-            {
-                server = new Server();
-            }
-
-            thread_host_send   .launch();
-            thread_host_recieve.launch();
-            isRunningServer = true;
-
-            host_aliveMutex.lock();
-            host_alive_send =    true;
-            host_alive_recieve = true;
-            host_aliveMutex.unlock();
-        }
-    }
-    void terminateHost()
-    {
-        if(isRunningServer)
-        {
-            host_terminateMutex.lock();
-            host_terminate = true;
-            host_terminateMutex.unlock();
-            isKillingServer = true;
-        }
-    }
-
-///client
-
+    // used to receive
     void client_mainThread()
     {
 
     }
-    void joinServer()
-    {
-        if(isRunningServer)
-        {
-
-        }
-    }
-
-///manager
-
-    void update()
-    {
-        if(isRunningServer && isKillingServer)
-        {
-            host_aliveMutex.lock();
-            if(!host_alive_send && !host_alive_recieve)
-            {
-                std::cout << "SERVER TERMINATED" << std::endl;
-                isRunningServer = false;
-                isKillingServer = false;
-
-                //just to make sure, should already be dead
-                thread_host_send.terminate();
-                thread_host_recieve.terminate();
-
-                //threads are dead, should be safe
-                host_terminate = false;
-            }
-            host_aliveMutex.unlock();
-        }
-    }
-    bool isServerDead()
-    {
-        return !isRunningServer;
-    }
-    void host_changeTickRate(float _tickRate)
-    {
-        host_changeTickRateMutex.lock();
-        if(_tickRate != tickRate)
-        {
-            host_tickChange = true;
-            tickRate = _tickRate;
-        }
-        host_changeTickRateMutex.unlock();
-    }
 
 
-private:
     Server* server;
 
 ///server

@@ -7,31 +7,33 @@ LightManager::LightManager(sf::RenderWindow &mWindow,TimeManager& _timeManager, 
     , timeManager(_timeManager)
     , resourceManager(_resourceManager)
 {
-    lightingOverlayTexture.create(960,540);
-    lightingOverlaySprite.setTexture(lightingOverlayTexture.getTexture());
-    lightingOverlaySprite.setOrigin(480,270);
-    lightingOverlaySprite.setPosition(0,0);
-    lightingOverlaySprite.setTextureRect(sf::IntRect(0,0,960,540));
+    if(window.isOpen())
+    {
+        lightingOverlayTexture.create(960,540);
+        lightingOverlaySprite.setTexture(lightingOverlayTexture.getTexture());
+        lightingOverlaySprite.setOrigin(480,270);
+        lightingOverlaySprite.setPosition(0,0);
+        lightingOverlaySprite.setTextureRect(sf::IntRect(0,0,960,540));
 
-    blackwhiteOverlay = sf::Color(0,0,0,255);
-    colorOverlay      = sf::Color(0,0,0,0);
+        playerCoordinates = sf::Vector2f(0,0);
 
-    blackwhiteRect.setSize(sf::Vector2f(960,540));
-    blackwhiteRect.setPosition(0,0);
-    blackwhiteRect.setFillColor(blackwhiteOverlay);
+        blackwhiteOverlay = sf::Color(0,0,0,255);
+        colorOverlay      = sf::Color(0,0,0,0);
 
-    colorRect.setSize(sf::Vector2f(960,540));
-    colorRect.setPosition(0,0);
-    colorRect.setFillColor(colorOverlay);
+        blackwhiteRect.setSize(sf::Vector2f(960,540));
+        blackwhiteRect.setPosition(0,0);
+        blackwhiteRect.setFillColor(blackwhiteOverlay);
 
-    playerCoordinates = sf::Vector2f(0,0);
+        colorRect.setSize(sf::Vector2f(960,540));
+        colorRect.setPosition(0,0);
+        colorRect.setFillColor(colorOverlay);
 
-    lightingTexture_1.loadFromFile(std::string("Media/Image/Game/Lighting/Light_Circle_1.png"));
-    lightingTextureColor_1.loadFromFile(std::string("Media/Image/Game/Lighting/Light_Circle_2.png"));
+        lightingTexture_1.loadFromFile(std::string("Media/Image/Game/Lighting/Light_Circle_1.png"));
+        lightingTextureColor_1.loadFromFile(std::string("Media/Image/Game/Lighting/Light_Circle_2.png"));
 
-    lightingTexture_1.setSmooth(true);
-    lightingTextureColor_1.setSmooth(true);
-
+        lightingTexture_1.setSmooth(true);
+        lightingTextureColor_1.setSmooth(true);
+    }
 }
 
 LightManager::~LightManager()

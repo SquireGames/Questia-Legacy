@@ -6,11 +6,13 @@
 
 #include "Data_Desktop.h"
 #include "EntityManager/EntityManager.h"
+#include "MultiplayerManager.h"
+#include "TimeManager.h"
 
 class CommandsManager
 {
 public:
-    CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager);
+    CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, MultiplayerManager& _multiplayerManager, TimeManager& _timeManager);
     ~CommandsManager();
 
     void getCharImput(char input);
@@ -34,6 +36,8 @@ private:
     sf::Texture texture_chatArea;
 
     EntityManager& entityManager;
+    MultiplayerManager& multiplayerManager;
+    TimeManager& timeManager;
     sf::RenderWindow &window;
 };
 
