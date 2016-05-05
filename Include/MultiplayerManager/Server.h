@@ -23,7 +23,6 @@ class Server
 public:
     Server():
         tick(0)
-        , tickRate(64)
         , resourceManager()
         , window()
         , timeManager(0,0)
@@ -40,6 +39,7 @@ public:
     void update()
     {
         tick++;
+        entityManager.update(tileEngine, sf::Vector2f (0,0), sf::Vector2f (0,0), 0.f);
     }
 
 private:
@@ -58,7 +58,6 @@ private:
     ResourceManager resourceManager;
     sf::RenderWindow window;
 
-    unsigned int tickRate;
     unsigned int tick;
 };
 

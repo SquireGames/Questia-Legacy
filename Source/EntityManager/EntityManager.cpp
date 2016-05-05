@@ -576,6 +576,7 @@ void EntityManager::update(TileEngine& tileEngine, sf::Vector2f player_MapCoordi
             entityPlayableStack[x]->setAngleToMouse(angle);
             entityPlayableStack[x]->setMouseCoordinates(mouseCoordinates);
 
+            // Interactions with player
             for(int y = 0; y < entityInteractStack.size(); y++)
             {
                 entityInteractStack[y]->checkInteraction(entityPlayableStack[x]->getCoordinates().x, entityPlayableStack[x]->getCoordinates().y, entityPlayableStack[x]->getSideRadius().x, entityPlayableStack[x]->getSideRadius().y);

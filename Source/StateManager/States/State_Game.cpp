@@ -228,6 +228,13 @@ State_Game::~State_Game()
         multiplayerManager.update();
         sf::sleep(sf::Time(sf::milliseconds(sf::Int32(100))));
     }
+
+    multiplayerManager.terminateClient();
+    while(!multiplayerManager.isClientDead())
+    {
+        multiplayerManager.update();
+        sf::sleep(sf::Time(sf::milliseconds(sf::Int32(100))));
+    }
 }
 
 void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)

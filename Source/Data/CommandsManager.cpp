@@ -251,12 +251,11 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
             {
                 if(param[1] == "join")
                 {
-
-
+                    multiplayerManager.joinServer();
                 }
                 else if(param[1] == "leave")
                 {
-
+                    multiplayerManager.terminateClient();
                 }
             }
             else if(param[0] == "time")

@@ -21,17 +21,23 @@ public:
         , thread_host_send    (&MultiplayerManager::host_sendThread,    this)
         , thread_host_recieve (&MultiplayerManager::host_recieveThread, this)
         , host_terminate     (false)
+        , client_terminate   (false)
         , host_alive_send    (false)
         , host_alive_recieve (false)
+        , client_alive       (false)
         , isRunningServer    (false)
+        , isRunningClient    (false)
         , isKillingServer    (false)
+        , isKillingClient    (false)
         , tickRate(5) // no active thread at this point
     {
 
     }
     ~MultiplayerManager()
     {
-        terminateHost(); // just to make sure
+        // just to make sure
+        terminateHost();
+        terminateClient();
     }
 
 ///server
@@ -65,7 +71,25 @@ public:
 ///client
     void joinServer()
     {
+        if(!isRunningClient)
+        {
+            thread_client_main.launch();
+            isRunningClient = true;
 
+            client_aliveMutex.lock();
+            client_alive = true;
+            client_aliveMutex.unlock();
+        }
+    }
+    void terminateClient()
+    {
+        if(isRunningClient)
+        {
+            client_terminateMutex.lock();
+            client_terminate = true;
+            client_terminateMutex.unlock();
+            isKillingClient = true;
+        }
     }
 
 ///manager
@@ -73,7 +97,7 @@ public:
     void update()
     {
         //send client information
-
+        //...
 
         if(isRunningServer && isKillingServer)
         {
@@ -93,10 +117,31 @@ public:
             }
             host_aliveMutex.unlock();
         }
+        if(isRunningClient && isKillingClient)
+        {
+            client_aliveMutex.lock();
+            if(!client_alive)
+            {
+                std::cout << "CLIENT TERMINATED" << std::endl;
+                isRunningClient = false;
+                isKillingClient = false;
+
+                //just to make sure
+                thread_client_main.terminate();
+
+                //should be safe
+                client_terminate = false;
+            }
+            client_aliveMutex.unlock();
+        }
     }
     bool isServerDead()
     {
         return !isRunningServer;
+    }
+    bool isClientDead()
+    {
+        return !isRunningClient;
     }
     void host_changeTickRate(float _tickRate)
     {
@@ -122,9 +167,12 @@ private:
         host_changeTickRateMutex.lock();
         float threadTickRate = tickRate;
         host_changeTickRateMutex.unlock();
-        sf::Time timePerUpdate = sf::seconds(1.f/threadTickRate);
-        sf::Clock clock;
+        sf::Time timePerUpdate = sf::seconds(1.f/144.f);
+        sf::Time timePerSend   = sf::seconds(1.f/threadTickRate);
+        sf::Clock clock_update;
+        sf::Clock clock_send;
         sf::Time timeSinceLastUpdate = sf::Time::Zero;
+        sf::Time timeSinceLastSend = sf::Time::Zero;
 
         host_terminateMutex.lock();
         while(!host_terminate)
@@ -137,20 +185,36 @@ private:
             {
                 host_tickChange = false;
                 threadTickRate = tickRate;
-                timePerUpdate = sf::seconds(1.f/threadTickRate);
+                if(threadTickRate > 144.f)
+                {
+                    threadTickRate = 144.f;
+                }
+                timePerSend = sf::seconds(1.f/threadTickRate);
             }
             host_changeTickRateMutex.unlock();
 
+
+
             ///update
-            sf::Time elapsedTime = clock.restart();
-            timeSinceLastUpdate += elapsedTime;
+            sf::Time elapsedTime_update = clock_update.restart();
+            timeSinceLastUpdate += elapsedTime_update;
             while (timeSinceLastUpdate > timePerUpdate)
             {
-                timeSinceLastUpdate -= timePerUpdate;
                 svr->update();
-                std::cout << "tick" << std::endl;
+                timeSinceLastUpdate -= timePerUpdate;
             }
-            sf::sleep(timePerUpdate/10.f);
+
+
+            ///send
+            sf::Time elapsedTime_send = clock_send.restart();
+            timeSinceLastSend += elapsedTime_send;
+            while (timeSinceLastSend > timePerSend)
+            {
+                timeSinceLastSend -= timePerSend;
+                //std::cout << "tick" << std::endl;
+            }
+
+            sf::sleep(sf::Time(sf::milliseconds(sf::Int32(4))));
 
             host_terminateMutex.lock();
         }
@@ -208,13 +272,36 @@ private:
     // used to receive
     void client_mainThread()
     {
+        std::cout << "client_mainThread() init" << std::endl;
 
+        sf::UdpSocket tempSocket;
+        sf::SocketSelector selector;
+
+        client_terminateMutex.lock();
+        while(!client_terminate)
+        {
+            client_terminateMutex.unlock();
+            if(selector.wait(sf::Time(sf::milliseconds(sf::Int32(100)))))
+            {
+                if(selector.isReady(tempSocket))
+                {
+
+                }
+            }
+            client_terminateMutex.lock();
+        }
+        client_terminateMutex.unlock();
+
+        ///death
+        client_aliveMutex.lock();
+        client_alive = false;
+        client_aliveMutex.unlock();
+        std::cout << "client_mainThread() ded" << std::endl;
     }
 
 
-    Server* server;
-
 ///server
+    Server* server;
 //terminate
     sf::Mutex host_terminateMutex;
     bool      host_terminate;
@@ -225,17 +312,31 @@ private:
 //tick rate
     sf::Mutex host_changeTickRateMutex;
     bool      host_tickChange;
-    float tickRate;
+    float     tickRate;
 
-
-///threads
+//threads
     sf::Thread thread_host_send;
     sf::Thread thread_host_recieve;
-    sf::Thread thread_client_main;
 
-///thread safe
+//thread safe
     bool isRunningServer;
     bool isKillingServer;
+
+
+///client
+//terminate
+    sf::Mutex   client_terminateMutex;
+    bool        client_terminate;
+//check if alive
+    sf::Mutex   client_aliveMutex;
+    bool        client_alive;
+
+//threads
+    sf::Thread thread_client_main;
+
+//thread safe
+    bool isRunningClient;
+    bool isKillingClient;
 };
 
 #endif // MULTIPLAYERMANAGER_H
