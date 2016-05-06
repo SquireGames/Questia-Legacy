@@ -31,20 +31,36 @@ public:
         , entityManager(window, resourceManager, lightManager)
         , spawnManager(false, entityManager)
         , itemManager(window, resourceManager)
+        , udpSocket()
+        , udpPort(7777)
     {
-
+        udpSocket.bind(udpPort);
     }
     ~Server();
 
     void update()
     {
-        tick++;
         entityManager.update(tileEngine, sf::Vector2f (0,0), sf::Vector2f (0,0), 0.f);
+    }
+
+    void send()
+    {
+        tick++;
+
+        sf::Packet testPacket;
+        testPacket << "tick: " << tick;
+
+        sf::IpAddress tempIP("192.168.2.6");
+        unsigned short tempPort = 7776;
+
+        udpSocket.send(testPacket, tempIP, tempPort);
     }
 
 private:
     sf::UdpSocket udpSocket;
+    unsigned short udpPort;
     sf::TcpSocket tcpSocket;
+
 
     //modules
     TimeManager timeManager;

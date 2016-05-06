@@ -129,7 +129,7 @@ public:
                 //just to make sure
                 thread_client_main.terminate();
 
-                //should be safe
+                //just in case, should be safe
                 client_terminate = false;
             }
             client_aliveMutex.unlock();
@@ -200,8 +200,8 @@ private:
             timeSinceLastUpdate += elapsedTime_update;
             while (timeSinceLastUpdate > timePerUpdate)
             {
-                svr->update();
                 timeSinceLastUpdate -= timePerUpdate;
+                svr->update();
             }
 
 
@@ -211,7 +211,7 @@ private:
             while (timeSinceLastSend > timePerSend)
             {
                 timeSinceLastSend -= timePerSend;
-                //std::cout << "tick" << std::endl;
+                svr->send();
             }
 
             sf::sleep(sf::Time(sf::milliseconds(sf::Int32(4))));
@@ -238,6 +238,9 @@ private:
         Server* svr = server; //saved to delete the server
 
         sf::UdpSocket tempSocket;
+        unsigned short tempPort = 7777;
+        tempSocket.bind(tempPort);
+
         sf::SocketSelector selector;
 
         host_terminateMutex.lock();
@@ -249,6 +252,9 @@ private:
             {
                 if(selector.isReady(tempSocket))
                 {
+                    std::string item1;
+                    int item2;
+
 
                 }
             }
@@ -275,6 +281,9 @@ private:
         std::cout << "client_mainThread() init" << std::endl;
 
         sf::UdpSocket tempSocket;
+        unsigned short tempPort = 7777;
+        tempSocket.bind(tempPort);
+
         sf::SocketSelector selector;
 
         client_terminateMutex.lock();
@@ -285,7 +294,16 @@ private:
             {
                 if(selector.isReady(tempSocket))
                 {
+                    sf::Packet test;
+                    std::string item1;
+                    int item2;
 
+                    unsigned short tempPort2 = 7777;
+                    sf::IpAddress tempIP("192.168.2.6");
+
+                    tempSocket.receive(test,tempIP , tempPort2);
+                    test >> item1 >> item2;
+                    std::cout << item1 << item2;
                 }
             }
             client_terminateMutex.lock();
