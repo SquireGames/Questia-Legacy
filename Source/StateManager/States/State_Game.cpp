@@ -22,7 +22,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager, true)
     , newGuiManager(mWindow, resourceManager)
-    , entityManager (mWindow, resourceManager, lightManager)
+    , entityManager (EntityManager::ManagerType::singleplayer, mWindow, resourceManager, lightManager)
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)

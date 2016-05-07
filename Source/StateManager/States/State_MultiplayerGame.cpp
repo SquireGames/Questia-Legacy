@@ -23,7 +23,7 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager, true)
     , newGuiManager(mWindow, resourceManager)
-    , entityManager (mWindow, resourceManager, lightManager)
+    , entityManager (EntityManager::ManagerType::multiplayer, mWindow, resourceManager, lightManager)
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)

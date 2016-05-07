@@ -28,7 +28,7 @@ public:
         , timeManager(0,0)
         , lightManager(window, timeManager, resourceManager)
         , tileEngine(window, resourceManager)
-        , entityManager(window, resourceManager, lightManager)
+        , entityManager(EntityManager::ManagerType::server, window, resourceManager, lightManager)
         , spawnManager(false, entityManager)
         , itemManager(window, resourceManager)
         , udpSocket()
@@ -53,10 +53,13 @@ public:
         testPacket << packetObj;
 
         sf::IpAddress tempIP = sf::IpAddress::getLocalAddress();
-        tempIP = sf::IpAddress::getLocalAddress();
         unsigned short tempPort = 8002;
 
         udpSocket.send(testPacket, tempIP, tempPort);
+    }
+    void get()
+    {
+
     }
 
 private:

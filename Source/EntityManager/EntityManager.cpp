@@ -23,8 +23,7 @@
 
 #include "Utl.h"
 
-
-EntityManager::EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager):
+EntityManager::EntityManager(ManagerType _type, sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager):
     window (mWindow)
     , spawnTick(0)
     , entityNumber(0)
@@ -32,6 +31,9 @@ EntityManager::EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, Li
     , resourceManager(res)
     , lightManager(_lightManager)
     , playerID(-1)
+    , type(_type)
+    , last_entityID(0)
+    , last_playerID(0)
 {
     std::cout<<"DEBUG: Entity Manager Initialized"<<std::endl;
 }
@@ -45,57 +47,93 @@ EntityManager::~EntityManager()
     std::cout<<"DEBUG: Destroyed Entity Manager"<<std::endl;
 }
 
-int EntityManager::getIDNumber()
+int EntityManager::getIDNumber(EntityType entityType)
 {
     int IDNumber;
 
-    std::vector<int> entityList;
-    for(int x = 0; x < entityStack.size(); x++)
+    switch (type)
     {
-        entityList.push_back(entityStack[x]->returnID());
-    }
-
-    std::sort(entityList.begin(),entityList.end());
-    if(entityList.size() > 0)
+    case ManagerType::singleplayer:
     {
-        if(entityStack.size() != entityList[entityList.size()-1]+1)
+        std::vector<int> entityList;
+        for(int x = 0; x < entityStack.size(); x++)
         {
-            if(entityStack.size()>1)
+            entityList.push_back(entityStack[x]->returnID());
+        }
+
+        std::sort(entityList.begin(),entityList.end());
+        if(entityList.size() > 0)
+        {
+            if(entityStack.size() != entityList[entityList.size()-1]+1)
             {
-                for(int x = 0; x < entityList.size(); x++)
+                if(entityStack.size()>1)
                 {
-                    if (entityList[x]+1 != entityList[x+1])
+                    for(int x = 0; x < entityList.size(); x++)
                     {
-                        IDNumber = entityList[x]+1;
-                        x = 99999;
+                        if (entityList[x]+1 != entityList[x+1])
+                        {
+                            IDNumber = entityList[x]+1;
+                            x = 99999;
+                        }
                     }
+                }
+                else
+                {
+                    entityNumber = entityList[entityList.size()-1]+1;
+                    IDNumber = entityNumber;
                 }
             }
             else
             {
-                entityNumber = entityList[entityList.size()-1]+1;
+                entityNumber =  entityList[entityList.size()-1]+1;
                 IDNumber = entityNumber;
             }
         }
         else
         {
-            entityNumber =  entityList[entityList.size()-1]+1;
+            entityNumber =  0;
             IDNumber = entityNumber;
         }
+        return IDNumber;
     }
-    else
+    break;
+
+    case ManagerType::multiplayer:
     {
-        entityNumber =  0;
-        IDNumber = entityNumber;
+
     }
-    return IDNumber;
+    break;
+
+    case ManagerType::server:
+    {
+        switch (entityType)
+        {
+        case EntityType::entity:
+            last_entityID++;
+            return last_entityID;
+            break;
+        case EntityType::player:
+            last_playerID--;
+            return last_playerID;
+            break;
+        default:
+            break;
+        }
+    }
+    break;
+    default:
+    {
+
+    }
+    break;
+    }
 }
 
 int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
 {
     spawnTick = 35;
 
-    int IDNumber = getIDNumber();
+    int IDNumber = getIDNumber(EntityType::entity);
 
     switch (entity)
     {
@@ -147,7 +185,7 @@ int EntityManager::createPlayer(std::string playerName, sf::Vector2f coordinates
                                 int mp, int maxMp,
                                 int st, int maxSt)
 {
-    int IDNumber = getIDNumber();
+    int IDNumber = getIDNumber(EntityType::player);
 
     Entity_Player* entity= new Entity_Player(resourceManager, *this, lightManager, coordinates, IDNumber, "player", hp, maxHp, mp, maxMp, st, maxSt);
     std::cout<<"DEBUG: Created entity: " << "Player     ID: " << IDNumber <<std::endl;
@@ -171,7 +209,7 @@ int EntityManager::createPlayer(std::string playerName, sf::Vector2f coordinates
 int EntityManager::createEntity(std::string entityName, sf::Vector2f coordinates)
 {
     spawnTick = 35;
-    int IDNumber = getIDNumber();
+    int IDNumber = getIDNumber(EntityType::entity);
     //Temporary way
 
     if(entityName == "chicken")
@@ -210,7 +248,7 @@ int EntityManager::createSpecialEntity(int entity, int _attackerID, std::string 
                                        int _extra)
 {
     spawnTick = 35;
-    int IDNumber = getIDNumber();
+    int IDNumber = getIDNumber(EntityType::entity);
 
     switch (entity)
     {
@@ -262,7 +300,7 @@ int EntityManager::createSpecialEntity(int entity, int _attackerID, std::string 
 
 void EntityManager::createInteravtiveEntity(std::string entity, int x, int y, int type, int subtype)
 {
-    int IDNumber = getIDNumber();
+    int IDNumber = getIDNumber(EntityType::entity);
 
     if(entity == "roof")
     {

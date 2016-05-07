@@ -20,7 +20,10 @@
 class EntityManager
 {
 public:
-    EntityManager(sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager);
+    enum ManagerType {singleplayer, multiplayer, server};
+    enum EntityType  {player, entity};
+
+    EntityManager(ManagerType _type, sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager);
     ~EntityManager();
 
     void handleInput(int actionType,bool isPressed,int player);
@@ -30,8 +33,14 @@ public:
     sf::Vector2f getPlayerCoordinates();
     void setPlayerCoordinates(sf::Vector2f coords);
     std::tuple<int, int, int,int, int, int> getPlayerStats();
-    int getPlayerID() {return playerID;}
-    int getPlayerID_2() {return playerID_2;}
+    int getPlayerID()
+    {
+        return playerID;
+    }
+    int getPlayerID_2()
+    {
+        return playerID_2;
+    }
 
     void saveEntities(SaveFile& save_entity);
     void setCharacteristic(int ID, std::string characteristic, int amount);
@@ -42,14 +51,14 @@ public:
     int createEntity(std::string entityName, sf::Vector2f coordinates);
 
     int createPlayer(std::string playerName, sf::Vector2f coordinates,
-                    int hp, int maxHp,
-                    int mp, int maxMp,
-                    int st, int maxSt);
+                     int hp, int maxHp,
+                     int mp, int maxMp,
+                     int st, int maxSt);
 
     int createSpecialEntity(int entity, int _attackerID, std::string _attackerName,
-                             sf::Vector2f _coordinates, sf::Vector2f _velocity, float _angle,
-                             int _duration, int _attackDamage, float _sizeMultiplier, float _timeMultiplier,
-                             int _extra);
+                            sf::Vector2f _coordinates, sf::Vector2f _velocity, float _angle,
+                            int _duration, int _attackDamage, float _sizeMultiplier, float _timeMultiplier,
+                            int _extra);
     void createInteravtiveEntity(std::string entity, int x, int y, int type, int subtype);
 
     void destroyEntity(int entityID);
@@ -63,10 +72,9 @@ public:
     std::vector <int> getDeadIDs();
 
 private:
-    int getIDNumber();
+    ManagerType type;
 
-    int playerID;
-    int playerID_2;
+    int getIDNumber(EntityType entityType);
 
     int spawnTick;
 
@@ -84,6 +92,14 @@ private:
     std::vector <Entity_Interactable*> entityInteractStack;
 
     std::vector <int> deadID;
+
+    ///singleplayer
+    int playerID;
+    int playerID_2;
+
+    ///multiplayer
+    int last_entityID;
+    int last_playerID;
 };
 
 #endif // ENTITYMANAGER_H
