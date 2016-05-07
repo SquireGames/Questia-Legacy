@@ -1,5 +1,5 @@
-#ifndef STATE_GAME_H
-#define STATE_GAME_H
+#ifndef STATE_MULTIPLAYERGAME_H
+#define STATE_MULTIPLAYERGAME_H
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
@@ -21,17 +21,18 @@
 #include "Data/SaveFile.h"
 #include "Data/Data_Desktop.h"
 
-class State_Game : public State
+class State_MultiplayerGame : public State
 {
 public:
-    State_Game(sf::RenderWindow &mWindow);
-    ~State_Game();
+    State_MultiplayerGame(sf::RenderWindow &mWindow);
+    ~State_MultiplayerGame();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);
     void update(sf::Time elapsedTime);
     void displayTextures();
 
 private:
+
     bool pause;
     unsigned char tick;
 
@@ -103,7 +104,6 @@ private:
     //TEMP
     sf::Sprite alignment;
 
-
 };
 
-#endif // STATE_GAME_H
+#endif // STATE_MULTIPLAYERGAME_H

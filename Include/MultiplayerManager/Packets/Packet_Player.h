@@ -29,6 +29,8 @@ struct Packet_Player : public Packet
         , coords_y(static_cast <sf::Int32> (coordinates.second))
         , playerID(static_cast <sf::Int32> (_playerID))
     {}
+    Packet_Player()
+    {}
     ~Packet_Player();
 
     ///Variables
@@ -53,9 +55,6 @@ static sf::Packet& operator << (sf::Packet& packet, const Packet_Player& player)
 
 static sf::Packet& operator >> (sf::Packet& packet, Packet_Player& player)
 {
-    int tempHeader;
-
-    packet >> tempHeader;
     packet >> player.packetNumber;
 
     packet >> player.playerID;
@@ -116,8 +115,6 @@ static sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player
 
 static sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& packetContainer)
 {
-    int tempHeader;
-    packet >> tempHeader;
     int packetNumber;
     packet >> packetContainer.packetNumber;
 

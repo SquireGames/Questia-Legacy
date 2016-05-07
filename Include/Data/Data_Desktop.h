@@ -10,7 +10,6 @@
 #include <sstream>
 #include "Data/SaveFile.h"
 
-
 class Data_Desktop
 {
 public:
@@ -52,8 +51,6 @@ private:
 
     sf::Vector2i desktopResolution;
     sf::Vector2f scaleFactor;
-
-    bool isDebuggerMode;
 
     //Unimplemented
     int normalVolume;

@@ -9,6 +9,9 @@
 #include "StateManager/States/State_CharacterSelection.h"
 #include "StateManager/States/State_TileMapEditor.h"
 #include "StateManager/States/State_MapSelector.h"
+#include "StateManager/States/State_MultiplayerGame.h"
+#include "StateManager/States/State_MultiplayerSelection.h"
+
 
 State_Transition::State_Transition(sf::RenderWindow &mWindow, int stateID):
     window(mWindow)
@@ -90,6 +93,18 @@ void State_Transition::displayTextures()
         std::cout<<"DEBUG: State_MapSelector Initialized"<<std::endl;
         std::cout<<"--------------------"<<std::endl;
         StateManager::getInstance().changeState(new State_MapSelector(window));
+        break;
+    case 7:
+        std::cout<<"--------------------"<<std::endl;
+        std::cout<<"DEBUG: State_MultiplayerGame Initialized"<<std::endl;
+        std::cout<<"--------------------"<<std::endl;
+        StateManager::getInstance().changeState(new State_MultiplayerGame(window));
+        break;
+    case 8:
+        std::cout<<"--------------------"<<std::endl;
+        std::cout<<"DEBUG: State_MultiplayerSelection Initialized"<<std::endl;
+        std::cout<<"--------------------"<<std::endl;
+        StateManager::getInstance().changeState(new State_MultiplayerSelection(window));
         break;
     }
 }

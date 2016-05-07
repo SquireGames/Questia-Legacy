@@ -1,3 +1,5 @@
+#include "State_MultiplayerGame.h"
+
 #include <iostream>
 #include <sstream>
 #include <math.h>
@@ -5,15 +7,14 @@
 #include <string>
 
 #include "StateManager/StateManager.h"
-#include "StateManager/States/State_Game.h"
 #include "StateManager/States/State_Transition.h"
 
 #include "Utl.h"
 
-///Global variables
-extern bool isInDebugMode;// = false;
+//Global variables
+extern bool isInDebugMode;
 
-State_Game::State_Game(sf::RenderWindow &mWindow):
+State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     window(mWindow)
     //managers
     , resourceManager()
@@ -57,31 +58,31 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , pause(false)
     , tick (0)
 {
-    //std::vector<std::string> path = Data_Desktop::getInstance().getFiles("Maps");
+    /*
+        std::stringstream sStream;
+        sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "location" << ".txt";
+        save_location.setFilePath(sStream.str());
+        sStream.str(std::string());
 
-    //{saves
-    //location
-    std::stringstream sStream;
-    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "location" << ".txt";
-    save_location.setFilePath(sStream.str());
-    sStream.str(std::string());
+        sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "character" << ".txt";
+        save_character.setFilePath(sStream.str());
+        sStream.str(std::string());
 
-    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "character" << ".txt";
-    save_character.setFilePath(sStream.str());
-    sStream.str(std::string());
+        sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "entities" << ".txt";
+        save_entities.setFilePath(sStream.str());
+        sStream.str(std::string());
 
-    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "entities" << ".txt";
-    save_entities.setFilePath(sStream.str());
-    sStream.str(std::string());
+        sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "spawn" << ".txt";
+        save_spawn.setFilePath(sStream.str());
+        sStream.str(std::string());
 
-    sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "spawn" << ".txt";
-    save_spawn.setFilePath(sStream.str());
-    sStream.str(std::string());
+        save_location.readFile();
+        save_character.readFile();
+    */
 
-    save_location.readFile();
-    save_character.readFile();
+    timeManager.setTime(6, 50);
 
-    timeManager.setTime(utl::asNumber(save_location.getItem("time")));
+    /*
 
     std::vector <int> savedID;
     std::map <int, int> newID; //old ID, new ID
@@ -102,7 +103,11 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     {
         save_entities.clearSave();
     }
+
+    */
+
     //}
+
 
     ///views
     gameView.setSize(1920,1080);
@@ -114,17 +119,18 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     overlayView.zoom(1);
 
     ///character
-    entityManager.createPlayer(Data_Desktop::getInstance().getCharacterSelection(),
-                               sf::Vector2f(utl::asNumber(save_location.getItem("coords_x")),utl::asNumber(save_location.getItem("coords_y"))),
-                               utl::asNumber(save_character.getItem("hp")), utl::asNumber(save_character.getItem("maxHp")),
-                               utl::asNumber(save_character.getItem("mp")), utl::asNumber(save_character.getItem("maxMp")),
-                               utl::asNumber(save_character.getItem("st")), utl::asNumber(save_character.getItem("maxSt")));
+    entityManager.createPlayer("test",
+                               sf::Vector2f(20*32,20*32),
+                               100, 100,
+                               100, 100,
+                               100, 100);
 
     ///light init
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
 
     ///loading the map
-    tileEngine.loadMap(Data_Desktop::getInstance().getMapSelection(), true);
+    tileEngine.loadMap("Tutorial_1", true);
+    /*
     if(save_spawn.readFile())
     {
         spawnManager.loadSpawnFile(Data_Desktop::getInstance().getMapSelection(), save_spawn, savedID, newID);
@@ -134,7 +140,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
         save_spawn.clearSave();
         spawnManager.loadSpawnFile(Data_Desktop::getInstance().getMapSelection(), save_spawn, savedID, newID);
     }
-
+    */
 
     ///rebindable keys
     moveKey0.keyType = 0;
@@ -217,9 +223,9 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     //}
 }
 
-State_Game::~State_Game()
+State_MultiplayerGame::~State_MultiplayerGame()
 {
-    std::cout<<"DEBUG: State_Game Destroyed"<<std::endl;
+    std::cout<<"DEBUG: State_MultiplayerGame Destroyed"<<std::endl;
 
     multiplayerManager.terminateHost();
     while(!multiplayerManager.isServerDead())
@@ -236,7 +242,7 @@ State_Game::~State_Game()
     }
 }
 
-void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
+void State_MultiplayerGame::processImput(sf::Keyboard::Key key,bool isPressed)
 {
     if(pause)
     {
@@ -295,6 +301,7 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 
     if(key == sf::Keyboard::Escape)
     {
+        /*
         save_location.saveItem("map", Data_Desktop::getInstance().getMapSelection());
         save_location.saveItem("coords_x", entityManager.getPlayerCoordinates().x);
         save_location.saveItem("coords_y", entityManager.getPlayerCoordinates().y);
@@ -317,10 +324,11 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         entityManager.saveEntities(save_entities);
         save_spawn.clearSave();
         spawnManager.saveSpawns(save_spawn);
+        */
     }
 }
 
-void State_Game::update(sf::Time elapsedTime)
+void State_MultiplayerGame::update(sf::Time elapsedTime)
 {
     newGuiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
 
@@ -405,7 +413,7 @@ void State_Game::update(sf::Time elapsedTime)
     }
 }
 
-void State_Game::displayTextures()
+void State_MultiplayerGame::displayTextures()
 {
     window.setView(gameView);
     tileEngine.drawMap(player_MapCoordinates);
@@ -423,5 +431,4 @@ void State_Game::displayTextures()
 
     //window.draw(alignment);
 }
-
 

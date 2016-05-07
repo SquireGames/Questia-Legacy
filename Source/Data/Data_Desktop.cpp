@@ -11,6 +11,7 @@
 
 #include "Utl.h"
 
+bool isInDebugMode = false;
 
 Data_Desktop::Data_Desktop():
     desktopResolution(sf::VideoMode::getDesktopMode().width,sf::VideoMode::getDesktopMode().height)
@@ -19,7 +20,6 @@ Data_Desktop::Data_Desktop():
     , mostRecentChar(' ')
     , mapSelection("NO MAP SELECTED")
     , characterSelection("NO CHARACTER SELECTED")
-    , isDebuggerMode(false)
     , save_options("options.cfg")
 {
     std::cout<<std::endl;

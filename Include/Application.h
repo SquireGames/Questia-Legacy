@@ -26,5 +26,4 @@ private:
     sf::Time mStatisticsUpdateTime;
     int mStatisticsFramesCount;
 };
-
 #endif // APPLICATION_H

@@ -60,6 +60,10 @@ void State_MainMenu::update(sf::Time elapsedTime)
         {
             StateManager::getInstance().changeState(new State_Transition(window, 6));
         }
+        else if(guiManager.isClicked("multiplayer"))
+        {
+            StateManager::getInstance().changeState(new State_Transition(window, 7));
+        }
     }
 }
 
@@ -130,4 +134,11 @@ void State_MainMenu::createGui()
     guiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color (153,153,0,111));
     //position
     guiManager.setButton("editor", gui::ButtonCharacteristic::coords, std::make_pair(1700, 1000));
+
+    ///multiplayer
+    guiManager.createButton("multiplayer", "editor");
+    //text
+    guiManager.setButtonAtr("multiplayer", "text", gui::ButtonAtrCharacteristic::text, "Multi");
+    //position
+    guiManager.setButton("multiplayer", gui::ButtonCharacteristic::coords, std::make_pair(1700, 920));
 }

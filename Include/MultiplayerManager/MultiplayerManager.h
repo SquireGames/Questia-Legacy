@@ -281,12 +281,14 @@ private:
         std::cout << "client_mainThread() init" << std::endl;
 
         sf::UdpSocket tempSocket;
-        unsigned short tempPort = 7777;
+        unsigned short tempPort = 8002;
         tempSocket.bind(tempPort);
 
         sf::SocketSelector selector;
+        selector.add(tempSocket);
 
         client_terminateMutex.lock();
+
         while(!client_terminate)
         {
             client_terminateMutex.unlock();
@@ -294,16 +296,39 @@ private:
             {
                 if(selector.isReady(tempSocket))
                 {
-                    sf::Packet test;
-                    std::string item1;
-                    int item2;
+                    unsigned short tempPort2 = 8001;
+                    sf::IpAddress tempIP = sf::IpAddress::getLocalAddress();
 
-                    unsigned short tempPort2 = 7777;
-                    sf::IpAddress tempIP("192.168.2.6");
+                    sf::Packet packet;
+                    tempSocket.receive(packet,tempIP, tempPort2);
 
-                    tempSocket.receive(test,tempIP , tempPort2);
-                    test >> item1 >> item2;
-                    std::cout << item1 << item2;
+                    int header;
+                    packet >> header;
+                    switch (header)
+                    {
+                    case pkt::Header::player:
+                    {
+                        std::cout << "player" << std::endl;
+                        Packet_Player player;
+                        packet >> player;
+                        std::cout << "playerID:" << player.playerID << std::endl;
+                        std::cout << "playerNumber:" << player.packetNumber << std::endl;
+                        std::cout << "playerCoords:" << player.coords_x << "," << player.coords_y << std::endl;
+                    }
+                    break;
+                    case pkt::Header::playerContainer:
+                    {
+                        std::cout << "player container" << std::endl;
+                    }
+                    break;
+                    case pkt::Header::entity:
+                        std::cout << "entity" << std::endl;
+                        break;
+                    }
+
+
+                    //packet >> item1 >> item2;
+                    //std::cout << item1 << item2 << std::endl;
                 }
             }
             client_terminateMutex.lock();

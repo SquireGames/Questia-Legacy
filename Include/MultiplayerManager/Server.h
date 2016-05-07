@@ -32,9 +32,10 @@ public:
         , spawnManager(false, entityManager)
         , itemManager(window, resourceManager)
         , udpSocket()
-        , udpPort(7777)
+        , udpPort(8001)
     {
         udpSocket.bind(udpPort);
+
     }
     ~Server();
 
@@ -47,11 +48,13 @@ public:
     {
         tick++;
 
+        Packet_Player packetObj(tick, std::make_pair(4.5f, 2.1f),7);
         sf::Packet testPacket;
-        testPacket << "tick: " << tick;
+        testPacket << packetObj;
 
-        sf::IpAddress tempIP("192.168.2.6");
-        unsigned short tempPort = 7776;
+        sf::IpAddress tempIP = sf::IpAddress::getLocalAddress();
+        tempIP = sf::IpAddress::getLocalAddress();
+        unsigned short tempPort = 8002;
 
         udpSocket.send(testPacket, tempIP, tempPort);
     }
