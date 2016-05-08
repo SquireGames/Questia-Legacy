@@ -32,7 +32,6 @@ Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManag
     , entityStep(1)
 
     , entityState(melee)
-    , entityCategory(hostile)
 {
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Hostile/hostile_goblin.png"));
     entitySprite.setTextureRect(sf::IntRect(27,0,24,50));

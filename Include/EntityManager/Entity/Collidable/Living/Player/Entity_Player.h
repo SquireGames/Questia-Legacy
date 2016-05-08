@@ -45,7 +45,7 @@ public:
     int getMaxMP(){return maxMP;}
     int getMaxST(){return maxST;}
     std::string getEntityType(){return entityType;}
-    EntityCategory getCategory(){return entityCategory;}
+    EntityCategory getCategory(){return EntityCategory::player;}
 
     std::vector <std::pair <std::string, std::string> > characteristics;
     ///saved characteristics

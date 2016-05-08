@@ -12,7 +12,9 @@
 class CommandsManager
 {
 public:
-    CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, MultiplayerManager& _multiplayerManager, TimeManager& _timeManager);
+    CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, MultiplayerManager* _multiplayerManager, TimeManager& _timeManager);
+    CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, TimeManager& _timeManager);
+
     ~CommandsManager();
 
     void getCharImput(char input);
@@ -36,7 +38,7 @@ private:
     sf::Texture texture_chatArea;
 
     EntityManager& entityManager;
-    MultiplayerManager& multiplayerManager;
+    MultiplayerManager* multiplayerManager;
     TimeManager& timeManager;
     sf::RenderWindow &window;
 };

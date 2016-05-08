@@ -26,9 +26,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)
-    , commandsManager(mWindow, entityManager, multiplayerManager, timeManager)
-
-    , multiplayerManager("Temporary server name")
+    , commandsManager(mWindow, entityManager, timeManager)
 
     //character info
     , player_Velocity(1,1)
@@ -220,20 +218,6 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 State_Game::~State_Game()
 {
     std::cout<<"DEBUG: State_Game Destroyed"<<std::endl;
-
-    multiplayerManager.terminateHost();
-    while(!multiplayerManager.isServerDead())
-    {
-        multiplayerManager.update();
-        sf::sleep(sf::Time(sf::milliseconds(sf::Int32(100))));
-    }
-
-    multiplayerManager.terminateClient();
-    while(!multiplayerManager.isClientDead())
-    {
-        multiplayerManager.update();
-        sf::sleep(sf::Time(sf::milliseconds(sf::Int32(100))));
-    }
 }
 
 void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
@@ -376,7 +360,6 @@ void State_Game::update(sf::Time elapsedTime)
 
     entityManager.update(tileEngine, player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
     spawnManager.checkSpawns();
-    multiplayerManager.update();
 
     gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());

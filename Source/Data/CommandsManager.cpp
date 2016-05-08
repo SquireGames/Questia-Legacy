@@ -11,11 +11,42 @@
 #define COUNT_VISIBLE 20
 #define COUNT_VISIVLE_FIT 7
 
-CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, MultiplayerManager& _multiplayerManager, TimeManager& _timeManager):
+CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, MultiplayerManager* _multiplayerManager, TimeManager& _timeManager):
     isCommandsActive(false)
     , window(_window)
     , entityManager(_entityManager)
     , multiplayerManager(_multiplayerManager)
+    , textImput()
+    , timer (0)
+    , isGood(true)
+    , currentCommand(-1)
+    , timeManager(_timeManager)
+{
+    for (int it = 0; it != COUNT_HISTORY; it++)
+    {
+        previousCommands[it] = "";
+    }
+
+    for (int it = 0; it != COUNT_VISIBLE; it++)
+    {
+        sf::Text text;
+        text.setCharacterSize(20);
+        text.setColor(sf::Color::White);
+        text.setString(std::string());
+        text.setFont(Data_Desktop::getInstance().font1);
+        visibleText[it] = text;
+    }
+
+    texture_chatArea.loadFromFile("Media/Image/Game/Gui/ChatBox.png");
+    sprite_chatArea.setPosition(POS_CHAT_X, POS_CHAT_Y);
+    sprite_chatArea.setTexture(texture_chatArea);
+}
+
+CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, TimeManager& _timeManager):
+    isCommandsActive(false)
+    , window(_window)
+    , entityManager(_entityManager)
+    , multiplayerManager(nullptr)
     , textImput()
     , timer (0)
     , isGood(true)
@@ -230,35 +261,43 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
                 param[it].erase(std::remove(param[it].begin(), param[it].end(), '\0'), param[it].end());
             }
 
-
-            if(param[0] == "host")
+            if(multiplayerManager != nullptr)
             {
-                if(param[1] == "true")
+                if(param[0] == "host")
                 {
-                    multiplayerManager.startHostingServer();
-                }
-                else if(param[1] == "false")
-                {
-                    multiplayerManager.terminateHost();
-                }
-                else if(param[1] == "tick")
-                {
-                    multiplayerManager.host_changeTickRate(static_cast<float>(utl::asNumber(param[2])));
-                }
+                    if(param[1] == "true")
+                    {
+                        multiplayerManager->startHostingServer();
+                    }
+                    else if(param[1] == "false")
+                    {
+                        multiplayerManager->terminateHost();
+                    }
+                    else if(param[1] == "tick")
+                    {
+                        multiplayerManager->host_changeTickRate(static_cast<float>(utl::asNumber(param[2])));
+                    }
 
-            }
-            else if(param[0] == "client")
-            {
-                if(param[1] == "join")
-                {
-                    multiplayerManager.joinServer();
                 }
-                else if(param[1] == "leave")
+                else if(param[0] == "client")
                 {
-                    multiplayerManager.terminateClient();
+                    if(param[1] == "join")
+                    {
+                        multiplayerManager->joinServer();
+                    }
+                    else if(param[1] == "leave")
+                    {
+                        multiplayerManager->terminateClient();
+                    }
+                }
+                else if (param[0] == "s")
+                {
+                    multiplayerManager->startHostingServer();
+                    multiplayerManager->joinServer();
                 }
             }
-            else if(param[0] == "time")
+
+            if(param[0] == "time")
             {
                 if(param[1] == "set")
                 {

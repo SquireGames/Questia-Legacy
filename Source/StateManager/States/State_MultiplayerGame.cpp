@@ -27,9 +27,9 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
     , itemManager(mWindow, resourceManager)
-    , commandsManager(mWindow, entityManager, multiplayerManager, timeManager)
-
     , multiplayerManager("Temporary server name")
+    , commandsManager(mWindow, entityManager, &multiplayerManager, timeManager)
+
 
     //character info
     , player_Velocity(1,1)
@@ -121,6 +121,11 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     ///character
     entityManager.createPlayer("test",
                                sf::Vector2f(20*32,20*32),
+                               100, 100,
+                               100, 100,
+                               100, 100);
+    entityManager.createPlayer("test2",
+                               sf::Vector2f(21*32,20*32),
                                100, 100,
                                100, 100,
                                100, 100);
@@ -282,11 +287,11 @@ void State_MultiplayerGame::processImput(sf::Keyboard::Key key,bool isPressed)
         }
         else if(key == sf::Keyboard::T)
         {
-            isInDebugMode = true;
+            //isInDebugMode = true;
         }
         else if(key == sf::Keyboard::Y)
         {
-            isInDebugMode = false;
+            //isInDebugMode = false;
         }
 
         else if(key == sf::Keyboard::Escape)
@@ -384,7 +389,10 @@ void State_MultiplayerGame::update(sf::Time elapsedTime)
 
     entityManager.update(tileEngine, player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
     spawnManager.checkSpawns();
+    multiplayerManager.sendData(entityManager);
     multiplayerManager.update();
+    multiplayerManager.receiveData(entityManager);
+
 
     gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
@@ -396,7 +404,6 @@ void State_MultiplayerGame::update(sf::Time elapsedTime)
     guiManager.addStats(std::string("Hour  : "), (int) timeManager.getHour());
     guiManager.addStats(std::string("Minute: "), (int) timeManager.getMinute());
     guiManager.addStats(std::string("Time: "), (float) timeManager.getDecimalTime());
-
 
     guiManager.setStats(entityManager.getPlayerStats());
 

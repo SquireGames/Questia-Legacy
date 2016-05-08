@@ -24,7 +24,7 @@ public:
     std::string getName();
     void getNumb(int a, sf::Vector2i  b);
     std::string getEntityType(){return entityType;}
-    EntityCategory getCategory(){return entityCategory;}
+    EntityCategory getCategory(){return EntityCategory::passive;}
 
     void setCoordinates(sf::Vector2f coords) {coordinates = coords;}
 
@@ -32,7 +32,6 @@ public:
 
 private:
     std::string entityType;
-    EntityCategory entityCategory;
 
     int hp;
     int mp;

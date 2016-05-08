@@ -14,7 +14,6 @@ Entity_Chicken::Entity_Chicken( ResourceManager& res, EntityManager& entityManag
     , maxST(50)
 
     , entityType(_entityType)
-    , entityCategory(passive)
 
     , mIsMovingUp(false)
     , mIsMovingDown(false)

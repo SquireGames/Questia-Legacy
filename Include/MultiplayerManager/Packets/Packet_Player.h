@@ -18,13 +18,13 @@ struct pkt
 //{ Packet_Player
 struct Packet_Player : public Packet
 {
-    Packet_Player(int _packetNumber, std::pair <float, float> coordinates, int _playerID):
+    Packet_Player(int _packetNumber, int _playerID, std::pair <float, float> coordinates):
         packetNumber(static_cast <sf::Int32> (_packetNumber))
         , coords_x(static_cast <sf::Int32> (coordinates.first))
         , coords_y(static_cast <sf::Int32> (coordinates.second))
         , playerID(static_cast <sf::Int32> (_playerID))
     {}
-    Packet_Player(std::pair <float, float> coordinates, int _playerID):
+    Packet_Player(int _playerID, std::pair <float, float> coordinates):
         coords_x(static_cast <sf::Int32> (coordinates.first))
         , coords_y(static_cast <sf::Int32> (coordinates.second))
         , playerID(static_cast <sf::Int32> (_playerID))
@@ -32,6 +32,11 @@ struct Packet_Player : public Packet
     Packet_Player()
     {}
     ~Packet_Player();
+
+    bool operator < (const Packet_Player& nextPacket) const
+    {
+        return (packetNumber < nextPacket.packetNumber);
+    }
 
     ///Variables
     sf::Int32 packetNumber; // to make sure to organize them in the right order
@@ -130,7 +135,7 @@ static sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& pack
         packet >> playerID;
         packet >> coords_x;
         packet >> coords_y;
-        packetContainer.add(Packet_Player(std::make_pair(coords_x, coords_y), playerID));
+        packetContainer.add(Packet_Player(playerID, std::make_pair(coords_x, coords_y)));
     }
     return packet;
 }

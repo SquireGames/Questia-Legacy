@@ -32,6 +32,7 @@ public:
     sf::Vector2f getPlayerVelocity();
     sf::Vector2f getPlayerCoordinates();
     void setPlayerCoordinates(sf::Vector2f coords);
+    void setPlayerCoordinates2(sf::Vector2f coords);
     std::tuple<int, int, int,int, int, int> getPlayerStats();
     int getPlayerID()
     {

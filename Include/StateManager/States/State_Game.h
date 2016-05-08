@@ -54,7 +54,6 @@ private:
     ItemManager itemManager;
     CommandsManager commandsManager;
     LightManager lightManager;
-    MultiplayerManager multiplayerManager;
     TimeManager timeManager;
 
     int tempCoords_x, tempCoords_y;

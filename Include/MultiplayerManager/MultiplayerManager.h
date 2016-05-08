@@ -7,6 +7,8 @@
 #include <iostream>
 #include <map>
 
+#include "EntityManager.h"
+
 #include "Server.h"
 
 #include "Packet.h"
@@ -19,19 +21,23 @@ public:
         server(nullptr)
         , thread_client_main  (&MultiplayerManager::client_mainThread,  this)
         , thread_host_send    (&MultiplayerManager::host_sendThread,    this)
-        , thread_host_recieve (&MultiplayerManager::host_recieveThread, this)
+        , thread_host_receive (&MultiplayerManager::host_receiveThread, this)
         , host_terminate     (false)
         , client_terminate   (false)
         , host_alive_send    (false)
-        , host_alive_recieve (false)
+        , host_alive_receive (false)
         , client_alive       (false)
         , isRunningServer    (false)
         , isRunningClient    (false)
         , isKillingServer    (false)
         , isKillingClient    (false)
         , tickRate(5) // no active thread at this point
+        , client_udpSocket_send()
+        , client_udpSocket_receive()
+        , client_tempTick(0)
     {
-
+        client_udpSocket_send.bind(8002);
+        client_udpSocket_receive.bind(8003);
     }
     ~MultiplayerManager()
     {
@@ -48,12 +54,12 @@ public:
             server = new Server();
 
             thread_host_send   .launch();
-            thread_host_recieve.launch();
+            thread_host_receive.launch();
             isRunningServer = true;
 
             host_aliveMutex.lock();
             host_alive_send =    true;
-            host_alive_recieve = true;
+            host_alive_receive = true;
             host_aliveMutex.unlock();
         }
     }
@@ -91,18 +97,59 @@ public:
             isKillingClient = true;
         }
     }
+    void sendData(EntityManager& entityManager)
+    {
+        if(isRunningClient)
+        {
+            entityManagerMutex.lock();
+            float coords_x = entityManager.getPlayerCoordinates().x;
+            float coords_y = entityManager.getPlayerCoordinates().y;
+            entityManagerMutex.unlock();
+
+            client_tempTick++;
+            Packet_Player packetObj(client_tempTick, -1, std::make_pair(coords_x, coords_y));
+            sf::Packet testPacket;
+            testPacket << packetObj;
+
+            client_udpSocket_send.send(testPacket, sf::IpAddress::getLocalAddress(), 8001);
+        }
+    }
+    void receiveData(EntityManager& entityManager)
+    {
+        if(isRunningClient)
+        {
+            std::vector <Packet_Player> playerData;
+            playerDataMutex.lock();
+            playerData = playerData_received;
+            playerData_received.clear();
+            playerDataMutex.unlock();
+
+            std::sort(playerData.begin(), playerData.end());
+
+            for(int it = 0; it != playerData.size(); it++)
+            {
+                playerData_queue.push(playerData[it]);
+            }
+
+            while(!playerData_queue.empty())
+            {
+                std::cout << "Packet: " << playerData_queue.front().packetNumber << ", Coords: (" << playerData_queue.front().coords_x << ", " << playerData_queue.front().coords_y << ")" << std::endl;
+                entityManagerMutex.lock();
+                entityManager.setPlayerCoordinates2(sf::Vector2f(playerData_queue.front().coords_x, playerData_queue.front().coords_y));
+                entityManagerMutex.unlock();
+                playerData_queue.pop();
+            }
+        }
+    }
 
 ///manager
 
     void update()
     {
-        //send client information
-        //...
-
         if(isRunningServer && isKillingServer)
         {
             host_aliveMutex.lock();
-            if(!host_alive_send && !host_alive_recieve)
+            if(!host_alive_send && !host_alive_receive)
             {
                 std::cout << "SERVER TERMINATED" << std::endl;
                 isRunningServer = false;
@@ -110,7 +157,7 @@ public:
 
                 //just to make sure, should already be dead
                 thread_host_send.terminate();
-                thread_host_recieve.terminate();
+                thread_host_receive.terminate();
 
                 //threads are dead, should be safe
                 host_terminate = false;
@@ -222,7 +269,7 @@ private:
 
         ///death
         host_aliveMutex.lock();
-        if(!host_alive_recieve)
+        if(!host_alive_receive)
         {
             delete svr;
             svr = nullptr;
@@ -232,33 +279,16 @@ private:
         std::cout << "host_sendThread() ded" << std::endl;
     }
     //handles receiving
-    void host_recieveThread()
+    void host_receiveThread()
     {
         std::cout << "host_recieveThread() init" << std::endl;
         Server* svr = server; //saved to delete the server
-
-        sf::UdpSocket tempSocket;
-        unsigned short tempPort = 7777;
-        tempSocket.bind(tempPort);
-
-        sf::SocketSelector selector;
 
         host_terminateMutex.lock();
         while(!host_terminate)
         {
             host_terminateMutex.unlock();
-
-            if(selector.wait(sf::Time(sf::milliseconds(sf::Int32(100)))))
-            {
-                if(selector.isReady(tempSocket))
-                {
-                    std::string item1;
-                    int item2;
-
-
-                }
-            }
-
+            server->receive();
             host_terminateMutex.lock();
         }
         host_terminateMutex.unlock();
@@ -271,7 +301,7 @@ private:
             delete svr;
             svr = nullptr;
         }
-        host_alive_recieve = false;
+        host_alive_receive = false;
         host_aliveMutex.unlock();
         std::cout << "host_recieveThread() ded" << std::endl;
     }
@@ -280,12 +310,8 @@ private:
     {
         std::cout << "client_mainThread() init" << std::endl;
 
-        sf::UdpSocket tempSocket;
-        unsigned short tempPort = 8002;
-        tempSocket.bind(tempPort);
-
         sf::SocketSelector selector;
-        selector.add(tempSocket);
+        selector.add(client_udpSocket_receive);
 
         client_terminateMutex.lock();
 
@@ -294,13 +320,15 @@ private:
             client_terminateMutex.unlock();
             if(selector.wait(sf::Time(sf::milliseconds(sf::Int32(100)))))
             {
-                if(selector.isReady(tempSocket))
+                if(selector.isReady(client_udpSocket_receive))
                 {
-                    unsigned short tempPort2 = 8001;
                     sf::IpAddress tempIP = sf::IpAddress::getLocalAddress();
+                    unsigned short tempPort = 8000;
 
                     sf::Packet packet;
-                    tempSocket.receive(packet,tempIP, tempPort2);
+                    client_udpSocket_receive.receive(packet,tempIP, tempPort);
+
+                    //std::cout << ">>>>>CLIENT<<<<<" << std::endl;
 
                     int header;
                     packet >> header;
@@ -308,12 +336,17 @@ private:
                     {
                     case pkt::Header::player:
                     {
-                        std::cout << "player" << std::endl;
+                        //std::cout << "player" << std::endl;
                         Packet_Player player;
                         packet >> player;
-                        std::cout << "playerID:" << player.playerID << std::endl;
-                        std::cout << "playerNumber:" << player.packetNumber << std::endl;
-                        std::cout << "playerCoords:" << player.coords_x << "," << player.coords_y << std::endl;
+
+                        playerDataMutex.lock();
+                        playerData_received.push_back(player);
+                        playerDataMutex.unlock();
+
+                        //std::cout << "playerID:" << player.playerID << std::endl;
+                        //std::cout << "playerNumber:" << player.packetNumber << std::endl;
+                        //std::cout << "playerCoords:" << player.coords_x << "," << player.coords_y << std::endl;
                     }
                     break;
                     case pkt::Header::playerContainer:
@@ -326,9 +359,7 @@ private:
                         break;
                     }
 
-
-                    //packet >> item1 >> item2;
-                    //std::cout << item1 << item2 << std::endl;
+                    //std::cout << "<<<<<CLIENT>>>>>" << std::endl;
                 }
             }
             client_terminateMutex.lock();
@@ -351,7 +382,7 @@ private:
 //check if alive
     sf::Mutex host_aliveMutex;
     bool      host_alive_send;
-    bool      host_alive_recieve;
+    bool      host_alive_receive;
 //tick rate
     sf::Mutex host_changeTickRateMutex;
     bool      host_tickChange;
@@ -359,7 +390,7 @@ private:
 
 //threads
     sf::Thread thread_host_send;
-    sf::Thread thread_host_recieve;
+    sf::Thread thread_host_receive;
 
 //thread safe
     bool isRunningServer;
@@ -377,9 +408,23 @@ private:
 //threads
     sf::Thread thread_client_main;
 
+//tick
+    int client_tempTick;
+
 //thread safe
     bool isRunningClient;
     bool isKillingClient;
+
+//socket
+    sf::UdpSocket client_udpSocket_send;
+    sf::UdpSocket client_udpSocket_receive;
+
+//player packet
+    sf::Mutex playerDataMutex;
+    std::vector <Packet_Player> playerData_received;
+    std::queue  <Packet_Player> playerData_queue;
+//entity manager
+    sf::Mutex entityManagerMutex;
 };
 
 #endif // MULTIPLAYERMANAGER_H

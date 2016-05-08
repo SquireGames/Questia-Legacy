@@ -30,7 +30,7 @@ public:
     int getMaxMP(){return maxMP;}
     int getMaxST(){return maxST;}
     std::string getEntityType() {return entityType;}
-    EntityCategory getCategory(){return entityCategory;}
+    EntityCategory getCategory(){return EntityCategory::hostile;}
 
     ///sets
     void getNumb(int distance, sf::Vector2i  entityCoords);
@@ -42,7 +42,6 @@ public:
 private:
     ///default
     std::string entityType;
-    EntityCategory entityCategory;
 
     int ID;
     sf::Sprite entitySprite;

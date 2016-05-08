@@ -3,7 +3,7 @@
 
 #include "EntityManager/Entity/Collidable/Entity_Collidable.h"
 
-enum EntityCategory {passive, hostile, player};
+enum class EntityCategory {passive, hostile, player};
 
 class Entity_Living : public Entity_Collidable
 {

@@ -100,7 +100,46 @@ int EntityManager::getIDNumber(EntityType entityType)
 
     case ManagerType::multiplayer:
     {
+        std::vector<int> entityList;
+        for(int x = 0; x < entityStack.size(); x++)
+        {
+            entityList.push_back(entityStack[x]->returnID());
+        }
 
+        std::sort(entityList.begin(),entityList.end());
+        if(entityList.size() > 0)
+        {
+            if(entityStack.size() != entityList[entityList.size()-1]+1)
+            {
+                if(entityStack.size()>1)
+                {
+                    for(int x = 0; x < entityList.size(); x++)
+                    {
+                        if (entityList[x]+1 != entityList[x+1])
+                        {
+                            IDNumber = entityList[x]+1;
+                            x = 99999;
+                        }
+                    }
+                }
+                else
+                {
+                    entityNumber = entityList[entityList.size()-1]+1;
+                    IDNumber = entityNumber;
+                }
+            }
+            else
+            {
+                entityNumber =  entityList[entityList.size()-1]+1;
+                IDNumber = entityNumber;
+            }
+        }
+        else
+        {
+            entityNumber =  0;
+            IDNumber = entityNumber;
+        }
+        return IDNumber;
     }
     break;
 
@@ -187,7 +226,7 @@ int EntityManager::createPlayer(std::string playerName, sf::Vector2f coordinates
 {
     int IDNumber = getIDNumber(EntityType::player);
 
-    Entity_Player* entity= new Entity_Player(resourceManager, *this, lightManager, coordinates, IDNumber, "player", hp, maxHp, mp, maxMp, st, maxSt);
+    Entity_Player* entity = new Entity_Player(resourceManager, *this, lightManager, coordinates, IDNumber, "player", hp, maxHp, mp, maxMp, st, maxSt);
     std::cout<<"DEBUG: Created entity: " << "Player     ID: " << IDNumber <<std::endl;
     if(playerID == -1)
     {
@@ -214,10 +253,9 @@ int EntityManager::createEntity(std::string entityName, sf::Vector2f coordinates
 
     if(entityName == "chicken")
     {
-        Entity_Chicken* entity= new Entity_Chicken(resourceManager, *this, coordinates, IDNumber, "chicken");
+        Entity_Chicken* entity = new Entity_Chicken(resourceManager, *this, coordinates, IDNumber, "chicken");
 
         std::cout<<"DEBUG: Created entity: " << "Chicken     ID: " << IDNumber <<std::endl;
-
 
         entityStack.push_back(entity);
         entityCollidableStack.push_back(entity);
@@ -436,11 +474,11 @@ void EntityManager::handleInput(int actionType,bool isPressed, int player)
             {
                 entityPlayableStack[x]->handleImput(actionType,isPressed);
             }
-        case 1:
-            if(entityPlayableStack[x]->returnID()==playerID_2)
-            {
-                entityPlayableStack[x]->handleImput(actionType,isPressed);
-            }
+        //case 1:
+         //   if(entityPlayableStack[x]->returnID()==playerID_2)
+          //  {
+         //       entityPlayableStack[x]->handleImput(actionType,isPressed);
+          //  }
         }
     }
 }
@@ -494,7 +532,7 @@ void EntityManager::attackCheck()
 {
     for(int x = 0; x < entityLivingStack.size(); x++)
     {
-        if(entityLivingStack[x]->getCategory() == hostile)
+        if(entityLivingStack[x]->getCategory() == EntityCategory::hostile)
         {
             sf::Vector2f coords (-1000, -1000);
             int distance = 1000000;
@@ -505,7 +543,7 @@ void EntityManager::attackCheck()
 
             for(int y = 0; y < entityLivingStack.size(); y++)
             {
-                if(entityLivingStack[y]->getCategory() == passive || entityLivingStack[y]->getCategory() == player)
+                if(entityLivingStack[y]->getCategory() == EntityCategory::passive || entityLivingStack[y]->getCategory() == EntityCategory::player)
                 {
                     int X2, Y2;
                     int distanceTemp;
@@ -565,13 +603,13 @@ void EntityManager::attackCheck()
                         {
                             entityLivingStack[y]->setHP(entityLivingStack[y]->getHP() - entityDamageStack[x]->getDamage(entityLivingStack[y]->returnID()));
                         }
-                        if(entityLivingStack[y]->getCategory() == passive)
+                        if(entityLivingStack[y]->getCategory() == EntityCategory::passive)
                         {
                             for(int z = 0; z < entityLivingStack.size(); z++)
                             {
                                 if(entityDamageStack[x]->getAttackerID() == entityLivingStack[z]->returnID())
                                 {
-                                    if(entityLivingStack[z]->getCategory() == hostile)
+                                    if(entityLivingStack[z]->getCategory() == EntityCategory::hostile)
                                     {
                                         entityLivingStack[y]->setHP(entityLivingStack[y]->getHP() - entityDamageStack[x]->getDamage(entityLivingStack[y]->returnID()));
                                     }
@@ -667,6 +705,17 @@ void EntityManager::setPlayerCoordinates(sf::Vector2f coords)
     for(int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID)
+        {
+            entityPlayableStack[x]->setCoordinates(coords);
+        }
+    }
+}
+
+void EntityManager::setPlayerCoordinates2(sf::Vector2f coords)
+{
+    for(int x = 0; x < entityPlayableStack.size(); x++)
+    {
+        if(entityPlayableStack[x]->returnID()==playerID_2)
         {
             entityPlayableStack[x]->setCoordinates(coords);
         }

@@ -2,8 +2,10 @@
 #define STRUCT_ANIMATION_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <ResourceManager.h>
 #include <map>
+
 
 struct Struct_Animation
 {
@@ -31,7 +33,7 @@ struct Struct_Animation
             {
                 sf::Sprite sheet;
                 sheet.setTexture(res.getTexture(imageLocation));
-                sheet.setTextureRect(sf::IntRect((it_1 * size_x) + it_1, (it_2 * size_y) + it_2, size_x, size_y));
+                sheet.setTextureRect(sf::IntRect((it_1 * size_x) + it_1 + 1, (it_2 * size_y) + it_2 + 1, size_x - 2, size_y - 2));
                 spriteMap[it_1] [it_2] = sheet;
             }
         }

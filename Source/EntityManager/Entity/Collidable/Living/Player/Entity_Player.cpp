@@ -51,8 +51,6 @@ Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager,
 
     , animation(res, "Media/Image/Game/Player/Customization/Skin/White.png", 8, 3)
     , colRect()
-
-    , entityCategory(player)
 {
     entitySprite.setTexture(res.getTexture("Media/Image/Game/Player/Character_Base.png"));
     entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Gui/Health.png"));
