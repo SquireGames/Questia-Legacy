@@ -146,14 +146,14 @@ void TileEngine_Editor::saveCurrentMap()
     overWrite_map.open(tileEngine.mapDir, std::ofstream::out);
     overWrite_map << std::endl;
 
-    for (int x=0; x < editTileMap[0].size(); x++)
+    for (unsigned int x=0; x < editTileMap[0].size(); x++)
     {
         if(x>0)
         {
             overWrite_map << std::endl;
         }
 
-        for (int y=0; y < editTileMap[0][x].size(); y++)
+        for (unsigned int y=0; y < editTileMap[0][x].size(); y++)
         {
             overWrite_map << editTileMap[0][x][y].x << "," << editTileMap[0][x][y].y << "|";
             std::pair <int, int> tile = std::make_pair(editTileMap[0][x][y].x, editTileMap[0][x][y].y);
@@ -166,14 +166,14 @@ void TileEngine_Editor::saveCurrentMap()
     overWrite_map2.open(tileEngine.mapDir2, std::ofstream::out);
     overWrite_map2 << std::endl;
 
-    for (int x=0; x < editTileMap[1].size(); x++)
+    for (unsigned int x=0; x < editTileMap[1].size(); x++)
     {
         if(x>0)
         {
             overWrite_map2 << std::endl;
         }
 
-        for (int y=0; y < editTileMap[1][x].size(); y++)
+        for (unsigned int y=0; y < editTileMap[1][x].size(); y++)
         {
             overWrite_map2 << editTileMap[1][x][y].x << "," << editTileMap[1][x][y].y << "|";
             std::pair <int, int> tile = std::make_pair(editTileMap[1][x][y].x, editTileMap[1][x][y].y);
@@ -194,7 +194,7 @@ void TileEngine_Editor::saveCurrentMap()
     //Overwrite used tiles
     std::ofstream overWrite_tiles;
     overWrite_tiles.open(tileEngine.mapTiles, std::ofstream::out);
-    for(int x = 0; x != tileVector.size(); x++)
+    for(unsigned int x = 0; x != tileVector.size(); x++)
     {
         if(tileVector[x].x != 0)
         {

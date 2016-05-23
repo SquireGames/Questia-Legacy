@@ -15,7 +15,7 @@ bool Entity_Collidable::check_Collision_SAT(std::vector<sf::Vector2f>& objectVec
 {
     /// saves every axis
     std::vector<float> normalVector;
-    for(int it = 0; it != objectVector_1.size(); it++)
+    for(unsigned int it = 0; it != objectVector_1.size(); it++)
     {
         float normal;
         if(it == objectVector_1.size() - 1)
@@ -28,7 +28,7 @@ bool Entity_Collidable::check_Collision_SAT(std::vector<sf::Vector2f>& objectVec
         }
         normalVector.push_back(normal);
     }
-    for(int it = 0; it != objectVector_2.size(); it++)
+    for(unsigned int it = 0; it != objectVector_2.size(); it++)
     {
         float normal;
         if(it == objectVector_2.size() - 1)
@@ -43,17 +43,17 @@ bool Entity_Collidable::check_Collision_SAT(std::vector<sf::Vector2f>& objectVec
     }
 
     ///cycle through every normal
-    for(int it_normal = 0; it_normal != normalVector.size(); it_normal++)
+    for(unsigned int it_normal = 0; it_normal != normalVector.size(); it_normal++)
     {
         /// finds dot product
         float poly1_dot[objectVector_1.size()];
         float poly2_dot[objectVector_2.size()];
 
-        for(int it = 0; it != objectVector_1.size(); it++)
+        for(unsigned int it = 0; it != objectVector_1.size(); it++)
         {
             poly1_dot[it] = (objectVector_1[it].x + objectVector_1[it].y * normalVector[it_normal]);
         }
-        for(int it = 0; it != objectVector_2.size(); it++)
+        for(unsigned int it = 0; it != objectVector_2.size(); it++)
         {
             poly2_dot[it] = (objectVector_2[it].x + objectVector_2[it].y * normalVector[it_normal]);
         }
@@ -63,7 +63,7 @@ bool Entity_Collidable::check_Collision_SAT(std::vector<sf::Vector2f>& objectVec
               poly1_max = poly1_dot[0],
               poly2_min = poly2_dot[0],
               poly2_max = poly2_dot[0];
-        for(int it = 0; it !=  objectVector_1.size(); it++)
+        for(unsigned int it = 0; it !=  objectVector_1.size(); it++)
         {
             if(poly1_dot[it] > poly1_max)
             {
@@ -74,7 +74,7 @@ bool Entity_Collidable::check_Collision_SAT(std::vector<sf::Vector2f>& objectVec
                 poly1_min = poly1_dot[it];
             }
         }
-        for(int it = 0; it !=  objectVector_2.size(); it++)
+        for(unsigned int it = 0; it !=  objectVector_2.size(); it++)
         {
             if(poly2_dot[it] > poly2_max)
             {

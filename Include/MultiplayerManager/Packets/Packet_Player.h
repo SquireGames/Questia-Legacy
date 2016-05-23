@@ -6,28 +6,20 @@
 
 #include "Packet.h"
 
-struct pkt
-{
-    //packet
-    enum Header { other = 0, player = 1, playerContainer = 2, entity = 3, entityContainer = 4};
-
-    //entities
-    enum Direction {none = 0, up = 1, upRight = 2, right = 3, downRight = 4, down = 5, downLeft = 6, left = 7, upLeft = 8};
-};
-
 //{ Packet_Player
 struct Packet_Player : public Packet
 {
     Packet_Player(int _packetNumber, int _playerID, std::pair <float, float> coordinates):
         packetNumber(static_cast <sf::Int32> (_packetNumber))
+        , playerID(static_cast <sf::Int32> (_playerID))
         , coords_x(static_cast <sf::Int32> (coordinates.first))
         , coords_y(static_cast <sf::Int32> (coordinates.second))
-        , playerID(static_cast <sf::Int32> (_playerID))
     {}
     Packet_Player(int _playerID, std::pair <float, float> coordinates):
-        coords_x(static_cast <sf::Int32> (coordinates.first))
-        , coords_y(static_cast <sf::Int32> (coordinates.second))
+        packetNumber(-1)
         , playerID(static_cast <sf::Int32> (_playerID))
+        , coords_x(static_cast <sf::Int32> (coordinates.first))
+        , coords_y(static_cast <sf::Int32> (coordinates.second))
     {}
     Packet_Player()
     {}
@@ -76,8 +68,9 @@ static sf::Packet& operator >> (sf::Packet& packet, Packet_Player& player)
 struct PacketContainer_Player : public Packet
 {
     PacketContainer_Player(int _packetNumber):
-        byteCount(0)
-        , packetNumber(static_cast <sf::Int32> (_packetNumber))
+        packetNumber(static_cast <sf::Int32> (_packetNumber))
+        , playerContainer()
+        , byteCount(0)
     {}
     ~PacketContainer_Player() {}
 
@@ -109,7 +102,7 @@ static sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player
 
     packet << packetContainer.playerContainer.size();
 
-    for(int it = 0; it != packetContainer.playerContainer.size(); it++)
+    for(unsigned int it = 0; it != packetContainer.playerContainer.size(); it++)
     {
         packet << packetContainer.playerContainer[it].playerID;
         packet << packetContainer.playerContainer[it].coords_x;
@@ -120,7 +113,6 @@ static sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player
 
 static sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& packetContainer)
 {
-    int packetNumber;
     packet >> packetContainer.packetNumber;
 
     int packetCount;

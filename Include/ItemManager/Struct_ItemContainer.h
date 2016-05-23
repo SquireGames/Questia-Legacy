@@ -17,9 +17,9 @@ struct Struct_ItemContainer
         , width (_width)
         , usedSlotsVector()
     {
-        for(int x = 0; x != width; x++)
+        for(unsigned int x = 0; x != width; x++)
         {
-            for(int y = 0; y != height; y++)
+            for(unsigned int y = 0; y != height; y++)
             {
                 usedSlotsVector[x][y] = -1;
             }
@@ -28,11 +28,11 @@ struct Struct_ItemContainer
 
     ContainerHolder containerHolder;
 
-    std::vector <Struct_Item*> itemContainer;
-    std::map <int,std::map <int, int> > usedSlotsVector;
-
     unsigned int height;
     unsigned int width;
+
+    std::vector <Struct_Item*> itemContainer;
+    std::map <int,std::map <int, int> > usedSlotsVector;
 };
 
 #endif // STRUCT_ITEMCONTAINER_H

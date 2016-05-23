@@ -108,7 +108,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
 {
     if(isMakingNewCharacter)
     {
-        for(int tempIterator = 0; tempIterator != questions.size() && optionsIterator != questions.size();)
+        for(unsigned int tempIterator = 0; tempIterator != questions.size() && optionsIterator != questions.size();)
         {
             optionText.setString(questions[optionsIterator]);
             tempIterator++;
@@ -120,7 +120,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
             {
                 characterFiles = Data_Desktop::getInstance().getFiles("Saves/Characters", false);
                 characterCount = characterFiles.size();
-                for(int it = 20; it!= characterCount+20; it++)
+                for(unsigned int it = 20; it!= characterCount+20; it++)
                 {
                     guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
@@ -128,7 +128,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
             }
             else
             {
-                for(int it = 20; it!= characterCount+20; it++)
+                for(unsigned int it = 20; it!= characterCount+20; it++)
                 {
                     guiManager.changeVisibility(it, false);
                 }
@@ -217,6 +217,9 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                     case Character::ClassType::mage:
                         playerClass = "3";
                         break;
+                    default:
+                        playerClass = "0";
+                        break;
                     }
                     selectedClassType = Character::ClassType::none;
                     options[optionsIterator] = playerClass;
@@ -289,7 +292,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
             }
             else if(guiManager.testButton(3)) // new Character
             {
-                for(int it = 20; it!= characterCount+20; it++)
+                for(unsigned int it = 20; it!= characterCount+20; it++)
                 {
                     guiManager.changeVisibility(it, true);
                 }
@@ -303,7 +306,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                 if(deleteProgress > 2)
                 {
                     deleteProgress = 0;
-                    for(int it = 20; it!= characterCount+20; it++)
+                    for(unsigned int it = 20; it!= characterCount+20; it++)
                     {
                         guiManager.deleteButton(it);
                     }
@@ -315,7 +318,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                     selectedCharacterOverlay.setPosition(-1000,-1000);
                     characterFiles = Data_Desktop::getInstance().getFiles("Saves/Characters", false);
                     characterCount = characterFiles.size();
-                    for(int it = 20; it!= characterCount+20; it++)
+                    for(unsigned int it = 20; it!= characterCount+20; it++)
                     {
                         guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                     }
@@ -323,7 +326,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
             }
             else
             {
-                for(int it = 20; it!= characterCount + 20; it++)
+                for(unsigned int it = 20; it!= characterCount + 20; it++)
                 {
                     if(guiManager.testButton(it))
                     {
@@ -338,7 +341,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
         {
             if(guiManager.testButton(2)) // menu
             {
-                for(int it = 20; it!= characterCount+20; it++)
+                for(unsigned int it = 20; it!= characterCount+20; it++)
                 {
                     guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
@@ -389,7 +392,7 @@ scrollSelector:
             goto scrollSelector;
         case 1:
             scrollAmount += 28;
-            for(int it = 20; it!= characterCount+20; it++)
+            for(unsigned int it = 20; it!= characterCount+20; it++)
             {
                 sf::Vector2i tempCoords = guiManager.getButtonCoords(it);
                 guiManager.moveSprite(it, tempCoords.x , tempCoords.y + 28);
@@ -401,7 +404,7 @@ scrollSelector:
             break;
         case -1:
             scrollAmount -= 28;
-            for(int it = 20; it!= characterCount+20; it++)
+            for(unsigned int it = 20; it!= characterCount+20; it++)
             {
                 sf::Vector2i tempCoords = guiManager.getButtonCoords(it);
                 guiManager.moveSprite(it, tempCoords.x, tempCoords.y - 28);

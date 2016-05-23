@@ -14,13 +14,14 @@
 bool isInDebugMode = false;
 
 Data_Desktop::Data_Desktop():
-    desktopResolution(sf::VideoMode::getDesktopMode().width,sf::VideoMode::getDesktopMode().height)
+    save_options("options.cfg")
+    , desktopResolution(sf::VideoMode::getDesktopMode().width,sf::VideoMode::getDesktopMode().height)
     , scaleFactor((float) 1920 / (float) desktopResolution.x, (float) 1080 / (float) desktopResolution.y)
     , FPS (0)
     , mostRecentChar(' ')
     , mapSelection("NO MAP SELECTED")
     , characterSelection("NO CHARACTER SELECTED")
-    , save_options("options.cfg")
+
 {
     std::cout<<std::endl;
     std::cout<<"DEBUG: Data_Desktop Initialized"<<std::endl;
@@ -281,6 +282,8 @@ sf::Keyboard::Key Data_Desktop::getConvertedKey(char key)
         return sf::Keyboard::BackSpace;
     case 'E':
         return sf::Keyboard::Return;
+    default:
+        return sf::Keyboard::Unknown;
     }
 }
 

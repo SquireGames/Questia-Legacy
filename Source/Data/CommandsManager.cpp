@@ -9,18 +9,21 @@
 
 // Amount of lines of strings to save
 #define COUNT_VISIBLE 20
-#define COUNT_VISIVLE_FIT 7
+#define COUNT_VISIBLE_FIT 7
 
 CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, MultiplayerManager* _multiplayerManager, TimeManager& _timeManager):
-    isCommandsActive(false)
-    , window(_window)
+      window(_window)
     , entityManager(_entityManager)
     , multiplayerManager(_multiplayerManager)
+    , timeManager(_timeManager)
+
+    , isCommandsActive(false)
     , textImput()
+    , previousCommands()
+    , currentCommand(-1)
+    , visibleText()
     , timer (0)
     , isGood(true)
-    , currentCommand(-1)
-    , timeManager(_timeManager)
 {
     for (int it = 0; it != COUNT_HISTORY; it++)
     {
@@ -43,15 +46,18 @@ CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _enti
 }
 
 CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _entityManager, TimeManager& _timeManager):
-    isCommandsActive(false)
-    , window(_window)
+      window(_window)
     , entityManager(_entityManager)
     , multiplayerManager(nullptr)
+    , timeManager(_timeManager)
+
+    , isCommandsActive(false)
     , textImput()
+    , previousCommands()
+    , currentCommand(-1)
+    , visibleText()
     , timer (0)
     , isGood(true)
-    , currentCommand(-1)
-    , timeManager(_timeManager)
 {
     for (int it = 0; it != COUNT_HISTORY; it++)
     {
@@ -183,7 +189,7 @@ void CommandsManager::drawCommandArea()
     if(isCommandsActive)
     {
         window.draw(sprite_chatArea);
-        for(int it = 0; it !=COUNT_VISIVLE_FIT; it++)
+        for(int it = 0; it !=COUNT_VISIBLE_FIT; it++)
         {
             visibleText[it].setPosition(20 + POS_CHAT_X, 240 + POS_CHAT_Y - (it * 40));
             window.draw(visibleText[it]);
@@ -268,6 +274,8 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
                     if(param[1] == "true")
                     {
                         multiplayerManager->startHostingServer();
+                        std::string temp ("SERVER: Server is open");
+                        visibleText[1].setString(temp);
                     }
                     else if(param[1] == "false")
                     {
@@ -277,13 +285,47 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
                     {
                         multiplayerManager->host_changeTickRate(static_cast<float>(utl::asNumber(param[2])));
                     }
+                    else if(param[1] == "local")
+                    {
+                        std::stringstream ss;
+                        ss << "SERVER: Local IP: " << multiplayerManager->getLocalIP();
+                        visibleText[1].setString(ss.str());
+                    }
+                    else if(param[1] == "public")
+                    {
+                        std::stringstream ss;
+                        ss << "SERVER: Public IP: " << multiplayerManager->getPublicIP();
+                        visibleText[1].setString(ss.str());
+                    }
 
                 }
                 else if(param[0] == "client")
                 {
                     if(param[1] == "join")
                     {
-                        multiplayerManager->joinServer();
+                        if(param[2] == "localhost")
+                        {
+                            if(multiplayerManager->joinServer(multiplayerManager->getLocalIP()))
+                            {
+                                visibleText[1].setString(std::string ("CLIENT: Connected to server"));
+                            }
+                            else
+                            {
+                                visibleText[1].setString(std::string ("CLIENT: Could not connect to server"));
+                            }
+
+                        }
+                        else
+                        {
+                            if(multiplayerManager->joinServer(param[2]))
+                            {
+                                visibleText[1].setString(std::string ("CLIENT: Connected to server"));
+                            }
+                            else
+                            {
+                                visibleText[1].setString(std::string ("CLIENT: Could not connect to server"));
+                            }
+                        }
                     }
                     else if(param[1] == "leave")
                     {
@@ -293,10 +335,9 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
                 else if (param[0] == "s")
                 {
                     multiplayerManager->startHostingServer();
-                    multiplayerManager->joinServer();
+                    multiplayerManager->joinServer("192.168.2.6");
                 }
             }
-
             if(param[0] == "time")
             {
                 if(param[1] == "set")
@@ -307,6 +348,10 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
                 {
                     timeManager.setTimeStep(static_cast<char>(utl::asNumber(param[2])));
                 }
+            }
+            else if(param[0] == "entityList")
+            {
+                entityManager.console_displayEntities();
             }
             // commands involving coordinates
             else if(param[0] == "spawn" || param[0] == "tp" ||  param[0] == "teleport")

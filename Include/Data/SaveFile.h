@@ -36,7 +36,7 @@ public:
     template <class T>
     void saveItem (std::string itemName, T item) // overwriting entries
     {
-        for(int it = 0; it != saveList.size(); it++)
+        for(unsigned int it = 0; it != saveList.size(); it++)
         {
             if(saveList[it].first == itemName)
             {
@@ -54,7 +54,7 @@ public:
     std::vector<std::string> getItemList()
     {
         std::vector<std::string> itemList;
-        for(int it = 0; it != saveList.size(); it++)
+        for(unsigned int it = 0; it != saveList.size(); it++)
         {
             itemList.push_back(saveList[it].first);
         }

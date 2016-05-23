@@ -78,7 +78,7 @@ void SaveFile::writeFile()
 
     if(fileStream.is_open())
     {
-        for(int it = 0; it != saveList.size(); it++)
+        for(unsigned int it = 0; it != saveList.size(); it++)
         {
             fileStream << saveList[it].first << ":" << saveList[it].second;
 
@@ -104,13 +104,14 @@ void SaveFile::clearSave()
 }
 std::string SaveFile::getItem(std::string itemName)
 {
-    for(int it = 0; it != saveList.size(); it++)
+    for(unsigned int it = 0; it != saveList.size(); it++)
     {
         if(saveList[it].first == itemName)
         {
             return saveList[it].second;
         }
     }
+    return std::string("ERROR: NO ITEM FOUND");
 }
 
 void SaveFile::addComment(std::string item, std::string _comment)

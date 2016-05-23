@@ -24,7 +24,7 @@ std::vector <std::string> utl::separateString (std::string saveString, char deli
 std::string utl::conjoinString (std::vector <std::string> stringParts, char delimiter)
 {
     std::stringstream sStream;
-    for(int it = 0; it != stringParts.size(); it++)
+    for(unsigned int it = 0; it != stringParts.size(); it++)
     {
         sStream << stringParts[it];
         if(it != stringParts.size()-1)

@@ -125,7 +125,7 @@ void Entity_Player::update(int effect, int (&returnCollision)[4])
         count_playerStep=0;
     }
 
-    if(count_playerStep >= 0 && count_playerStep < 36 / previousVelocity || count_playerStep >= 72 / previousVelocity && count_playerStep < 108 / previousVelocity)
+    if((count_playerStep >= 0 && count_playerStep < 36 / previousVelocity )||( count_playerStep >= 72 / previousVelocity && count_playerStep < 108 / previousVelocity))
     {
         playerStep=1;
     }
@@ -263,19 +263,19 @@ void Entity_Player::update(int effect, int (&returnCollision)[4])
     switch(differenceOfFacing)
     {
     case 0:
-        speedDivider = 1;
+        speedDivider = 1.f;
         break;
     case 1:
-        speedDivider=0.8;
+        speedDivider=0.8f;
         break;
     case 2:
-        speedDivider=0.7;
+        speedDivider=0.7f;
         break;
     case 3:
-        speedDivider=0.5;
+        speedDivider=0.5f;
         break;
     case 4:
-        speedDivider=0.3;
+        speedDivider=0.3f;
         break;
     }
 
@@ -305,7 +305,7 @@ void Entity_Player::update(int effect, int (&returnCollision)[4])
 
     ///temporary stamina + mana + health regeneration
 
-    float staminaRegen = .1, healthRegen = .05, manaRegen = .1;
+    //float staminaRegen = .1, healthRegen = .05, manaRegen = .1;
 
     if(stamina < maxST)
     {

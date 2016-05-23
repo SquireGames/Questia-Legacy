@@ -21,11 +21,15 @@ struct Struct_Item
                 int _gridSize_x, int _gridSize_y,
                 std::string _inventorySpriteLoc, std::string _usageSpriteLoc,
                 ItemUsage _itemUsage, ItemType _itemType, AttackType _attackType):
-        storageID(_storageID)
-        , itemID(_itemID)
+        itemID(_itemID)
+        , storageID(_storageID)
 
         , itemName(_itemName)
         , itemDescription(_itemDescription)
+
+        , itemUsage (_itemUsage)
+        , itemType (_itemType)
+        , attackType(_attackType)
 
         , coord_x(_coord_x)
         , coord_y(_coord_y)
@@ -36,9 +40,6 @@ struct Struct_Item
         , usageSprite(_resourceManager, _usageSpriteLoc, 1, 1)
         , inventorySprite(_resourceManager, _inventorySpriteLoc, 1, 1)
 
-        , itemType (_itemType)
-        , attackType(_attackType)
-        , itemUsage (_itemUsage)
     {
 
     }
@@ -53,10 +54,6 @@ struct Struct_Item
     ItemType itemType;
     AttackType attackType;
 
-    Struct_Animation inventorySprite;
-    Struct_Animation usageSprite;
-
-
     int coord_x;
     int coord_y;
 
@@ -65,6 +62,11 @@ struct Struct_Item
     int gridSize_y;
 
     //std::map <int, std::map < > >
+
+    Struct_Animation usageSprite;
+    Struct_Animation inventorySprite;
+
+
 
     //future implementation
     int quality;

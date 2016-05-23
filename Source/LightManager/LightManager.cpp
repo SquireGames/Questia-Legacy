@@ -46,7 +46,7 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
     int IDNumber;
 
     std::vector<int> lightList;
-    for(int x = 0; x < lightingList.size(); x++)
+    for(unsigned int x = 0; x < lightingList.size(); x++)
     {
         lightList.push_back(lightingList[x]->id);
     }
@@ -55,11 +55,11 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
 
     if(lightList.size() > 0)
     {
-        if(lightingList.size() != lightList[lightList.size()-1]+1)
+        if(lightingList.size() != static_cast <unsigned int> (lightList[lightList.size()-1]+1))
         {
             if(lightingList.size()>1)
             {
-                for(int x = 0; x < lightList.size(); x++)
+                for(unsigned int x = 0; x < lightList.size(); x++)
                 {
                     if (lightList[x]+1 != lightList[x+1])
                     {
@@ -109,7 +109,6 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
     {
         lightSource->lightShape = 1;
 
-        lightSource->circle;
         lightSource->circle.setRadius(sideRadius.x);
         lightSource->circle.setOrigin(sideRadius.x, sideRadius.x);
 
@@ -124,7 +123,6 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
     {
         lightSource->lightShape = 2;
 
-        lightSource->rect;
         lightSource->rect.setSize(sideRadius);
         lightSource->rect.setOrigin(0, 0);
 
@@ -139,7 +137,6 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
     {
         lightSource->lightShape = 3;
 
-        lightSource->lightSprite;
         lightSource->lightSprite.setTexture(resourceManager.getTexture(std::string("Media/Image/Game/Lighting/Light_Circle_1.png")));
         lightSource->lightSprite.setScale((sideRadius.x*2.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*2.f)/ lightSource->lightSprite.getLocalBounds().height);
         lightSource->baseScale_x = lightSource->lightSprite.getScale().x;
@@ -154,15 +151,12 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
     {
         lightSource->lightShape = 3;
 
-        lightSource->lightSprite;
         lightSource->lightSprite.setTexture(lightingTexture_1);
         lightSource->lightSprite.setScale((sideRadius.x*2.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*2.f)/ lightSource->lightSprite.getLocalBounds().height);
         lightSource->baseScale_x = lightSource->lightSprite.getScale().x;
         lightSource->baseScale_y = lightSource->lightSprite.getScale().y;
         lightSource->lightSprite.setOrigin(lightSource->lightSprite.getLocalBounds().width/2, lightSource->lightSprite.getLocalBounds().height/2);
 
-
-        lightSource->lightSpriteColor;
         lightSource->lightSpriteColor.setTexture(lightingTextureColor_1);
         lightSource->lightSpriteColor.setScale((sideRadius.x*2.f)/ lightSource->lightSprite.getLocalBounds().width,(sideRadius.y*2.f)/ lightSource->lightSprite.getLocalBounds().height);
         lightSource->lightSpriteColor.setOrigin(lightSource->lightSprite.getLocalBounds().width/2, lightSource->lightSprite.getLocalBounds().height/2);
@@ -188,7 +182,7 @@ int LightManager::create_lightSource(sf::Vector2f coordinates, float brightness,
 
 void LightManager::moveLightSource(int id, sf::Vector2f coordinates)
 {
-    for(int x = 0; x != lightingList.size(); x++)
+    for(unsigned int x = 0; x != lightingList.size(); x++)
     {
         if(lightingList[x]->id == id)
         {
@@ -212,7 +206,7 @@ void LightManager::moveLightSource(int id, sf::Vector2f coordinates)
 
 int LightManager::delete_lightSource(int id)
 {
-    for(int x = 0; x < lightingList.size(); x++)
+    for(unsigned int x = 0; x < lightingList.size(); x++)
     {
         if(lightingList[x]->id==id)
         {
@@ -222,6 +216,8 @@ int LightManager::delete_lightSource(int id)
             std::cout << "Deleted light src: " <<  id << std::endl;
         }
     }
+    //TODO fix
+    return 0;
 }
 
 void LightManager::updateLighting()
@@ -247,7 +243,7 @@ void LightManager::updateLighting()
 
     blackwhiteOverlay.a = brightness;
 
-    for(int x = 0; x != lightingList.size(); x++)
+    for(unsigned int x = 0; x != lightingList.size(); x++)
     {
         if(lightingList[x]->lightShape == 3)
         {
@@ -268,7 +264,7 @@ void LightManager::updateLighting()
 
 void LightManager::drawLighting_1()
 {
-    for(int x = 0; x != lightingList.size(); x++)
+    for(unsigned int x = 0; x != lightingList.size(); x++)
     {
         if(lightingList[x]->lightShape == 3)
         {
@@ -311,7 +307,7 @@ void LightManager::drawLighting_2()
     lightingOverlayTexture.draw(blackwhiteRect);
     lightingOverlayTexture.draw(colorRect);
 
-    for(int x = 0; x != lightingList.size(); x++)
+    for(unsigned int x = 0; x != lightingList.size(); x++)
     {
         if(lightingList[x]->lightShape == 1)
         {
@@ -383,7 +379,7 @@ void LightManager::flickerLight(int id, float lowerBound, float upperBound)
 
     if(flicker != 0)
     {
-        for(int x = 0; x != lightingList.size(); x++)
+        for(unsigned int x = 0; x != lightingList.size(); x++)
         {
             if(lightingList[x]->id == id)
             {

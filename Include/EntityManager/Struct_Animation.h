@@ -27,9 +27,9 @@ struct Struct_Animation
         size_x = (imageSize.x - (slides_x - 1)) / slides_x;
         size_y = (imageSize.y - (slides_y - 1)) / slides_y;
 
-        for(int it_1 = 0; it_1 < slides_x; it_1++)
+        for(unsigned int it_1 = 0; it_1 < slides_x; it_1++)
         {
-            for(int it_2 = 0; it_2 < slides_y; it_2++)
+            for(unsigned int it_2 = 0; it_2 < slides_y; it_2++)
             {
                 sf::Sprite sheet;
                 sheet.setTexture(res.getTexture(imageLocation));

@@ -8,6 +8,7 @@
 #include <vector>
 #include <queue>
 
+#include "Packet.h"
 #include "Packet_Player.h"
 
 #include "TimeManager/TimeManager.h"
@@ -20,134 +21,69 @@
 
 #include "ResourceManager.h"
 
+enum class ClientStage {disconnected = 0, connected = 1, choosingCharacter = 2, active = 3};
+
+struct Client
+{
+    Client(int _clientID, sf::TcpSocket* _tcpSocket, sf::IpAddress _ip):
+        clientID(_clientID)
+        , tcpSocket(_tcpSocket)
+        , ip(_ip)
+        , clientStage(ClientStage::connected)
+    {}
+    int clientID;
+    sf::TcpSocket* tcpSocket;
+    sf::IpAddress ip;
+    ClientStage clientStage;
+
+    //client connects -> client sends login info -> server returns character list -> client sends character choice -> server initiates character and starts sending info
+};
+
+struct Map
+{
+    Map():
+    resourceManager()
+    , window()
+    , timeManager(0,0)
+    , lightManager(window, timeManager, resourceManager)
+    , tileEngine(window, resourceManager)
+    , entityManager(EntityManager::ManagerType::server, window, resourceManager, lightManager)
+    , spawnManager(false, entityManager)
+    , itemManager(window, resourceManager)
+    {}
+
+    //inactive
+    ResourceManager resourceManager;
+    sf::RenderWindow window;
+
+    TimeManager timeManager;
+    LightManager lightManager;
+    TileEngine tileEngine;
+    EntityManager entityManager;
+    SpawnManager spawnManager;
+    ItemManager itemManager;
+};
+
 class Server
 {
 public:
-    Server():
-        tick(0)
-        , resourceManager()
-        , window()
-        , timeManager(0,0)
-        , lightManager(window, timeManager, resourceManager)
-        , tileEngine(window, resourceManager)
-        , entityManager(EntityManager::ManagerType::server, window, resourceManager, lightManager)
-        , spawnManager(false, entityManager)
-        , itemManager(window, resourceManager)
-        , udpSocket_send()
-        , selector()
-    {
-        ///send
-        udpSocket_send   .bind(8000);
-
-        ///receive
-        udpSocket_receive.bind(8001);
-        selector.add(udpSocket_receive);
-
-        ///entityManager
-        entityManager.createPlayer("test",
-                                   sf::Vector2f(20*32,20*32),
-                                   100, 100,
-                                   100, 100,
-                                   100, 100);
-    }
+    Server();
     ~Server();
 
     ///send thread
-    void update()
-    {
-        std::vector <Packet_Player> playerData;
-
-        playerDataMutex.lock();
-        playerData = playerData_received;
-        playerData_received.clear();
-        playerDataMutex.unlock();
-
-        std::sort(playerData.begin(), playerData.end());
-
-        for(int it = 0; it != playerData.size(); it++)
-        {
-            playerData_queue.push(playerData[it]);
-        }
-
-        while(!playerData_queue.empty())
-        {
-            //std::cout << "Packet: " << playerData_queue.front().packetNumber << ", Coords: (" << playerData_queue.front().coords_x << ", " << playerData_queue.front().coords_y << ")" << std::endl;
-            entityManagerMutex.lock();
-            entityManager.setPlayerCoordinates(sf::Vector2f(playerData_queue.front().coords_x, playerData_queue.front().coords_y));
-            entityManagerMutex.unlock();
-            playerData_queue.pop();
-        }
-
-        entityManager.update(tileEngine, sf::Vector2f (0,0), sf::Vector2f (0,0), 0.f);
-    }
-    void send()
-    {
-        tick++;
-
-        entityManagerMutex.lock();
-        float coords_x = entityManager.getPlayerCoordinates().x;
-        float coords_y = entityManager.getPlayerCoordinates().y;
-        entityManagerMutex.unlock();
-
-        Packet_Player packetObj(tick, -1, std::make_pair(coords_x, coords_y));
-        sf::Packet testPacket;
-        testPacket << packetObj;
-
-        sf::IpAddress tempIP = sf::IpAddress::getLocalAddress();
-        unsigned short tempPort = 8003;
-
-        udpSocket_send.send(testPacket, tempIP, tempPort);
-    }
-
+    void update();
+    void send();
     ///receive thread
-    void receive()
-    {
-        if(selector.wait(sf::Time(sf::milliseconds(sf::Int32(100)))))
-        {
-            if(selector.isReady(udpSocket_receive))
-            {
-                unsigned short tempPort2 = 8002;
-                sf::IpAddress tempIP = sf::IpAddress::getLocalAddress();
-
-                sf::Packet packet;
-                udpSocket_receive.receive(packet,tempIP, tempPort2);
-
-                //std::cout << ">>>>>SERVER<<<<<" << std::endl;
-
-                int header;
-                packet >> header;
-                switch (header)
-                {
-                case pkt::Header::player:
-                {
-                    //std::cout << "player" << std::endl;
-                    Packet_Player player;
-                    packet >> player;
-                    //std::cout << "playerID:" << player.playerID << std::endl;
-                    //std::cout << "playerNumber:" << player.packetNumber << std::endl;
-                    //std::cout << "playerCoords:" << player.coords_x << "," << player.coords_y << std::endl;
-
-                    playerDataMutex.lock();
-                    playerData_received.push_back(player);
-                    playerDataMutex.unlock();
-                }
-                break;
-                case pkt::Header::playerContainer:
-                {
-                    std::cout << "player container" << std::endl;
-                }
-                break;
-                case pkt::Header::entity:
-                    std::cout << "entity" << std::endl;
-                    break;
-                }
-
-               //std::cout << "<<<<<SERVER>>>>>" << std::endl;
-            }
-        }
-    }
+    void receive();
 
 private:
+    ///server
+    void checkClient(); //used for joining stages,
+
+    ///clients
+    std::vector <Client*> clientVector;
+    int clientCount;
+
     ///send
     sf::UdpSocket udpSocket_send;
     sf::TcpSocket tcpSocket;
@@ -155,6 +91,7 @@ private:
     ///receive
     sf::UdpSocket udpSocket_receive;
     sf::SocketSelector selector;
+    sf::TcpListener listener;
 
     ///data
     //player packet
@@ -164,18 +101,8 @@ private:
     //entityManager
     sf::Mutex entityManagerMutex;
 
-
-    //modules
-    TimeManager timeManager;
-    LightManager lightManager;
-    TileEngine tileEngine; //for AI collision
-    EntityManager entityManager;
-    SpawnManager spawnManager;
-    ItemManager itemManager;
-
-    //inactive
-    ResourceManager resourceManager;
-    sf::RenderWindow window;
+    ///game
+    std::vector <Map*> mapVector;
 
     unsigned int tick;
 };

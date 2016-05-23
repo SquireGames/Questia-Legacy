@@ -93,7 +93,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
 {
     if(isMakingNewMap)
     {
-        for(int tempIterator = 0; tempIterator != questions.size() && optionsIterator != questions.size();)
+        for(unsigned int tempIterator = 0; tempIterator != questions.size() && optionsIterator != questions.size();)
         {
             optionText.setString(questions[optionsIterator]);
             tempIterator++;
@@ -104,7 +104,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
             {
                 mapFiles = Data_Desktop::getInstance().getFiles("Maps", false);
                 mapCount = mapFiles.size();
-                for(int it = 20; it!= mapCount+20; it++)
+                for(unsigned int it = 20; it!= mapCount+20; it++)
                 {
                     guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
@@ -112,7 +112,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
             }
             else
             {
-                for(int it = 20; it!= mapCount+20; it++)
+                for(unsigned int it = 20; it!= mapCount+20; it++)
                 {
                     guiManager.changeVisibility(it, false);
                 }
@@ -243,7 +243,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
         }
         else if(guiManager.testButton(3)) // new Map
         {
-            for(int it = 20; it!= mapCount+20; it++)
+            for(unsigned int it = 20; it!= mapCount+20; it++)
             {
                 guiManager.changeVisibility(it, true);
             }
@@ -255,7 +255,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
             if(deleteProgress > 2)
             {
                 deleteProgress = 0;
-                for(int it = 20; it!= mapCount+20; it++)
+                for(unsigned int it = 20; it!= mapCount+20; it++)
                 {
                     guiManager.deleteButton(it);
                 }
@@ -267,7 +267,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
                 selectedMapOverlay.setPosition(-1000,-1000);
                 mapFiles = Data_Desktop::getInstance().getFiles("Maps", false);
                 mapCount = mapFiles.size();
-                for(int it = 20; it!= mapCount+20; it++)
+                for(unsigned int it = 20; it!= mapCount+20; it++)
                 {
                     guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
@@ -275,7 +275,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
         }
         else
         {
-            for(int it = 20; it!= mapCount+20; it++)
+            for(unsigned int it = 20; it!= mapCount+20; it++)
             {
                 if(guiManager.testButton(it))
                 {
@@ -307,7 +307,7 @@ scrollSelector:
             goto scrollSelector;
         case 1:
             scrollAmount += 28;
-            for(int it = 20; it!= mapCount+20; it++)
+            for(unsigned int it = 20; it!= mapCount+20; it++)
             {
                 sf::Vector2i tempCoords = guiManager.getButtonCoords(it);
                 guiManager.moveSprite(it, tempCoords.x , tempCoords.y + 28);
@@ -319,7 +319,7 @@ scrollSelector:
             break;
         case -1:
             scrollAmount -= 28;
-            for(int it = 20; it!= mapCount+20; it++)
+            for(unsigned int it = 20; it!= mapCount+20; it++)
             {
                 sf::Vector2i tempCoords = guiManager.getButtonCoords(it);
                 guiManager.moveSprite(it, tempCoords.x, tempCoords.y - 28);

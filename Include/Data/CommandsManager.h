@@ -26,21 +26,21 @@ public:
     bool isActive();
 
 private:
+    sf::RenderWindow &window;
+    EntityManager& entityManager;
+    MultiplayerManager* multiplayerManager;
+    TimeManager& timeManager;
+
+    bool isCommandsActive;
     std::stringstream textImput;
     std::map <int, std::string> previousCommands;
     int currentCommand;
     std::map <int, sf::Text> visibleText;
     int timer;
     bool isGood;
-    bool isCommandsActive;
 
     sf::Sprite   sprite_chatArea;
     sf::Texture texture_chatArea;
-
-    EntityManager& entityManager;
-    MultiplayerManager* multiplayerManager;
-    TimeManager& timeManager;
-    sf::RenderWindow &window;
 };
 
 #endif // COMMANDSMANAGER_H

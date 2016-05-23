@@ -91,7 +91,7 @@ int Attack_Arrow::getDamage(int ID)
 {
     bool pass = true;
 
-    for(int x = 0; x < entityIDList.size(); x++)
+    for(unsigned int x = 0; x < entityIDList.size(); x++)
     {
         if(ID == entityIDList[x])
         {

@@ -56,7 +56,7 @@ int EntityManager::getIDNumber(EntityType entityType)
     case ManagerType::singleplayer:
     {
         std::vector<int> entityList;
-        for(int x = 0; x < entityStack.size(); x++)
+        for(unsigned int x = 0; x < entityStack.size(); x++)
         {
             entityList.push_back(entityStack[x]->returnID());
         }
@@ -64,11 +64,11 @@ int EntityManager::getIDNumber(EntityType entityType)
         std::sort(entityList.begin(),entityList.end());
         if(entityList.size() > 0)
         {
-            if(entityStack.size() != entityList[entityList.size()-1]+1)
+            if(entityStack.size() != static_cast <unsigned int> (entityList[entityList.size()-1]+1))
             {
                 if(entityStack.size()>1)
                 {
-                    for(int x = 0; x < entityList.size(); x++)
+                    for(unsigned int x = 0; x < entityList.size(); x++)
                     {
                         if (entityList[x]+1 != entityList[x+1])
                         {
@@ -100,8 +100,18 @@ int EntityManager::getIDNumber(EntityType entityType)
 
     case ManagerType::multiplayer:
     {
+        switch (entityType)
+        {
+        case EntityType::player:
+            last_playerID--;
+            return last_playerID;
+            break;
+        default:
+            break;
+        }
+
         std::vector<int> entityList;
-        for(int x = 0; x < entityStack.size(); x++)
+        for(unsigned int x = 0; x < entityStack.size(); x++)
         {
             entityList.push_back(entityStack[x]->returnID());
         }
@@ -109,11 +119,11 @@ int EntityManager::getIDNumber(EntityType entityType)
         std::sort(entityList.begin(),entityList.end());
         if(entityList.size() > 0)
         {
-            if(entityStack.size() != entityList[entityList.size()-1]+1)
+            if(entityStack.size() != static_cast <unsigned int> (entityList[entityList.size()-1]+1))
             {
                 if(entityStack.size()>1)
                 {
-                    for(int x = 0; x < entityList.size(); x++)
+                    for(unsigned int x = 0; x < entityList.size(); x++)
                     {
                         if (entityList[x]+1 != entityList[x+1])
                         {
@@ -162,7 +172,7 @@ int EntityManager::getIDNumber(EntityType entityType)
     break;
     default:
     {
-
+        return 0;
     }
     break;
     }
@@ -207,17 +217,18 @@ int EntityManager::createEntity(int entity, sf::Vector2f coordinates)
     }
     }
 
-    //std::cout<<"-----------------" <<std::endl;
-    for(int x = 0; x < entityStack.size(); x++)
-    {
-        //std::cout<<"Live entity: " << entityStack[x]->returnID()<<std::endl;
-    }
-
-    //std::cout<<"-----------------" <<std::endl;
-
     return IDNumber;
 }
 
+void EntityManager::console_displayEntities()
+{
+    std::cout<<"-----------------" <<std::endl;
+    for(unsigned int x = 0; x < entityStack.size(); x++)
+    {
+        std::cout<<"Live entity: " << entityStack[x]->returnID()<<std::endl;
+    }
+    std::cout<<"-----------------" <<std::endl;
+}
 
 int EntityManager::createPlayer(std::string playerName, sf::Vector2f coordinates,
                                 int hp, int maxHp,
@@ -326,7 +337,7 @@ int EntityManager::createSpecialEntity(int entity, int _attackerID, std::string 
     }
 
     // std::cout<<"-----------------" <<std::endl;
-    for(int x = 0; x < entityStack.size(); x++)
+    for(unsigned int x = 0; x < entityStack.size(); x++)
     {
         // std::cout<<"Live entity: " << entityStack[x]->returnID()<<std::endl;
     }
@@ -371,7 +382,7 @@ void EntityManager::destroyEntity(int entityID)
     int eP = 0;
     int eI = 0;
 
-    for(int x = 0; x < entityCollidableStack.size(); x++)
+    for(unsigned int x = 0; x < entityCollidableStack.size(); x++)
     {
         if(entityCollidableStack[x]->returnID()==entityID)
         {
@@ -379,7 +390,7 @@ void EntityManager::destroyEntity(int entityID)
             eC++;
         }
     }
-    for(int x = 0; x < entityInteractStack.size(); x++)
+    for(unsigned int x = 0; x < entityInteractStack.size(); x++)
     {
         if(entityInteractStack[x]->returnID()==entityID)
         {
@@ -387,7 +398,7 @@ void EntityManager::destroyEntity(int entityID)
             eI++;
         }
     }
-    for(int x = 0; x < entityDamageStack.size(); x++)
+    for(unsigned int x = 0; x < entityDamageStack.size(); x++)
     {
         if(entityDamageStack[x]->returnID()==entityID)
         {
@@ -395,7 +406,7 @@ void EntityManager::destroyEntity(int entityID)
             eD++;
         }
     }
-    for(int x = 0; x < entityStack.size(); x++)
+    for(unsigned int x = 0; x < entityStack.size(); x++)
     {
         if(entityStack[x]->returnID()==entityID)
         {
@@ -404,7 +415,7 @@ void EntityManager::destroyEntity(int entityID)
         }
     }
 
-    for(int x = 0; x < entityLivingStack.size(); x++)
+    for(unsigned int x = 0; x < entityLivingStack.size(); x++)
     {
         if(entityLivingStack[x]->returnID()==entityID)
         {
@@ -413,7 +424,7 @@ void EntityManager::destroyEntity(int entityID)
         }
     }
 
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==entityID)
         {
@@ -447,7 +458,7 @@ void EntityManager::destroyEntity(int entityID)
     {
         eL--;
         entityLivingStack.erase(eL + entityLivingStack.begin());
-        for(int x = 0; x < entityDamageStack.size(); x++)
+        for(unsigned int x = 0; x < entityDamageStack.size(); x++)
         {
             if(entityDamageStack[x]->getAttackerID() == entityID)
             {
@@ -465,7 +476,7 @@ void EntityManager::destroyEntity(int entityID)
 
 void EntityManager::handleInput(int actionType,bool isPressed, int player)
 {
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         switch (player)
         {
@@ -486,7 +497,7 @@ void EntityManager::handleInput(int actionType,bool isPressed, int player)
 void EntityManager::drawEntity()
 {
     sf::Vector2f playerCoordinates;
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID)
         {
@@ -494,7 +505,7 @@ void EntityManager::drawEntity()
         }
     }
 
-    for(int x = 0; x < entityStack.size(); x++)
+    for(unsigned int x = 0; x < entityStack.size(); x++)
     {
         if(std::abs(entityStack[x]->getCoordinates().x - playerCoordinates.x) < 3000 )
         {
@@ -504,7 +515,7 @@ void EntityManager::drawEntity()
             }
         }
     }
-    for(int x = 0; x < entityDamageStack.size(); x++)
+    for(unsigned int x = 0; x < entityDamageStack.size(); x++)
     {
         if(std::abs(entityDamageStack[x]->getCoordinates().x - playerCoordinates.x) < 3000 )
         {
@@ -515,7 +526,7 @@ void EntityManager::drawEntity()
         }
     }
 
-    for(int x = 0; x < entityInteractStack.size(); x++)
+    for(unsigned int x = 0; x < entityInteractStack.size(); x++)
     {
         if(std::abs(entityInteractStack[x]->getCoordinates().x - playerCoordinates.x) < 5000 )
         {
@@ -530,7 +541,7 @@ void EntityManager::drawEntity()
 
 void EntityManager::attackCheck()
 {
-    for(int x = 0; x < entityLivingStack.size(); x++)
+    for(unsigned int x = 0; x < entityLivingStack.size(); x++)
     {
         if(entityLivingStack[x]->getCategory() == EntityCategory::hostile)
         {
@@ -541,7 +552,7 @@ void EntityManager::attackCheck()
             X1 = entityLivingStack[x]->getCoordinates().x;
             Y1 = entityLivingStack[x]->getCoordinates().y;
 
-            for(int y = 0; y < entityLivingStack.size(); y++)
+            for(unsigned int y = 0; y < entityLivingStack.size(); y++)
             {
                 if(entityLivingStack[y]->getCategory() == EntityCategory::passive || entityLivingStack[y]->getCategory() == EntityCategory::player)
                 {
@@ -568,13 +579,12 @@ void EntityManager::attackCheck()
     int Y1, Y2;
     int X1, X2;
     int distance;
-    int ID;
 
     sf::Vector2f coords;
 
-    for(int x = 0; x < entityDamageStack.size(); x++)
+    for(unsigned int x = 0; x < entityDamageStack.size(); x++)
     {
-        for(int y = 0; y < entityLivingStack.size(); y++)
+        for(unsigned int y = 0; y < entityLivingStack.size(); y++)
         {
             if(entityDamageStack[x]->getAttackerID() == entityLivingStack[y]->returnID())
             {
@@ -588,7 +598,7 @@ void EntityManager::attackCheck()
         {
             X1 = entityDamageStack[x]->getCoordinates().x;
             Y1 = entityDamageStack[x]->getCoordinates().y;
-            for(int y = 0; y < entityLivingStack.size(); y++)
+            for(unsigned int y = 0; y < entityLivingStack.size(); y++)
             {
                 X2 = entityLivingStack[y]->getCoordinates().x;
                 Y2 = entityLivingStack[y]->getCoordinates().y;
@@ -605,7 +615,7 @@ void EntityManager::attackCheck()
                         }
                         if(entityLivingStack[y]->getCategory() == EntityCategory::passive)
                         {
-                            for(int z = 0; z < entityLivingStack.size(); z++)
+                            for(unsigned int z = 0; z < entityLivingStack.size(); z++)
                             {
                                 if(entityDamageStack[x]->getAttackerID() == entityLivingStack[z]->returnID())
                                 {
@@ -645,7 +655,7 @@ void EntityManager::attackCheck()
 
 void EntityManager::update(TileEngine& tileEngine, sf::Vector2f player_MapCoordinates, sf::Vector2f mouseCoordinates, float angle)
 {
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID)
         {
@@ -653,7 +663,7 @@ void EntityManager::update(TileEngine& tileEngine, sf::Vector2f player_MapCoordi
             entityPlayableStack[x]->setMouseCoordinates(mouseCoordinates);
 
             // Interactions with player
-            for(int y = 0; y < entityInteractStack.size(); y++)
+            for(unsigned int y = 0; y < entityInteractStack.size(); y++)
             {
                 entityInteractStack[y]->checkInteraction(entityPlayableStack[x]->getCoordinates().x, entityPlayableStack[x]->getCoordinates().y, entityPlayableStack[x]->getSideRadius().x, entityPlayableStack[x]->getSideRadius().y);
             }
@@ -670,7 +680,7 @@ void EntityManager::update(TileEngine& tileEngine, sf::Vector2f player_MapCoordi
 
 
     int returnCollision[4] = {0,0,0,0};
-    for(int x = 0; x < entityCollidableStack.size(); x++)
+    for(unsigned int x = 0; x < entityCollidableStack.size(); x++)
     {
         entityCollidableStack[x]->update(tileEngine.getMapCollision(entityCollidableStack[x]->getMapCoordinates(), entityCollidableStack[x]->getCoordinates(), entityCollidableStack[x]->getSideRadius(), entityCollidableStack[x]->getVelocity(), returnCollision), returnCollision);
     }
@@ -680,29 +690,31 @@ void EntityManager::update(TileEngine& tileEngine, sf::Vector2f player_MapCoordi
 
 sf::Vector2f EntityManager::getPlayerVelocity()
 {
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID)
         {
             return entityPlayableStack[x]->getVelocity();
         }
     }
+    return sf::Vector2f (0,0);
 }
 
 sf::Vector2f EntityManager::getPlayerCoordinates()
 {
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID)
         {
             return entityPlayableStack[x]->getCoordinates();
         }
     }
+    return sf::Vector2f(0,0);
 }
 
 void EntityManager::setPlayerCoordinates(sf::Vector2f coords)
 {
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID)
         {
@@ -713,7 +725,7 @@ void EntityManager::setPlayerCoordinates(sf::Vector2f coords)
 
 void EntityManager::setPlayerCoordinates2(sf::Vector2f coords)
 {
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID_2)
         {
@@ -724,13 +736,14 @@ void EntityManager::setPlayerCoordinates2(sf::Vector2f coords)
 
 std::tuple<int, int, int, int, int, int> EntityManager::getPlayerStats()
 {
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID)
         {
             return entityPlayableStack[x]->getStats();
         }
     }
+    return std::make_tuple(0,0,0,0,0,0);
 }
 
 int EntityManager::getEntityCount()
@@ -743,7 +756,7 @@ void EntityManager::doAttack(int attack, float angle, int ID, float x, float y)
     int st;
     std::ostringstream os;
 
-    for(int x = 0; x < entityLivingStack.size(); x++)
+    for(unsigned int x = 0; x < entityLivingStack.size(); x++)
     {
         if(entityLivingStack[x]->returnID()==ID)
         {
@@ -752,7 +765,7 @@ void EntityManager::doAttack(int attack, float angle, int ID, float x, float y)
     }
 
 
-    for(int x = 0; x < entityPlayableStack.size(); x++)
+    for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
         if(entityPlayableStack[x]->returnID()==playerID)
         {
@@ -771,7 +784,7 @@ void EntityManager::doAttack(int attack, float angle, int ID, float x, float y)
             if(st>=5)
             {
                 createSpecialEntity(1,ID,os.str(),getPlayerCoordinates(),sf::Vector2f(0,0),angle,35,4,1,1,1);
-                for(int x = 0; x < entityPlayableStack.size(); x++)
+                for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
                 {
                     if(entityPlayableStack[x]->returnID()==playerID)
                     {
@@ -786,11 +799,11 @@ void EntityManager::doAttack(int attack, float angle, int ID, float x, float y)
             if(st>=10)
             {
                 createSpecialEntity(2,ID,os.str(),getPlayerCoordinates(),sf::Vector2f(4,4),angle,150,4,1,1,1);
-                for(int x = 0; x < entityPlayableStack.size(); x++)
+                for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
                 {
                     if(entityPlayableStack[x]->returnID()==playerID)
                     {
-                        entityPlayableStack[x]->setST(st-10);
+                        entityPlayableStack[x]->setST(st - 10);
                     }
                 }
             }
@@ -810,7 +823,7 @@ std::vector <int> EntityManager::getDeadIDs()
 
 void EntityManager::setCharacteristic(int ID, std::string characteristic, int amount)
 {
-    for(int it = 0; it != entityLivingStack.size(); it++)
+    for(unsigned int it = 0; it != entityLivingStack.size(); it++)
     {
         if(entityLivingStack[it]->returnID() == ID)
         {
@@ -825,7 +838,7 @@ void EntityManager::setCharacteristic(int ID, std::string characteristic, int am
 
 void EntityManager::saveEntities(SaveFile& save_entity)
 {
-    for(int it = 0; it != entityLivingStack.size(); it++)
+    for(unsigned int it = 0; it != entityLivingStack.size(); it++)
     {
         entityLivingStack[it]->saveEntity();
         std::map <std::string, std::string>& characteristicMap = entityLivingStack[it]->getSaveCharacteristics();

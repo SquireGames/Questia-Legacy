@@ -37,7 +37,7 @@ float Entity_Attack::convertRadiansToDegrees(float angle)
 
 void Entity_Attack::rotateNewPoints(float angle, sf::Vector2f coordinates, std::vector<sf::Vector2f>& _point)
 {
-    for(int it = 0; it != _point.size(); it++)
+    for(unsigned int it = 0; it != _point.size(); it++)
     {
         float sin = std::sin(angle);
         float cos = std::cos(angle);
@@ -54,7 +54,7 @@ void Entity_Attack::rotateNewPoints(float angle, sf::Vector2f coordinates, std::
 
 void Entity_Attack::rotatePoints(float angle, sf::Vector2f coordinates, std::vector<sf::Vector2f>& _point)
 {
-    for(int it = 0; it != _point.size(); it++)
+    for(unsigned int it = 0; it != _point.size(); it++)
     {
         _point[it].x -= coordinates.x;
         _point[it].y -= coordinates.y;
@@ -82,7 +82,7 @@ void Entity_Attack::movePoints(float angle, sf::Vector2f& coordinates, sf::Vecto
     coordinates.x += x_component;
     coordinates.y += y_component;
 
-    for(int it = 0; it != _point.size(); it++)
+    for(unsigned int it = 0; it != _point.size(); it++)
     {
         _point[it].x = _point[it].x + x_component;
         _point[it].y = _point[it].y + y_component;

@@ -278,7 +278,7 @@ void Hostile_Goblin::getNumb(int distance, sf::Vector2i entityCoords)
     {
         count_entityStep=0;
     }
-    if(count_entityStep >= 0 && count_entityStep < 36 / velocity.x || count_entityStep >= 72 / velocity.x && count_entityStep < 108 / velocity.x)
+    if((count_entityStep >= 0 && count_entityStep < 36 / velocity.x ) || (count_entityStep >= 72 / velocity.x && count_entityStep < 108 / velocity.x))
     {
         entityStep=1;
     }

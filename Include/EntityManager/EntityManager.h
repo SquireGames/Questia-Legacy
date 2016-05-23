@@ -29,6 +29,8 @@ public:
     void handleInput(int actionType,bool isPressed,int player);
     void update(TileEngine& tileEngine, sf::Vector2f player_MapCoordinates,sf::Vector2f mouseCoordinates, float angle);
 
+    void console_displayEntities();
+
     sf::Vector2f getPlayerVelocity();
     sf::Vector2f getPlayerCoordinates();
     void setPlayerCoordinates(sf::Vector2f coords);

@@ -255,13 +255,13 @@ void TileEngine::drawMap(sf::Vector2f coordinates)
     //std::cout<<"Map Width:"<<mapWidth<<std::endl;
     //std::cout<<"Map Height:"<<mapHeight<<std::endl;
 
-    int layers = tileMap.size();
+    unsigned int layers = tileMap.size();
 
-    for(int it = 0; it != layers; it++)
+    for(unsigned int it = 0; it != layers; it++)
     {
-        for (int x =(coordinates.y-13); x < (coordinates.y+10); x++)
+        for (float x =(coordinates.y-13); x < (coordinates.y+10); x++)
         {
-            for (int y =(coordinates.x-20); y < (coordinates.x+18); y++)
+            for (float y =(coordinates.x-20); y < (coordinates.x+18); y++)
             {
                 if (x>-1 && y > -1 && x < mapHeight && y < mapWidth)
                 {
@@ -272,17 +272,17 @@ void TileEngine::drawMap(sf::Vector2f coordinates)
     }
 }
 
-void TileEngine::loadTiles(int x, int y, int index, int id)
+void TileEngine::loadTiles(float x, float y, int index, int id)
 {
     sf::Sprite& sprite = tileIndex[index][id];
-    sprite.setPosition(y * 32, x * 32);
+    sprite.setPosition(y * 32.f, x * 32.f);
     window.draw(sprite);
 }
 
-void TileEngine::loadTiles(int x, int y, int index, int id, int transparency)
+void TileEngine::loadTiles(float x, float y, int index, int id, int transparency)
 {
     sf::Sprite& sprite = tileIndex[index][id];
-    sprite.setPosition(y * 32, x * 32);
+    sprite.setPosition(y * 32.f, x * 32.f);
     sf::Color tempColor = sprite.getColor();
     sprite.setColor(sf::Color(0,0,0,transparency));
     window.draw(sprite);
@@ -409,7 +409,7 @@ bool TileEngine::tileIsUsed(int index, int id, bool isLimitingTextures)
     {
         if(index != 0 && !(index == 50 && id == 1))
         {
-            for(int x = 0; x != usedTileVector.size(); x++)
+            for(unsigned int x = 0; x != usedTileVector.size(); x++)
             {
                 if(index == usedTileVector[x].x && id == usedTileVector[x].y)
                 {

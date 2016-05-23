@@ -5,12 +5,13 @@ Attack_Slash::Attack_Slash( ResourceManager &res, int _attackID,int _attackerID,
                             sf::Vector2f _coordinates, sf::Vector2f _velocity, float _angle,
                             int _duration, int _attackDamage, float _sizeMultiplier, float _timeMultiplier,
                             int _extra):
-    attackID(_attackID)
+    coordinates(_coordinates)
+    , velocity(_velocity)
+    , attackID(_attackID)
     , attackerName(_attackerName)
     , attackerID (_attackerID)
-    , coordinates(_coordinates)
-    , velocity(_velocity)
     , duration(_duration)
+    , initDuration(_duration)
     , attackDamage(_attackDamage)
     , sizeMultiplier(_sizeMultiplier)
     , timeMultiplier(_timeMultiplier)
@@ -19,7 +20,6 @@ Attack_Slash::Attack_Slash( ResourceManager &res, int _attackID,int _attackerID,
     , angle(_angle)
 
     , res(res)
-    , initDuration(_duration)
 {
     angle = fixAngle(angle);
 
@@ -101,7 +101,7 @@ bool Attack_Slash::isActive()
 }
 void Attack_Slash::update(sf::Vector2f coords)
 {
-    for(int x = 0; x != hitbox_Attack.size(); x++)
+    for(unsigned int x = 0; x != hitbox_Attack.size(); x++)
     {
         hitbox_Attack[x].x = hitbox_Attack[x].x - coordinates.x + coords.x;
         hitbox_Attack[x].y = hitbox_Attack[x].y - coordinates.y + coords.y;
@@ -112,7 +112,7 @@ int Attack_Slash::getDamage(int ID)
 {
     bool pass = true;
 
-    for(int x = 0; x < entityIDList.size(); x++)
+    for(unsigned int x = 0; x < entityIDList.size(); x++)
     {
         if(ID == entityIDList[x])
         {

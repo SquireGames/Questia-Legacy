@@ -7,6 +7,8 @@
 
 namespace utl
 {
+    enum Direction {none = 0, up = 1, upRight = 2, right = 3, downRight = 4, down = 5, downLeft = 6, left = 7, upLeft = 8};
+
     int asNumber(std::string _string);
 
     template <class T>

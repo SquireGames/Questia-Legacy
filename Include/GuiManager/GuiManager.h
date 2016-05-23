@@ -92,11 +92,11 @@ struct Button
         window(_window)
         , resourceManager(_resourceManager)
         , buttonFont(_buttonFont)
-        , scrollAmount_x (0)
-        , scrollAmount_y (0)
         , buttonPosition (std::make_pair(0,0))
         , buttonBounds (std::make_pair(0,0))
         , isCoordsChanged(true)
+        , scrollAmount_x (0)
+        , scrollAmount_y (0)
         , isVisible(true)
         , isTemplate(_isTemplate)
     {}
@@ -106,11 +106,11 @@ struct Button
         window(oldButton.window)
         , resourceManager(oldButton.resourceManager)
         , buttonFont (oldButton.buttonFont)
-        , scrollAmount_x (0)
-        , scrollAmount_y (0)
         , buttonPosition (std::make_pair(0,0))
         , buttonBounds (oldButton.buttonBounds)
         , isCoordsChanged(true)
+        , scrollAmount_x (0)
+        , scrollAmount_y (0)
         , isVisible(oldButton.isVisible)
         , isTemplate(false)
     {
@@ -715,7 +715,7 @@ public:
         {
             std::vector <std::string>& buttonVec = groupMap[groupName];
 
-            for(int it = 0; it != buttonVec.size(); it++)
+            for(unsigned int it = 0; it != buttonVec.size(); it++)
             {
                 buttonMap[buttonVec[it]]->setButton(buttonChar, value);
             }
@@ -728,7 +728,7 @@ public:
         {
             std::vector <std::string>& buttonVec = groupMap[currentGroupEdit];
 
-            for(int it = 0; it != buttonVec.size(); it++)
+            for(unsigned int it = 0; it != buttonVec.size(); it++)
             {
                 buttonMap[buttonVec[it]]->setButton(buttonChar, value);
             }
@@ -789,17 +789,17 @@ public:
     }
 
 private:
+    sf::RenderWindow& window;
+    ResourceManager &resourceManager;
+
     std::string currentButtonEdit;
     std::string currentButtonAtrEdit;
     std::string currentGroupEdit;
 
-    std::map <std::string, Button*> buttonMap;
     std::pair <float, float> mouseCoords;
+    std::map <std::string, Button*> buttonMap;
     std::map <std::string, std::vector <std::string> > groupMap;
     sf::Font buttonFont;
-
-    sf::RenderWindow& window;
-    ResourceManager &resourceManager;
 };
 
 

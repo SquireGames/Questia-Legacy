@@ -30,14 +30,14 @@ public:
     void drawLayer3(sf::RenderWindow &mWindow);
 
 private:
+    ResourceManager &resource;
+    int ID;
+
     sf::Vector2f velocity;
     sf::Vector2f coordinates;
     sf::Sprite entitySprite;
     sf::Sprite entitySprite2;
     sf::Vector2i mapCoordinates;
-
-    int ID;
-    ResourceManager &resource;
 
     sf::Vector2f bounds;
     bool interaction;

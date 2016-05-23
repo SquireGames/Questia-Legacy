@@ -87,7 +87,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     if(save_entities.readFile())
     {
         std::vector<std::pair<std::string, std::string> >& entityVector = save_entities.getSaveList();
-        for(int it = 0; it != entityVector.size(); it++)
+        for(unsigned int it = 0; it != entityVector.size(); it++)
         {
             std::vector<std::string> entityInfo = utl::separateString(entityVector[it].second, ',');
             int entityID = entityManager.createEntity(entityVector[it].first, sf::Vector2f(utl::asNumber(entityInfo[1]),utl::asNumber(entityInfo[2])));
@@ -105,11 +105,11 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     ///views
     gameView.setSize(1920,1080);
     gameView.setCenter(960,540);
-    gameView.zoom(0.5);
+    gameView.zoom(0.5f);
 
     overlayView.setSize(1920,1080);
     overlayView.setCenter(960,540);
-    overlayView.zoom(1);
+    overlayView.zoom(1.f);
 
     ///character
     entityManager.createPlayer(Data_Desktop::getInstance().getCharacterSelection(),

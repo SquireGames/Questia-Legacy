@@ -18,8 +18,8 @@ public:
 
     void drawMap(sf::Vector2f coordinates);
     int getMapCollision(sf::Vector2i mapCoordinates,sf::Vector2f playerCoordinates, sf::Vector2f getSideRadius, sf::Vector2f velocity, int (&returnCollision)[4]);
-    void loadTiles(int x, int y, int index, int id);
-    void loadTiles(int x, int y, int index, int id, int transparency);
+    void loadTiles(float x, float y, int index, int id);
+    void loadTiles(float x, float y, int index, int id, int transparency);
     void loadMap(std::string mapName, bool isLimitingTextures);
     std::vector <sf::Vector2i> usedTileVector;
 

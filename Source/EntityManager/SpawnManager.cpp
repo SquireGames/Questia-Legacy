@@ -21,7 +21,7 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
     std::vector <std::pair <int, int>> pastSpawn;
 
     std::vector<std::pair<std::string, std::string> >& spawnSaveVector = save_spawnSave.getSaveList();
-    for(int it = 0; it != spawnSaveVector.size(); it++)
+    for(unsigned int it = 0; it != spawnSaveVector.size(); it++)
     {
         pastSpawn.push_back(std::make_pair(utl::asNumber(spawnSaveVector[it].first), it));
     }
@@ -29,9 +29,9 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
     // compare ID's with saved ones, store iterator position in a vector
     std::vector <int> iteratorPosition;
     std::map <int, int> newIDMap; // iterator, newID
-    for(int x = 0; x != savedID.size(); x++)
+    for(unsigned int x = 0; x != savedID.size(); x++)
     {
-        for(int y = 0; y != pastSpawn.size(); y++)
+        for(unsigned int y = 0; y != pastSpawn.size(); y++)
         {
             if(savedID[x] == pastSpawn[y].first)
             {
@@ -43,7 +43,7 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
 
     // saveInfo map
     std::map <int, spawnInfo> pastEntities;
-    for(int it = 0; it != iteratorPosition.size(); it++)
+    for(unsigned int it = 0; it != iteratorPosition.size(); it++)
     {
         std::vector<std::string> spawnSaveInfo = utl::separateString(spawnSaveVector[iteratorPosition[it]].second, ',');
         spawnInfo entity;
@@ -68,7 +68,7 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
     if(save_spawn.readFile())
     {
         std::vector <std::pair <std::string, std::string> > spawnVector = save_spawn.getSaveList();
-        for(int it = 0; it != spawnVector.size(); it++)
+        for(unsigned int it = 0; it != spawnVector.size(); it++)
         {
             std::vector <std::string> entityData = utl::separateString(spawnVector[it].second, ',');
 
@@ -121,7 +121,7 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
     if(save_interactive.readFile())
     {
         std::vector <std::pair <std::string, std::string> > spawnVector = save_interactive.getSaveList();
-        for(int it = 0; it != spawnVector.size(); it++)
+        for(unsigned int it = 0; it != spawnVector.size(); it++)
         {
             std::vector <std::string> entityData = utl::separateString(spawnVector[it].second, ',');
 
@@ -145,9 +145,9 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
 void SpawnManager::checkSpawns()
 {
     std::vector<int> deadID = entityManager.getDeadIDs();
-    for(int x = 0; x < deadID.size(); x++)
+    for(unsigned int x = 0; x < deadID.size(); x++)
     {
-        for(int y = 0; y < spawningInfo.size(); y++)
+        for(unsigned int y = 0; y < spawningInfo.size(); y++)
         {
             if(spawningInfo[y].ID == deadID[x])
             {
@@ -158,7 +158,7 @@ void SpawnManager::checkSpawns()
 
     sf::Vector2i coords = sf::Vector2i(entityManager.getPlayerCoordinates().x, entityManager.getPlayerCoordinates().y);
 
-    for(int x = 0; x < spawningInfo.size(); x++)
+    for(unsigned int x = 0; x < spawningInfo.size(); x++)
     {
         if(spawningInfo[x].cooldown_current == 0)
         {
@@ -187,7 +187,7 @@ void SpawnManager::checkSpawns()
 
 void SpawnManager::saveSpawns(SaveFile& save_spawn)
 {
-    for(int it = 0; it < spawningInfo.size(); it++)
+    for(unsigned int it = 0; it < spawningInfo.size(); it++)
     {
         std::vector <std::string> spawnSave;
 

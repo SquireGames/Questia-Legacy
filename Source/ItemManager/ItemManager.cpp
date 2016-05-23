@@ -17,10 +17,10 @@ ItemManager::~ItemManager()
 // Items
 int ItemManager::getStorageID()
 {
-    int IDNumber;
+    int IDNumber = 0;
 
     std::vector<int> itemList;
-    for(int x = 0; x < itemVector.size(); x++)
+    for(unsigned int x = 0; x < itemVector.size(); x++)
     {
         itemList.push_back(itemVector[x]->storageID);
     }
@@ -28,11 +28,11 @@ int ItemManager::getStorageID()
     std::sort(itemList.begin(),itemList.end());
     if(itemList.size() > 0)
     {
-        if(itemVector.size() != itemList[itemList.size()-1]+1)
+        if(itemVector.size() != static_cast <unsigned int> (itemList[itemList.size()-1]+1))
         {
             if(itemVector.size()>1)
             {
-                for(int x = 0; x < itemList.size(); x++)
+                for(unsigned int x = 0; x < itemList.size(); x++)
                 {
                     if (itemList[x]+1 != itemList[x+1])
                     {
@@ -110,7 +110,7 @@ void ItemManager::destroyItem(int item)
 {
     int e = 0;
 
-    for(int x = 0; x < itemVector.size(); x++)
+    for(unsigned int x = 0; x < itemVector.size(); x++)
     {
         if(itemVector[x]->storageID == item)
         {
@@ -137,7 +137,7 @@ void ItemManager::createContainer(ContainerHolder containerHolder, int size_x, i
 
 void ItemManager::drawItems()
 {
-    for(int x = 0; x < itemVector.size(); x++)
+    for(unsigned int x = 0; x < itemVector.size(); x++)
     {
         switch (itemVector[x]->itemUsage)
         {

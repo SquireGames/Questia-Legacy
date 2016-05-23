@@ -17,400 +17,74 @@
 class MultiplayerManager
 {
 public:
-    MultiplayerManager(std::string _serverName):
-        server(nullptr)
-        , thread_client_main  (&MultiplayerManager::client_mainThread,  this)
-        , thread_host_send    (&MultiplayerManager::host_sendThread,    this)
-        , thread_host_receive (&MultiplayerManager::host_receiveThread, this)
-        , host_terminate     (false)
-        , client_terminate   (false)
-        , host_alive_send    (false)
-        , host_alive_receive (false)
-        , client_alive       (false)
-        , isRunningServer    (false)
-        , isRunningClient    (false)
-        , isKillingServer    (false)
-        , isKillingClient    (false)
-        , tickRate(5) // no active thread at this point
-        , client_udpSocket_send()
-        , client_udpSocket_receive()
-        , client_tempTick(0)
-    {
-        client_udpSocket_send.bind(8002);
-        client_udpSocket_receive.bind(8003);
-    }
-    ~MultiplayerManager()
-    {
-        // just to make sure
-        terminateHost();
-        terminateClient();
-    }
+    MultiplayerManager(std::string _serverName);
+    ~MultiplayerManager();
 
 ///server
-    void startHostingServer()
-    {
-        if(!isRunningServer)
-        {
-            server = new Server();
+    void startHostingServer();
+    void terminateHost();
 
-            thread_host_send   .launch();
-            thread_host_receive.launch();
-            isRunningServer = true;
+    void host_changeTickRate(float _tickRate);
+    std::string getPublicIP();
+    std::string getLocalIP();
 
-            host_aliveMutex.lock();
-            host_alive_send =    true;
-            host_alive_receive = true;
-            host_aliveMutex.unlock();
-        }
-    }
-    void terminateHost()
-    {
-        if(isRunningServer)
-        {
-            host_terminateMutex.lock();
-            host_terminate = true;
-            host_terminateMutex.unlock();
-            isKillingServer = true;
-        }
-    }
 
 ///client
-    void joinServer()
-    {
-        if(!isRunningClient)
-        {
-            thread_client_main.launch();
-            isRunningClient = true;
+    bool joinServer(std::string ipAddress);
+    void terminateClient();
 
-            client_aliveMutex.lock();
-            client_alive = true;
-            client_aliveMutex.unlock();
-        }
-    }
-    void terminateClient()
-    {
-        if(isRunningClient)
-        {
-            client_terminateMutex.lock();
-            client_terminate = true;
-            client_terminateMutex.unlock();
-            isKillingClient = true;
-        }
-    }
-    void sendData(EntityManager& entityManager)
-    {
-        if(isRunningClient)
-        {
-            entityManagerMutex.lock();
-            float coords_x = entityManager.getPlayerCoordinates().x;
-            float coords_y = entityManager.getPlayerCoordinates().y;
-            entityManagerMutex.unlock();
-
-            client_tempTick++;
-            Packet_Player packetObj(client_tempTick, -1, std::make_pair(coords_x, coords_y));
-            sf::Packet testPacket;
-            testPacket << packetObj;
-
-            client_udpSocket_send.send(testPacket, sf::IpAddress::getLocalAddress(), 8001);
-        }
-    }
-    void receiveData(EntityManager& entityManager)
-    {
-        if(isRunningClient)
-        {
-            std::vector <Packet_Player> playerData;
-            playerDataMutex.lock();
-            playerData = playerData_received;
-            playerData_received.clear();
-            playerDataMutex.unlock();
-
-            std::sort(playerData.begin(), playerData.end());
-
-            for(int it = 0; it != playerData.size(); it++)
-            {
-                playerData_queue.push(playerData[it]);
-            }
-
-            while(!playerData_queue.empty())
-            {
-                std::cout << "Packet: " << playerData_queue.front().packetNumber << ", Coords: (" << playerData_queue.front().coords_x << ", " << playerData_queue.front().coords_y << ")" << std::endl;
-                entityManagerMutex.lock();
-                entityManager.setPlayerCoordinates2(sf::Vector2f(playerData_queue.front().coords_x, playerData_queue.front().coords_y));
-                entityManagerMutex.unlock();
-                playerData_queue.pop();
-            }
-        }
-    }
+    void sendData(EntityManager& entityManager);
+    void receiveData(EntityManager& entityManager);
 
 ///manager
+    void update();
 
-    void update()
-    {
-        if(isRunningServer && isKillingServer)
-        {
-            host_aliveMutex.lock();
-            if(!host_alive_send && !host_alive_receive)
-            {
-                std::cout << "SERVER TERMINATED" << std::endl;
-                isRunningServer = false;
-                isKillingServer = false;
-
-                //just to make sure, should already be dead
-                thread_host_send.terminate();
-                thread_host_receive.terminate();
-
-                //threads are dead, should be safe
-                host_terminate = false;
-            }
-            host_aliveMutex.unlock();
-        }
-        if(isRunningClient && isKillingClient)
-        {
-            client_aliveMutex.lock();
-            if(!client_alive)
-            {
-                std::cout << "CLIENT TERMINATED" << std::endl;
-                isRunningClient = false;
-                isKillingClient = false;
-
-                //just to make sure
-                thread_client_main.terminate();
-
-                //just in case, should be safe
-                client_terminate = false;
-            }
-            client_aliveMutex.unlock();
-        }
-    }
-    bool isServerDead()
-    {
-        return !isRunningServer;
-    }
-    bool isClientDead()
-    {
-        return !isRunningClient;
-    }
-    void host_changeTickRate(float _tickRate)
-    {
-        host_changeTickRateMutex.lock();
-        if(_tickRate != tickRate)
-        {
-            host_tickChange = true;
-            tickRate = _tickRate;
-        }
-        host_changeTickRateMutex.unlock();
-    }
+    bool isServerDead();
+    bool isClientDead();
 
 
 private:
-    ///Threads
+///Threads
     //handles sending
-    void host_sendThread()
-    {
-        std::cout << "host_sendThread() init" << std::endl;
-        Server* svr = server; //saved to delete the server
-
-        ///tick rate
-        host_changeTickRateMutex.lock();
-        float threadTickRate = tickRate;
-        host_changeTickRateMutex.unlock();
-        sf::Time timePerUpdate = sf::seconds(1.f/144.f);
-        sf::Time timePerSend   = sf::seconds(1.f/threadTickRate);
-        sf::Clock clock_update;
-        sf::Clock clock_send;
-        sf::Time timeSinceLastUpdate = sf::Time::Zero;
-        sf::Time timeSinceLastSend = sf::Time::Zero;
-
-        host_terminateMutex.lock();
-        while(!host_terminate)
-        {
-            host_terminateMutex.unlock();
-
-            ///check for changes in tick rate
-            host_changeTickRateMutex.lock();
-            if(host_tickChange)
-            {
-                host_tickChange = false;
-                threadTickRate = tickRate;
-                if(threadTickRate > 144.f)
-                {
-                    threadTickRate = 144.f;
-                }
-                timePerSend = sf::seconds(1.f/threadTickRate);
-            }
-            host_changeTickRateMutex.unlock();
-
-
-
-            ///update
-            sf::Time elapsedTime_update = clock_update.restart();
-            timeSinceLastUpdate += elapsedTime_update;
-            while (timeSinceLastUpdate > timePerUpdate)
-            {
-                timeSinceLastUpdate -= timePerUpdate;
-                svr->update();
-            }
-
-
-            ///send
-            sf::Time elapsedTime_send = clock_send.restart();
-            timeSinceLastSend += elapsedTime_send;
-            while (timeSinceLastSend > timePerSend)
-            {
-                timeSinceLastSend -= timePerSend;
-                svr->send();
-            }
-
-            sf::sleep(sf::Time(sf::milliseconds(sf::Int32(4))));
-
-            host_terminateMutex.lock();
-        }
-        host_terminateMutex.unlock();
-
-        ///death
-        host_aliveMutex.lock();
-        if(!host_alive_receive)
-        {
-            delete svr;
-            svr = nullptr;
-        }
-        host_alive_send = false;
-        host_aliveMutex.unlock();
-        std::cout << "host_sendThread() ded" << std::endl;
-    }
+    void host_sendThread();
     //handles receiving
-    void host_receiveThread()
-    {
-        std::cout << "host_recieveThread() init" << std::endl;
-        Server* svr = server; //saved to delete the server
-
-        host_terminateMutex.lock();
-        while(!host_terminate)
-        {
-            host_terminateMutex.unlock();
-            server->receive();
-            host_terminateMutex.lock();
-        }
-        host_terminateMutex.unlock();
-
-
-        ///death
-        host_aliveMutex.lock();
-        if(!host_alive_send)
-        {
-            delete svr;
-            svr = nullptr;
-        }
-        host_alive_receive = false;
-        host_aliveMutex.unlock();
-        std::cout << "host_recieveThread() ded" << std::endl;
-    }
+    void host_receiveThread();
     // used to receive
-    void client_mainThread()
-    {
-        std::cout << "client_mainThread() init" << std::endl;
-
-        sf::SocketSelector selector;
-        selector.add(client_udpSocket_receive);
-
-        client_terminateMutex.lock();
-
-        while(!client_terminate)
-        {
-            client_terminateMutex.unlock();
-            if(selector.wait(sf::Time(sf::milliseconds(sf::Int32(100)))))
-            {
-                if(selector.isReady(client_udpSocket_receive))
-                {
-                    sf::IpAddress tempIP = sf::IpAddress::getLocalAddress();
-                    unsigned short tempPort = 8000;
-
-                    sf::Packet packet;
-                    client_udpSocket_receive.receive(packet,tempIP, tempPort);
-
-                    //std::cout << ">>>>>CLIENT<<<<<" << std::endl;
-
-                    int header;
-                    packet >> header;
-                    switch (header)
-                    {
-                    case pkt::Header::player:
-                    {
-                        //std::cout << "player" << std::endl;
-                        Packet_Player player;
-                        packet >> player;
-
-                        playerDataMutex.lock();
-                        playerData_received.push_back(player);
-                        playerDataMutex.unlock();
-
-                        //std::cout << "playerID:" << player.playerID << std::endl;
-                        //std::cout << "playerNumber:" << player.packetNumber << std::endl;
-                        //std::cout << "playerCoords:" << player.coords_x << "," << player.coords_y << std::endl;
-                    }
-                    break;
-                    case pkt::Header::playerContainer:
-                    {
-                        std::cout << "player container" << std::endl;
-                    }
-                    break;
-                    case pkt::Header::entity:
-                        std::cout << "entity" << std::endl;
-                        break;
-                    }
-
-                    //std::cout << "<<<<<CLIENT>>>>>" << std::endl;
-                }
-            }
-            client_terminateMutex.lock();
-        }
-        client_terminateMutex.unlock();
-
-        ///death
-        client_aliveMutex.lock();
-        client_alive = false;
-        client_aliveMutex.unlock();
-        std::cout << "client_mainThread() ded" << std::endl;
-    }
+    void client_mainThread();
 
 
-///server
+///server vars
     Server* server;
-//terminate
+    //terminate
     sf::Mutex host_terminateMutex;
     bool      host_terminate;
-//check if alive
+    //check if alive
     sf::Mutex host_aliveMutex;
     bool      host_alive_send;
     bool      host_alive_receive;
-//tick rate
+    //tick rate
     sf::Mutex host_changeTickRateMutex;
     bool      host_tickChange;
     float     tickRate;
-
-//threads
+    //threads
     sf::Thread thread_host_send;
     sf::Thread thread_host_receive;
-
-//thread safe
+    //thread safe
     bool isRunningServer;
     bool isKillingServer;
 
 
-///client
+///client vars
 //terminate
     sf::Mutex   client_terminateMutex;
     bool        client_terminate;
 //check if alive
     sf::Mutex   client_aliveMutex;
     bool        client_alive;
-
 //threads
     sf::Thread thread_client_main;
-
 //tick
     int client_tempTick;
-
 //thread safe
     bool isRunningClient;
     bool isKillingClient;
@@ -418,7 +92,7 @@ private:
 //socket
     sf::UdpSocket client_udpSocket_send;
     sf::UdpSocket client_udpSocket_receive;
-
+    sf::TcpSocket client_tcpSocket;
 //player packet
     sf::Mutex playerDataMutex;
     std::vector <Packet_Player> playerData_received;

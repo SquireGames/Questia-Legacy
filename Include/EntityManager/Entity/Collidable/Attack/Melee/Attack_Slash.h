@@ -78,9 +78,9 @@ private:
     sf::Vector2f rectBox1_P[10];
 
     sf::Vector2f rectBox2[4];
-     ResourceManager &res;
+    ResourceManager &res;
 
-     void drawLayer2(sf::RenderWindow &mWindow);
+    void drawLayer2(sf::RenderWindow &mWindow);
 };
 
 #endif // ATTACK_SLASH_H
