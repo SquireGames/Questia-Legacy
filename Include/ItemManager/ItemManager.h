@@ -22,6 +22,7 @@ public:
 
 private:
     std::map <int, std::string> itemMap;
+
     std::vector <Struct_Item*> itemVector; // Stores every item pointer
 
     int getStorageID();

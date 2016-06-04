@@ -7,7 +7,7 @@ struct pkt
     enum Header
     {
         //init
-        playerLogin = 1, svrResp = 2,
+        playerLogin = 1, svrResp = 2, playerNewAcc = 3,
         //in game entities
         other = 10, player = 11, playerContainer = 12, entity = 13, entityContainer = 14
     };

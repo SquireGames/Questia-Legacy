@@ -21,7 +21,8 @@ MultiplayerManager::MultiplayerManager(std::string _serverName):
     , tickRate(16) // no active thread at this point, 16 default
     , client_udpSocket_send()
     , client_udpSocket_receive()
-    , client_tcpSocket()
+    , client_tcpSocket_send()
+    , client_tcpSocket_receive()
     , client_tempTick(0)
 {
     client_udpSocket_send.bind(8002);
@@ -96,8 +97,10 @@ bool MultiplayerManager::joinServer(std::string ipAddress)
 {
     if(!isRunningClient)
     {
-        if(client_tcpSocket.connect(ipAddress, 8004, sf::Time(sf::seconds(3))) == sf::Socket::Done)
+        if((client_tcpSocket_send.connect   (ipAddress, 8005, sf::Time(sf::seconds(3))) == sf::Socket::Done) &&
+           (client_tcpSocket_receive.connect(ipAddress, 8006, sf::Time(sf::seconds(3))) == sf::Socket::Done))
         {
+
             thread_client_main.launch();
             isRunningClient = true;
 
@@ -376,10 +379,6 @@ void MultiplayerManager::client_mainThread()
                     playerDataMutex.lock();
                     playerData_received.push_back(player);
                     playerDataMutex.unlock();
-
-                    //std::cout << "playerID:" << player.playerID << std::endl;
-                    //std::cout << "playerNumber:" << player.packetNumber << std::endl;
-                    //std::cout << "playerCoords:" << player.coords_x << "," << player.coords_y << std::endl;
                 }
                 break;
                 case pkt::Header::playerContainer:
@@ -394,6 +393,19 @@ void MultiplayerManager::client_mainThread()
 
                 //std::cout << "<<<<<CLIENT>>>>>" << std::endl;
             }
+        }
+        ///get client tcp
+        else
+        {
+            if(selector.isReady(client_tcpSocket_receive))
+            {
+                sf::Packet packet;
+                if(client_tcpSocket_receive.receive(packet) == sf::Socket::Done)
+                {
+                    // move data to other thread
+                }
+            }
+
         }
         client_terminateMutex.lock();
     }

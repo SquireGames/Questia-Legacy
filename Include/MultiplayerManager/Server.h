@@ -10,6 +10,8 @@
 
 #include "Packet.h"
 #include "Packet_Player.h"
+#include "Packet_Init.h"
+#include "Packet_Entity.h"
 
 #include "TimeManager/TimeManager.h"
 #include "LightManager/LightManager.h"
@@ -27,12 +29,43 @@ struct Client
 {
     Client(int _clientID, sf::TcpSocket* _tcpSocket, sf::IpAddress _ip):
         clientID(_clientID)
-        , tcpSocket(_tcpSocket)
+        , tcpSocket_send(nullptr)
+        , tcpSocket_receieve(nullptr)
         , ip(_ip)
-        , clientStage(ClientStage::connected)
-    {}
+        , clientStage(ClientStage::disconnected)
+    {
+        if(_tcpSocket->getRemotePort() == 8005)
+        {
+            tcpSocket_send = _tcpSocket;
+        }
+        else if(_tcpSocket->getRemotePort() == 8006)
+        {
+            tcpSocket_receieve = _tcpSocket;
+        }
+    }
+    bool addSocket(sf::TcpSocket* _tcpSocket)
+    {
+        if(_tcpSocket != nullptr)
+        {
+            if(_tcpSocket->getRemotePort() == 8005)
+            {
+                tcpSocket_send = _tcpSocket;
+            }
+            else if(_tcpSocket->getRemotePort() == 8006)
+            {
+                tcpSocket_receieve = _tcpSocket;
+            }
+            if(tcpSocket_send != nullptr && tcpSocket_receieve != nullptr)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     int clientID;
-    sf::TcpSocket* tcpSocket;
+    sf::TcpSocket* tcpSocket_receieve;
+    sf::TcpSocket* tcpSocket_send;
     sf::IpAddress ip;
     ClientStage clientStage;
 
@@ -42,14 +75,14 @@ struct Client
 struct Map
 {
     Map():
-    resourceManager()
-    , window()
-    , timeManager(0,0)
-    , lightManager(window, timeManager, resourceManager)
-    , tileEngine(window, resourceManager)
-    , entityManager(EntityManager::ManagerType::server, window, resourceManager, lightManager)
-    , spawnManager(false, entityManager)
-    , itemManager(window, resourceManager)
+        resourceManager()
+        , window()
+        , timeManager(0,0)
+        , lightManager(window, timeManager, resourceManager)
+        , tileEngine(window, resourceManager)
+        , entityManager(EntityManager::ManagerType::server, window, resourceManager, lightManager)
+        , spawnManager(false, entityManager)
+        , itemManager(window, resourceManager)
     {}
 
     //inactive
@@ -103,6 +136,9 @@ private:
 
     ///game
     std::vector <Map*> mapVector;
+
+    ///login
+    std::vector <std::pair <std::string, std::string> > registeredClients;
 
     unsigned int tick;
 };

@@ -92,7 +92,8 @@ private:
 //socket
     sf::UdpSocket client_udpSocket_send;
     sf::UdpSocket client_udpSocket_receive;
-    sf::TcpSocket client_tcpSocket;
+    sf::TcpSocket client_tcpSocket_send;
+    sf::TcpSocket client_tcpSocket_receive;
 //player packet
     sf::Mutex playerDataMutex;
     std::vector <Packet_Player> playerData_received;

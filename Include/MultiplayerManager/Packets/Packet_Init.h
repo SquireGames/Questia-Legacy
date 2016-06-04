@@ -20,6 +20,7 @@ struct Packet_Init_Login
         username(_username)
         , password(_password)
     {}
+    Packet_Init_Login(){}
     //will be encrypted later
     std::string username;
     std::string password;
@@ -44,9 +45,10 @@ static sf::Packet& operator >> (sf::Packet& packet, Packet_Init_Login& player)
 //{ server response
 struct Packet_Init_SvrResp
 {
-    Packet_Init_SerResp(bool _response):
-    response(_response)
+    Packet_Init_SvrResp(bool _response):
+        response(_response)
     {}
+    Packet_Init_SvrResp() {}
     bool response;
 };
 

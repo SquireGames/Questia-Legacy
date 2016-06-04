@@ -16,6 +16,9 @@ Server::Server():
     selector.add(udpSocket_receive);
     listener.listen(8004);
     selector.add(listener);
+
+    ///temp
+    registeredClients.push_back(std::make_pair(std::string("admin"), std::string("pass")));
 }
 
 Server::~Server()
@@ -23,7 +26,8 @@ Server::~Server()
     //dtor
     for(unsigned int it = 0; it != clientVector.size(); it++)
     {
-        delete clientVector[it]->tcpSocket;
+        delete clientVector[it]->tcpSocket_send;
+        delete clientVector[it]->tcpSocket_receieve;
         delete clientVector[it];
     }
     for(unsigned int it = 0; it != mapVector.size(); it++)
@@ -136,16 +140,37 @@ void Server::receive()
             sf::TcpSocket* clientSocket = new sf::TcpSocket;
             if(listener.accept(*clientSocket) == sf::Socket::Done)
             {
-                clientCount++;
-                Client* client = new Client (Client(clientCount, clientSocket, clientSocket->getRemoteAddress()));
-                clientVector.push_back(client);
-                selector.add(*clientSocket);
+                enum class ClientSocketStage {Connected = 0, NewConnection = 1, Error = 3};
 
-                std::cout<<"-----------------" <<std::endl;
-                std::cout<<"New Client Connected" <<std::endl;
-                std::cout<<"ClientID = "<< client->clientID <<std::endl;
-                std::cout<<"ClientIP = "<< client->ip.toString() <<std::endl;
-                std::cout<<"-----------------" <<std::endl;
+                bool isClientActive = false;
+                for(unsigned int it = 0; it < clientVector.size(); it++)
+                {
+                    if(clientVector[it]->ip == clientSocket->getRemoteAddress() && clientVector[it]->clientStage == ClientStage::disconnected)
+                    {
+                        bool isClientActive = clientVector[it]->addSocket(clientSocket);
+                        delete clientSocket;
+                        break;
+                    }
+                }
+                if(isClientActive)
+                {
+
+
+                    std::cout<<"-----------------" <<std::endl;
+                    std::cout<<"New Client Connected" <<std::endl;
+                    std::cout<<"ClientID = "<< client->clientID <<std::endl;
+                    std::cout<<"ClientIP = "<< client->ip.toString() <<std::endl;
+                    std::cout<<"-----------------" <<std::endl;
+
+                    delete clientSocket;
+                }
+                else
+                {
+                    clientCount++;
+                    Client* client = new Client (Client(clientCount, clientSocket, clientSocket->getRemoteAddress()));
+                    clientVector.push_back(client);
+                    selector.add(*clientSocket);
+                }
             }
             else
             {
@@ -164,14 +189,50 @@ void Server::receive()
                     sf::Packet packet;
                     if(clientSocket.receive(packet) == sf::Socket::Done)
                     {
-                        //enum class ClientStage {disconnected = 0, connected = 1, gettingInit = 2, doneInit = 3, active = 4};
                         switch (clientVector[it]->clientStage)
                         {
                         case ClientStage::disconnected:
-                            //should never happen, would not be able to send packet
+                            //one of the two sockets are not yet connected
                             break;
                         case ClientStage::connected:
-                            //used to send client data
+                            //used to send client user and pass
+                            int header;
+                            packet >> header;
+                            switch (header)
+                            {
+                            case pkt::Header::playerLogin:
+                            {
+                                Packet_Init_Login loginInfo;
+                                packet >> loginInfo;
+                                for(const std::pair <std::string, std::string>& login : registeredClients)
+                                {
+                                    if(login.first == loginInfo.username && login.second == loginInfo.password)
+                                    {
+                                        std::cout << "SERVER: Login accepted" << std::endl;
+
+                                    }
+                                    else
+                                    {
+                                        std::cout << "SERVER: Login denied" << std::endl;
+
+                                        Packet_Init_SvrResp responsePacketObj(false);
+                                        sf::Packet responsePacket;
+                                        responsePacket << responsePacketObj;
+
+                                        clientVector[it]->tcpSocket->send(responsePacket);
+                                    }
+                                }
+
+                            }
+                            case pkt::Header::playerNewAcc:
+                            {
+
+                            }
+                            default:
+                            {
+
+                            }
+                            }
 
                             break;
                         case ClientStage::choosingCharacter:

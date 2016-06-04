@@ -32,7 +32,7 @@ struct Struct_ItemContainer
     unsigned int width;
 
     std::vector <Struct_Item*> itemContainer;
-    std::map <int,std::map <int, int> > usedSlotsVector;
+    std::map <int,std::map <int, int> > usedSlotsVector; // TODO change to std::vector<std::vector<int> > for efficiency
 };
 
 #endif // STRUCT_ITEMCONTAINER_H
