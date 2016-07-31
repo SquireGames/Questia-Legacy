@@ -21,7 +21,7 @@
 #include "EntityManager/Entity/Collidable/Entity_Collidable.h"
 #include "ResourceManager.h"
 
-#include "Utl.h"
+#include "Utl/Utl.h"
 
 EntityManager::EntityManager(ManagerType _type, sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager):
     window (mWindow)

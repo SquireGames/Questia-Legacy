@@ -2,7 +2,7 @@
 #include <sstream>
 #include <fstream>
 
-#include "Utl.h"
+#include "Utl/Utl.h"
 
 SpawnManager::SpawnManager(bool game, EntityManager &entityManage):
     entityManager(entityManage)
@@ -23,7 +23,7 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
     std::vector<std::pair<std::string, std::string> >& spawnSaveVector = save_spawnSave.getSaveList();
     for(unsigned int it = 0; it != spawnSaveVector.size(); it++)
     {
-        pastSpawn.push_back(std::make_pair(utl::asNumber(spawnSaveVector[it].first), it));
+        pastSpawn.push_back(std::make_pair(utl::asInt(spawnSaveVector[it].first), it));
     }
 
     // compare ID's with saved ones, store iterator position in a vector
@@ -48,9 +48,9 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
         std::vector<std::string> spawnSaveInfo = utl::separateString(spawnSaveVector[iteratorPosition[it]].second, ',');
         spawnInfo entity;
         entity.ID = -1;
-        entity.spawnNumber = utl::asNumber(spawnSaveInfo[0]);
-        entity.cooldown_current = utl::asNumber(spawnSaveInfo[1]);
-        entity.dead = static_cast<bool> (utl::asNumber(spawnSaveInfo[2]));
+        entity.spawnNumber = utl::asInt(spawnSaveInfo[0]);
+        entity.cooldown_current = utl::asInt(spawnSaveInfo[1]);
+        entity.dead = static_cast<bool> (utl::asInt(spawnSaveInfo[2]));
 
         pastEntities[entity.spawnNumber] = entity;
     }
@@ -76,9 +76,9 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
             {
                 spawnInfo entitySpawn = pastEntities[it];
                 entitySpawn.entityType = spawnVector[it].first;
-                entitySpawn.coords_x = (utl::asNumber(entityData[0]) * 32) + 15;
-                entitySpawn.coords_y = (utl::asNumber(entityData[1]) * 32) + 15;
-                entitySpawn.cooldown =  utl::asNumber(entityData[2]);
+                entitySpawn.coords_x = (utl::asInt(entityData[0]) * 32) + 15;
+                entitySpawn.coords_y = (utl::asInt(entityData[1]) * 32) + 15;
+                entitySpawn.cooldown =  utl::asInt(entityData[2]);
                 entitySpawn.spawnNumber = it;
                 entitySpawn.ID = newIDMap[it];
 
@@ -90,9 +90,9 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
             {
                 spawnInfo entitySpawn;
                 entitySpawn.entityType = spawnVector[it].first;
-                entitySpawn.coords_x = (utl::asNumber(entityData[0]) * 32) + 15;
-                entitySpawn.coords_y = (utl::asNumber(entityData[1]) * 32) + 15;
-                entitySpawn.cooldown =  utl::asNumber(entityData[2]);
+                entitySpawn.coords_x = (utl::asInt(entityData[0]) * 32) + 15;
+                entitySpawn.coords_y = (utl::asInt(entityData[1]) * 32) + 15;
+                entitySpawn.cooldown =  utl::asInt(entityData[2]);
                 entitySpawn.spawnNumber = it;
                 // Temporary
                 entitySpawn.ID = -1;
@@ -126,8 +126,8 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
             std::vector <std::string> entityData = utl::separateString(spawnVector[it].second, ',');
 
             std::string entityType = spawnVector[it].first;
-            int coord_x = utl::asNumber(entityData[0]) * 32;
-            int coord_y = utl::asNumber(entityData[1]) * 32;
+            int coord_x = utl::asInt(entityData[0]) * 32;
+            int coord_y = utl::asInt(entityData[1]) * 32;
 
             if(entityType != "objectName")
             {

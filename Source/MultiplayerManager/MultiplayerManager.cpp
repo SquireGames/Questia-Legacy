@@ -97,9 +97,14 @@ bool MultiplayerManager::joinServer(std::string ipAddress)
 {
     if(!isRunningClient)
     {
-        if((client_tcpSocket_send.connect   (ipAddress, 8005, sf::Time(sf::seconds(3))) == sf::Socket::Done) &&
-           (client_tcpSocket_receive.connect(ipAddress, 8006, sf::Time(sf::seconds(3))) == sf::Socket::Done))
+        if((client_tcpSocket_send.connect   (ipAddress, 8004, sf::Time(sf::seconds(2))) == sf::Socket::Done) &&
+                (client_tcpSocket_receive.connect(ipAddress, 8004, sf::Time(sf::seconds(2))) == sf::Socket::Done))
         {
+            Packet_Init_Tcp tcpPacket(sf::IpAddress::getLocalAddress().toString(), sf::IpAddress::getPublicAddress().toString(),
+                                      client_tcpSocket_send.getLocalPort(), client_tcpSocket_receive.getLocalPort());
+            sf::Packet initPacket;
+            initPacket << tcpPacket;
+            client_tcpSocket_send.send(initPacket);
 
             thread_client_main.launch();
             isRunningClient = true;
@@ -130,7 +135,7 @@ void MultiplayerManager::terminateClient()
 
 //}
 
-//{ client packets
+//{ client send + receive data
 
 void MultiplayerManager::sendData(EntityManager& entityManager)
 {
@@ -356,6 +361,7 @@ void MultiplayerManager::client_mainThread()
         client_terminateMutex.unlock();
         if(selector.wait(sf::Time(sf::milliseconds(sf::Int32(100)))))
         {
+            ///UDP for in game
             if(selector.isReady(client_udpSocket_receive))
             {
                 sf::IpAddress tempIP = sf::IpAddress::getLocalAddress();
@@ -393,20 +399,20 @@ void MultiplayerManager::client_mainThread()
 
                 //std::cout << "<<<<<CLIENT>>>>>" << std::endl;
             }
-        }
-        ///get client tcp
-        else
-        {
-            if(selector.isReady(client_tcpSocket_receive))
+            ///TCP
+            else
             {
-                sf::Packet packet;
-                if(client_tcpSocket_receive.receive(packet) == sf::Socket::Done)
+                if(selector.isReady(client_tcpSocket_receive))
                 {
-                    // move data to other thread
+                    sf::Packet packet;
+                    if(client_tcpSocket_receive.receive(packet) == sf::Socket::Done)
+                    {
+                        // move data to other thread
+                    }
                 }
             }
-
         }
+
         client_terminateMutex.lock();
     }
     client_terminateMutex.unlock();
@@ -418,4 +424,16 @@ void MultiplayerManager::client_mainThread()
     std::cout << "client_mainThread() ded" << std::endl;
 }
 
+//}
+
+//{ client init
+bool MultiplayerManager::client_init_testUDP()
+{
+    sf::Packet testPacket;
+
+//    client_udpSocket_receive.send();
+    //  client_udpSocket_send.send();
+
+    return false;
+}
 //}

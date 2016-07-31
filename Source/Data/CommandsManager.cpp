@@ -1,5 +1,5 @@
 #include "CommandsManager.h"
-#include "Utl.h"
+#include "Utl/Utl.h"
 #include <string>
 
 // Amount of commands saved in memory to press up to find
@@ -283,7 +283,7 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
                     }
                     else if(param[1] == "tick")
                     {
-                        multiplayerManager->host_changeTickRate(static_cast<float>(utl::asNumber(param[2])));
+                        multiplayerManager->host_changeTickRate(utl::asFloat(param[2]));
                     }
                     else if(param[1] == "local")
                     {
@@ -342,11 +342,11 @@ bool CommandsManager::handleImput(int actionType, bool isPressed,int player)
             {
                 if(param[1] == "set")
                 {
-                    timeManager.setTime(static_cast<char> (utl::asNumber(param[2])), static_cast<char> (utl::asNumber(param[3])));
+                    timeManager.setTime(static_cast<char> (utl::asInt(param[2])), static_cast<char> (utl::asInt(param[3])));
                 }
                 else if(param[1] == "step")
                 {
-                    timeManager.setTimeStep(static_cast<char>(utl::asNumber(param[2])));
+                    timeManager.setTimeStep(static_cast<char>(utl::asInt(param[2])));
                 }
             }
             else if(param[0] == "entityList")

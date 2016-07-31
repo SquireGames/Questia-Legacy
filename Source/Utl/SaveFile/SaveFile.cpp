@@ -1,4 +1,4 @@
-#include "SaveFile.h"
+#include "Utl/SaveFile/SaveFile.h"
 
 SaveFile::SaveFile(std::string _fileName):
     fileName(_fileName)
@@ -39,17 +39,19 @@ bool SaveFile::readFile()
             {
                 std::string entry;
                 std::getline(sStream, entry, ':');
-                char firstCharacter = entry.at(0);
-                if(firstCharacter != '(')
+
+                char firstCharacter = ' ';
+                if(entry.length() > 0)
+                {
+                    firstCharacter = entry.at(0);
+                }
+
+                if(firstCharacter != '/')
                 {
                     if(firstCharacter != ' ')
                     {
                         lineSeperator[iter] = entry;
                         iter++;
-                    }
-                    else
-                    {
-                        return false;
                     }
                 }
                 else

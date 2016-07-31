@@ -1,0 +1,235 @@
+#ifndef STATE_OPTIONSMENU_H
+#define STATE_OPTIONSMENU_H
+
+#include <SFML/Graphics.hpp>
+#include <StateManager/State.h>
+#include "ResourceManager.h"
+#include "GuiManager.h"
+
+#include <List>
+#include <memory>
+
+template <class T>
+class Option
+{
+public:
+    static Option createChoiceOption()
+    {
+        return Option(OptionType::Choice);
+    }
+    static Option createInputOption()
+    {
+        return Option(OptionType::Choice);
+    }
+    static Option createToggleOption()
+    {
+        return Option(OptionType::Choice);
+    }
+    static Option createFunctionOption()
+    {
+        return Option(OptionType::Choice);
+    }
+
+    void setGuiManager (GuiManagerNew* _guiManager)
+    {
+        guiManager = _guiManager;
+    }
+    void initValue(T value)
+    {
+        oldOption = value;
+        newOption = value;
+
+        for (auto it = choiceList.begin(); it != choiceList.end(); it++)
+        {
+            if(it->second == value)
+            {
+                choiceIterator = it;
+                return;
+            }
+        }
+    }
+    void setValue(T value)
+    {
+        newOption = value;
+    }
+    T getValue()
+    {
+        return newOption;
+    }
+    bool isChanged()
+    {
+        return (oldOption == newOption) ? false : true;
+    }
+    void addChoice (std::pair <std::string, T> option)
+    {
+        choiceList.push_back(option);
+    }
+    void setChoices (std::list <std::pair <std::string, T> > _choiceList)
+    {
+        choiceList = _choiceList;
+    }
+    
+
+private:
+    enum class OptionType {Choice, Input, Toggle, Function};
+    OptionType optionType;
+
+    T oldOption;
+    T newOption;
+
+    std::list <std::pair <std::string, T> > choiceList;
+    typename std::list <std::pair <std::string, T> >::iterator choiceIterator = choiceList.begin();
+
+    GuiManagerNew* guiManager = nullptr;
+
+    std::string templateGroup;
+
+
+    Option(OptionType _optionType)
+    {
+        optionType = _optionType;
+
+        switch (optionType)
+        {
+        case OptionType::Choice:
+            break;
+        case OptionType::Input:
+            break;
+        case OptionType::Toggle:
+            break;
+        case OptionType::Function:
+            break;
+        }
+    }
+};
+
+class State_OptionsMenu : public State
+{
+public:
+    State_OptionsMenu(sf::RenderWindow &mWindow);
+    ~State_OptionsMenu();
+
+    void processImput(sf::Keyboard::Key key,bool isPressed);
+    void update(sf::Time elapsedTime);
+    void displayTextures();
+
+private:
+    sf::Sprite background;
+
+    sf::RenderWindow& window;
+    ResourceManager resourceManager;
+    GuiManagerNew guiManager;
+
+    ///options
+    //display
+    Option<int> option_windowMode     {Option<int>::createChoiceOption()};
+    Option<int> option_fps            {Option<int>::createChoiceOption()};
+    Option<int> option_font           {Option<int>::createChoiceOption()};
+    //audio
+    Option<int> option_musicVolume    {Option<int>::createChoiceOption()};
+    //input
+    Option<char> option_key_moveUp    {Option<char>::createInputOption()};
+    Option<char> option_key_moveDown  {Option<char>::createInputOption()};
+    Option<char> option_key_moveLeft  {Option<char>::createInputOption()};
+    Option<char> option_key_moveRight {Option<char>::createInputOption()};
+    //game
+    Option<int> option_deleteData     {Option<int>::createFunctionOption()};
+
+
+
+
+
+
+    // not needed
+    std::string checkKeyName(char c);
+
+    /*
+    //display settings
+    std::list <std::pair<int, std::string> > option_windowMode  {std::make_pair (0, "Fullscreen"),  std::make_pair (1, "Windowed")};
+    std::list <std::pair<int, std::string> > option_fps         {std::make_pair (0, "V-Sync"),      std::make_pair(60, "60  Fps"),      std::make_pair(144, "144 Fps"),      std::make_pair(288, "288 Fps"),    std::make_pair(-1, "Unlimited")};
+    std::list <std::pair<int, std::string> > option_font        {std::make_pair (1, "Lato-Medium"), std::make_pair (2, "Lato-Regular"), std::make_pair (3, "acidstructure")};
+    //audio
+    std::list <std::pair<int, std::string> > option_musicVolume {std::make_pair(0, "Muted"), std::make_pair(10, "10%"), std::make_pair(20, "20%"), std::make_pair(30, "30%"), std::make_pair(40, "40%"), std::make_pair(50, "50%"), std::make_pair(60, "60%"), std::make_pair(70, "70%"), std::make_pair(80, "80%"), std::make_pair(90, "90%"), std::make_pair(100, "100%")};
+    //game
+    std::string option_deleteSaveData = "Delete Save Files";
+    //input
+    std::string option_key_moveUp =    "Move Up Key";
+    std::string option_key_moveDown =  "Move Down Key";
+    std::string option_key_moveLeft =  "Move Left Key";
+    std::string option_key_moveRight = "Move Right Key";
+
+
+    //old modes
+    //display
+    //int set_windowMode;
+    //int set_fps;
+    //int set_font;
+    //audio
+    //int set_musicVolume;
+
+
+
+
+
+
+    //GuiManager guiManager;
+
+
+    enum optionsEnum {display, audio, game, input};
+    optionsEnum optionsTab;
+
+
+
+    sf::Sprite setting;
+    sf::Text settingText;
+
+    int scrollAmount_d;
+    int scrollAmount_a;
+    int scrollAmount_g;
+    int scrollAmount_i;
+
+    bool keyboard_up;
+    bool keyboard_down;
+
+
+
+    /// options
+    //display
+    int videoMode;
+    int fps;
+    int font;
+    // audio
+    int musicVolume;
+    int normalVolume;
+    //input
+    char key_moveUp;
+    char key_moveDown;
+    char key_moveLeft;
+    char key_moveRight;
+
+    char key_skill4;
+    char key_skill5;
+    char key_skill6;
+
+
+    ///new options;
+    //display
+    int newVideoMode;
+    int newFps;
+    int newFont;
+    //audio
+    int newMusicVolume;
+    int NewNormalVolume;
+    //input
+    char newKey_moveUp;
+    char newKey_moveDown;
+    char newKey_moveLeft;
+    char newKey_moveRight;
+
+    char newKey_skill4;
+    char newKey_skill5;
+    char newKey_skill6;
+    */
+};
+
+#endif // STATE_OPTIONSMENU_H

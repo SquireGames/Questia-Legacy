@@ -9,7 +9,6 @@
 #include <map>     //std::map
 #include <iostream>
 
-
 // This object assumes the file is good
 
 class SaveFile

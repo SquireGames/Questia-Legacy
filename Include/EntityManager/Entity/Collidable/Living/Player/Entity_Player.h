@@ -7,7 +7,7 @@
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Playable.h"
 #include "ResourceManager.h"
 #include "EntityManager/EntityManager.h"
-#include "Struct_Animation.h"
+#include "Utl/SpriteSheet.h"
 
 
 class Entity_Player : public Entity_Playable
@@ -81,10 +81,10 @@ private:
 
 
     ///layers
-    Struct_Animation animation;//Temp
-    //Struct_Animation skin;
-    //Struct_Animation hair;
-    //Struct_Animation under;
+    SpriteSheet animation;//Temp
+    //SpriteSheet skin;
+    //SpriteSheet hair;
+    //SpriteSheet under;
 
 
 

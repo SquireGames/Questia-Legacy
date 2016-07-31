@@ -6,22 +6,21 @@
 #include <ResourceManager.h>
 #include <map>
 
-
-struct Struct_Animation
+struct SpriteSheet
 {
-    Struct_Animation(ResourceManager& _resourceManager, std::string imageLocation, unsigned int slides_x, unsigned int slides_y):
+    SpriteSheet(ResourceManager& _resourceManager, std::string imageLocation, unsigned int slides_x, unsigned int slides_y):
         res(_resourceManager)
         , spriteMap()
         , size_x(0)
         , size_y(0)
     {
-        if(imageLocation == "None")
+        sf::Texture animationSheet;
+
+        if (!animationSheet.loadFromFile(imageLocation))
         {
             return;
         }
 
-        sf::Texture animationSheet;
-        animationSheet.loadFromFile(imageLocation);
         sf::Vector2<unsigned int> imageSize = animationSheet.getSize();
 
         size_x = (imageSize.x - (slides_x - 1)) / slides_x;

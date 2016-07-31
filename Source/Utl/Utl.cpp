@@ -1,11 +1,21 @@
-#include "Utl.h"
+#include "Utl/Utl.h"
 
 #include <stdlib.h>//std::atoi
 #include <vector>
 
-int utl::asNumber(std::string _string)
+float utl::asFloat(const std::string& _string)
 {
     return atoi(_string.c_str());
+}
+
+int utl::asInt(const std::string& _string)
+{
+    return atoi(_string.c_str());
+}
+
+bool utl::isNumber(const std::string& _string)
+{
+    return (_string.find_first_not_of("0123456789.") == std::string::npos);
 }
 
 std::vector <std::string> utl::separateString (std::string saveString, char delimiter)
@@ -21,6 +31,7 @@ std::vector <std::string> utl::separateString (std::string saveString, char deli
     }
     return returnVector;
 }
+
 std::string utl::conjoinString (std::vector <std::string> stringParts, char delimiter)
 {
     std::stringstream sStream;
@@ -31,6 +42,17 @@ std::string utl::conjoinString (std::vector <std::string> stringParts, char deli
         {
             sStream << delimiter;
         }
+    }
+    std::string conjoinedString = sStream.str();
+    return conjoinedString;
+}
+
+std::string utl::conjoinString (std::vector <std::string> stringParts)
+{
+    std::stringstream sStream;
+    for(unsigned int it = 0; it != stringParts.size(); it++)
+    {
+        sStream << stringParts[it];
     }
     std::string conjoinedString = sStream.str();
     return conjoinedString;

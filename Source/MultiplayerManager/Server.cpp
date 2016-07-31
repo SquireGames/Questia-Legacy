@@ -34,6 +34,10 @@ Server::~Server()
     {
         delete mapVector[it];
     }
+    for(unsigned int it = 0; it != toBeSortedTcp.size(); it++)
+    {
+        delete toBeSortedTcp[it];
+    }
 }
 
 //}
@@ -140,50 +144,61 @@ void Server::receive()
             sf::TcpSocket* clientSocket = new sf::TcpSocket;
             if(listener.accept(*clientSocket) == sf::Socket::Done)
             {
-                enum class ClientSocketStage {Connected = 0, NewConnection = 1, Error = 3};
-
-                bool isClientActive = false;
-                for(unsigned int it = 0; it < clientVector.size(); it++)
-                {
-                    if(clientVector[it]->ip == clientSocket->getRemoteAddress() && clientVector[it]->clientStage == ClientStage::disconnected)
-                    {
-                        bool isClientActive = clientVector[it]->addSocket(clientSocket);
-                        delete clientSocket;
-                        break;
-                    }
-                }
-                if(isClientActive)
-                {
-
-
-                    std::cout<<"-----------------" <<std::endl;
-                    std::cout<<"New Client Connected" <<std::endl;
-                    std::cout<<"ClientID = "<< client->clientID <<std::endl;
-                    std::cout<<"ClientIP = "<< client->ip.toString() <<std::endl;
-                    std::cout<<"-----------------" <<std::endl;
-
-                    delete clientSocket;
-                }
-                else
-                {
-                    clientCount++;
-                    Client* client = new Client (Client(clientCount, clientSocket, clientSocket->getRemoteAddress()));
-                    clientVector.push_back(client);
-                    selector.add(*clientSocket);
-                }
+                toBeSortedTcp.push_back(clientSocket);
+                selector.add(*clientSocket);
             }
             else
             {
                 delete clientSocket;
             }
-
         }
         ///get client tcp
         else
         {
-            for(unsigned int it = 0; it != clientVector.size(); it++)
+            for(unsigned int it = 0; it != toBeSortedTcp.size(); it++)
             {
-                sf::TcpSocket& clientSocket = *clientVector[it]->tcpSocket;
+                if(toBeSortedTcp[it] != nullptr)
+                {
+                    sf::TcpSocket& clientSocket = *toBeSortedTcp[it];
+                    if(selector.isReady(clientSocket))
+                    {
+                        sf::Packet packet;
+                        if(clientSocket.receive(packet) == sf::Socket::Done)
+                        {
+                            int header;
+                            packet >> header;
+                            switch (header)
+                            {
+                            case pkt::Header::clientTcp:
+                            {
+                                Packet_Init_Tcp packetObj;
+                                packet >> packetObj;
+
+                                sf::TcpSocket* tcp[2] {nullptr, nullptr};
+
+                                for(unsigned int it2 = 0; it2 != toBeSortedTcp.size(); it2++)
+                                {
+                                    if(toBeSortedTcp[it2]->getRemoteAddress().toString() == packetObj.clientIP_local ||
+                                            toBeSortedTcp[it2]->getRemoteAddress().toString() == packetObj.clientIP_public)
+                                    {
+                                        // packetObj.
+                                    }
+                                }
+
+                                std::cout << "SERVER: TCP SORT - " << packetObj.clientIP_local << ", " << packetObj.clientIP_public << std::endl;
+                            }
+                            break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for(unsigned int it = 0; it != clientVector.size(); it++) // TODO remember to break out when done
+            {
+                sf::TcpSocket& clientSocket = *clientVector[it]->tcpSocket_receieve;
                 if(selector.isReady(clientSocket))
                 {
                     sf::Packet packet;
@@ -200,7 +215,7 @@ void Server::receive()
                             packet >> header;
                             switch (header)
                             {
-                            case pkt::Header::playerLogin:
+                            case pkt::Header::clientLogin:
                             {
                                 Packet_Init_Login loginInfo;
                                 packet >> loginInfo;
@@ -219,13 +234,9 @@ void Server::receive()
                                         sf::Packet responsePacket;
                                         responsePacket << responsePacketObj;
 
-                                        clientVector[it]->tcpSocket->send(responsePacket);
+                                        //clientVector[it]->tcpSocket_receieve->send(responsePacket);
                                     }
                                 }
-
-                            }
-                            case pkt::Header::playerNewAcc:
-                            {
 
                             }
                             default:

@@ -5,6 +5,8 @@
 #include <SFML/Audio.hpp>
 #include <StateManager/State.h>
 
+#include "GuiLoader.h"
+
 #include "Data_Desktop.h"
 #include "ResourceManager.h"
 #include "GuiManager.h"
@@ -20,11 +22,9 @@ public:
     void displayTextures();
 
 private:
-    void createGui();
+    GuiLoader guiLoader;
 
     sf::RenderWindow& window;
-
-    sf::Sprite aMenuImage;
 
     sf::SoundBuffer musicBuffer;
     sf::Sound musicSound;

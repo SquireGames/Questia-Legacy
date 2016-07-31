@@ -9,7 +9,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
 
-#include "Utl.h"
+#include "Utl/Utl.h"
 
 bool isInDebugMode = false;
 
@@ -121,7 +121,7 @@ void Data_Desktop::loadOptions()
     keyMap[4] = getConvertedKey(save_options.getItem("key_skill4").at(0));
     keyMap[5] = getConvertedKey(save_options.getItem("key_skill5").at(0));
     keyMap[6] = getConvertedKey(save_options.getItem("key_skill6").at(0));
-    changeFont(utl::asNumber(save_options.getItem("font")));
+    changeFont(utl::asInt(save_options.getItem("font")));
 }
 
 void Data_Desktop::writeOptions(int windowMode, int fps, int soundVolume, int font,

@@ -5,7 +5,7 @@
 
 #include "StateManager/States/State_MainMenu.h"
 #include "StateManager/States/State_Game.h"
-#include "StateManager/States/State_OptionsMenu.h"
+#include "StateManager/States/State_OptionsMenu/State_OptionsMenu.h"
 #include "StateManager/States/State_CharacterSelection.h"
 #include "StateManager/States/State_TileMapEditor.h"
 #include "StateManager/States/State_MapSelector.h"

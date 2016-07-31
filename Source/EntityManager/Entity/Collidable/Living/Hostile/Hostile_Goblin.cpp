@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "Utl.h"
+#include "Utl/Utl.h"
 
 Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManager,sf::Vector2f coordinates, int aID, std::string _entityType):
     coordinates(coordinates.x,coordinates.y)

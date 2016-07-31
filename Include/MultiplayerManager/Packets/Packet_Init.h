@@ -13,6 +13,43 @@ struct Packet_Init
     ~Packet_Init();
 };
 
+//{ client tcp init
+struct Packet_Init_Tcp
+{
+    Packet_Init_Tcp(std::string _clientIP_local, std::string _clientIP_public, unsigned short _port_send, unsigned short _port_receive):
+        clientIP_local(_clientIP_local)
+        , clientIP_public(_clientIP_public)
+        , port_send(_port_send)
+        , port_receive(_port_receive)
+    {}
+    Packet_Init_Tcp() {}
+    //variables
+    std::string clientIP_local;
+    std::string clientIP_public;
+    unsigned short port_send;
+    unsigned short port_receive;
+};
+
+static sf::Packet& operator << (sf::Packet& packet, const Packet_Init_Tcp& client)
+{
+    packet << static_cast <sf::Int32> (pkt::Header::clientTcp);
+    packet << client.clientIP_local;
+    packet << client.clientIP_public;
+    packet << client.port_send;
+    packet << client.port_receive;
+    return packet;
+}
+
+static sf::Packet& operator >> (sf::Packet& packet, Packet_Init_Tcp& client)
+{
+    packet >> client.clientIP_local;
+    packet >> client.clientIP_public;
+    packet >> client.port_send;
+    packet >> client.port_receive;
+    return packet;
+}
+//}
+
 //{ client login
 struct Packet_Init_Login
 {
@@ -20,7 +57,7 @@ struct Packet_Init_Login
         username(_username)
         , password(_password)
     {}
-    Packet_Init_Login(){}
+    Packet_Init_Login() {}
     //will be encrypted later
     std::string username;
     std::string password;
@@ -28,7 +65,7 @@ struct Packet_Init_Login
 
 static sf::Packet& operator << (sf::Packet& packet, const Packet_Init_Login& player)
 {
-    packet << static_cast <sf::Int32> (pkt::Header::playerLogin);
+    packet << static_cast <sf::Int32> (pkt::Header::clientLogin);
     packet << player.username;
     packet << player.password;
     return packet;

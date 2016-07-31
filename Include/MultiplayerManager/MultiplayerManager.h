@@ -52,6 +52,9 @@ private:
     // used to receive
     void client_mainThread();
 
+///client commands
+    bool client_init_testUDP();
+
 
 ///server vars
     Server* server;

@@ -23,6 +23,7 @@ public:
     virtual std::string getEntityType() = 0;    // Entity spawn name
     virtual EntityCategory getCategory() = 0;   // hostile, passive, player...
 
+    //TODO Fix this mess
 
     std::string getCharacteristic(std::string characteristic)
     {

@@ -27,46 +27,25 @@ enum class ClientStage {disconnected = 0, connected = 1, choosingCharacter = 2, 
 
 struct Client
 {
-    Client(int _clientID, sf::TcpSocket* _tcpSocket, sf::IpAddress _ip):
+    Client(int _clientID, sf::TcpSocket* _tcpSocket_send, sf::TcpSocket* _tcpSocket_receieve,  std::string _ip, unsigned short _port_udp_send, unsigned short _port_udp_receieve):
         clientID(_clientID)
-        , tcpSocket_send(nullptr)
-        , tcpSocket_receieve(nullptr)
+        , tcpSocket_send(_tcpSocket_send)
+        , tcpSocket_receieve(_tcpSocket_receieve)
         , ip(_ip)
-        , clientStage(ClientStage::disconnected)
-    {
-        if(_tcpSocket->getRemotePort() == 8005)
-        {
-            tcpSocket_send = _tcpSocket;
-        }
-        else if(_tcpSocket->getRemotePort() == 8006)
-        {
-            tcpSocket_receieve = _tcpSocket;
-        }
-    }
-    bool addSocket(sf::TcpSocket* _tcpSocket)
-    {
-        if(_tcpSocket != nullptr)
-        {
-            if(_tcpSocket->getRemotePort() == 8005)
-            {
-                tcpSocket_send = _tcpSocket;
-            }
-            else if(_tcpSocket->getRemotePort() == 8006)
-            {
-                tcpSocket_receieve = _tcpSocket;
-            }
-            if(tcpSocket_send != nullptr && tcpSocket_receieve != nullptr)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+        , port_udp_send (_port_udp_send)
+        , port_udp_receieve (_port_udp_receieve)
+        //, clientStage(ClientStage::disconnected)
+    {}
 
     int clientID;
-    sf::TcpSocket* tcpSocket_receieve;
+
     sf::TcpSocket* tcpSocket_send;
-    sf::IpAddress ip;
+    sf::TcpSocket* tcpSocket_receieve;
+
+    std::string ip;
+    unsigned short port_udp_send;
+    unsigned short port_udp_receieve;
+
     ClientStage clientStage;
 
     //client connects -> client sends login info -> server returns character list -> client sends character choice -> server initiates character and starts sending info
@@ -114,6 +93,9 @@ private:
     void checkClient(); //used for joining stages,
 
     ///clients
+    //new clients
+    std::vector <sf::TcpSocket*> toBeSortedTcp;
+    //existing clients
     std::vector <Client*> clientVector;
     int clientCount;
 

@@ -9,9 +9,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <list>
 #include <map>
-
 
 #include "StateManager/State.h"
 #include "ResourceManager.h"
@@ -27,30 +25,23 @@ public:
     ~GuiManagerNew();
 
     void createButton(std::string buttonName);
-    void createButton(std::string buttonName, int layer);
     void createButton(std::string copyName, std::string originalName);
     void createButtonTemplate(std::string buttonName);
-    void createButtonTemplate(std::string buttonName, int layer);
     void createButtonTemplate(std::string copyName, std::string originalName);
     void createButtonAtr(std::string atrName, gui::ButtonAtr buttonAtr);
     void createButtonAtr(std::string buttonName, std::string atrName, gui::ButtonAtr buttonAtr);
-    void setButtonLayer(std::string buttonName, int layer);
-    void setButtonLayer(int layer);
 
     void createGroup(std::string groupName);
     void createGroupTemplate(std::string groupName);
     void createGroupFromTemplate(std::string groupName, std::string templateName);
     void addToGroup (std::string groupName, std::string entryName);
     void addToGroup (std::string entryName);
-    std::string getGroupEntry(std::string groupName, std::string buttonName);
 
     void createList(std::string listName);
     void setListSpacing(std::string listName, int spacing);
     void setListSpacing(int spacing);
-    void setListTemplate(std::string listName, std::string groupTemplate);
     void setListTemplate(std::string groupTemplate);
-    void setListPosition(std::string listName, std::pair<int, int> position);
-    void setListPosition(std::pair<int, int> position);
+    void setListTemplate(std::string listName, std::string groupTemplate);
     std::string createListEntry(std::string listName);
     std::string createListEntry();
 
@@ -81,6 +72,7 @@ public:
     {
         buttonMap[currentButtonEdit]->setButtonAtr(currentButtonAtrEdit, atrChar, value);
     }
+
 
 
     template <class T>
@@ -118,17 +110,17 @@ public:
     template <class T>
     void setListAtr(std::string listName, gui::ButtonCharacteristic buttonChar, T value)
     {
-        for(const std::string& groupIt : listMap[listName].second)
+        for(const std::string& groupIt : listMap[listName].second())
         {
-            setGroupAtr(groupIt, buttonChar, value);
+            setGroupAtr(groupIt, value);
         }
     }
     template <class T>
-    void setListAtr(gui::ButtonCharacteristic buttonChar, T value)
+    void setListAtr(std::string listName, gui::ButtonCharacteristic buttonChar, T value)
     {
-        for(const std::string& groupIt : listMap[currentListEdit].second)
+        for(const std::string& groupIt : listMap[listName].second())
         {
-            setGroupAtr(groupIt, buttonChar, value);
+            setGroupAtr(groupIt, value);
         }
     }
 
@@ -142,42 +134,13 @@ private:
     std::string currentListEdit;
 
     std::pair <float, float> mouseCoords;
-
     std::map <std::string, Button*> buttonMap;
-    std::list <Button*> buttonDrawList;
-    void placeInDrawList(Button* button);
-
     std::map <std::string, std::vector <std::string> > groupMap;
     std::map <std::string, std::vector <std::string> > groupTemplateMap;
-
-    std::map <std::string, std::pair <std::pair <std::string, std::pair <std::pair <int, int>, int>>,std::vector <std::string > > > listMap;
+    std::map <std::string, std::pair <std::pair <std::string, int>, std::vector <std::string> > > listMap;
 
     sf::Font buttonFont;
-    int buttonCount = 0;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class GuiManager

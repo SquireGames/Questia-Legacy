@@ -7,7 +7,7 @@
 
 #include "Data_Desktop.h"
 
-#include "Utl.h"
+#include "Utl/Utl.h"
 
 const sf::Time Application::timePerFrame = sf::seconds(1.f/144.f);
 
@@ -15,10 +15,10 @@ Application::Application():
     mStatisticsUpdateTime()
     , mStatisticsFramesCount(0)
 {
-
+    //
     Data_Desktop::getInstance().loadOptions();
 
-    switch (utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))
+    switch (utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))
     {
     case 0:
         mWindow.create(sf::VideoMode(1920, 1080),"Questia",sf::Style::Fullscreen);
@@ -40,13 +40,13 @@ void Application::run()
 {
     Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(mWindow.getSize().x,mWindow.getSize().y),mWindow.getPosition());
 
-    if(utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")) == 0)
+    if(utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")) == 0)
     {
         mWindow.setVerticalSyncEnabled(true);
     }
     else
     {
-        mWindow.setFramerateLimit(utl::asNumber(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")));
+        mWindow.setFramerateLimit(utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")));
         mWindow.setVerticalSyncEnabled(false);
     }
 
@@ -185,6 +185,12 @@ void Application::processEvents()
         case sf::Event::Resized:
             Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(mWindow.getSize().x,mWindow.getSize().y),mWindow.getPosition());
             break;
+        case sf::Event::MouseButtonReleased:
+            Data_Desktop::getInstance().setMouseReleased(true);
+            break;
+        case sf::Event::MouseButtonPressed:
+            Data_Desktop::getInstance().setMousePressed(true);
+            break;
         default:
             break;
         }
@@ -229,4 +235,5 @@ Application::~Application()
     std::cout<<"--------------------"<<std::endl;
     std::cout<<" Questia Terminated "<<std::endl;
     std::cout<<"--------------------"<<std::endl;
+    //throw std::runtime_error("Success");
 }

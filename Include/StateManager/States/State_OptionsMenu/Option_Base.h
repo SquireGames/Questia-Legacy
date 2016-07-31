@@ -1,0 +1,30 @@
+#ifndef OPTION_BASE_H
+#define OPTION_BASE_H
+
+#include <string>
+
+//for container iteration through options
+
+class Option_Base
+{
+public:
+    Option_Base();
+    virtual ~Option_Base();
+
+    virtual bool isChanged() = 0;
+
+    virtual std::string getList() = 0;
+    virtual void setList(std::string) = 0;
+
+    virtual void iterateForward() = 0;
+    virtual void iterateBackward() = 0;
+    virtual void callFunction() = 0;
+
+    virtual bool isEnd() = 0;
+    virtual bool isBegin() = 0;
+
+    virtual std::string* getDisplayString() = 0;
+    virtual std::string getOptionName() = 0;
+};
+
+#endif // OPTION_BASE_H

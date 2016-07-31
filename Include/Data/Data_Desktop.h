@@ -8,7 +8,8 @@
 #include <map>
 #include <iostream>
 #include <sstream>
-#include "Data/SaveFile.h"
+
+#include "SaveFile.h"
 
 class Data_Desktop
 {
@@ -46,6 +47,28 @@ public:
 
     SaveFile& getSaveOptions(){return save_options;}
 
+    void setMouseReleased(bool isReleased)
+    {
+        m_isMouseReleased = isReleased;
+    }
+    bool isMouseReleased()
+    {
+        bool temp = m_isMouseReleased;
+        m_isMouseReleased = false;
+        return temp;
+    }
+
+    void setMousePressed(bool isPressed)
+    {
+        m_isMousePressed = isPressed;
+    }
+    bool isMousePressed()
+    {
+        bool temp = m_isMousePressed;
+        m_isMousePressed = false;
+        return temp;
+    }
+
 private:
     SaveFile save_options;
 
@@ -63,6 +86,9 @@ private:
 
     char mostRecentChar;
     int mouseWheelDelta;
+
+    bool m_isMouseReleased = false;
+    bool m_isMousePressed = false;
 
 
 

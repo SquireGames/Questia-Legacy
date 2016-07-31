@@ -5,11 +5,18 @@
 #include "StateManager/StateManager.h"
 #include "StateManager/States/State_Transition.h"
 
-#include "Utl.h"
+#include "Utl/Utl.h"
 
 State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
     window(mWindow)
     , resourceManager()
+    , guiManager(window, resourceManager)
+{
+
+    background.setTexture(resourceManager.getTexture("Media/Image/Menu/Options.png"));
+
+/*
+
     , optionsTab(display)
     , guiManager(mWindow, resourceManager, false)
 
@@ -46,8 +53,10 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
     , newKey_skill4(key_skill4)
     , newKey_skill5(key_skill5)
     , newKey_skill6(key_skill6)
-{
-    background.setTexture(resourceManager.getTexture("Media/Image/Menu/Options.png"));
+    */
+
+
+    /*
     setting.setTexture(resourceManager.getTexture("Media/Image/Menu/Buttons/Options_Setting.png"));
 
     settingText.setFont(Data_Desktop::getInstance().font1);
@@ -80,41 +89,52 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
 
 
     //Key binding up down left right
-    guiManager.addButton(1000, true, 910, 265, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260 ,1,50, sf::Color::Black, sf::Color(237,210,103,0));
-    guiManager.addButton(1001, true, 910, 365, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260 ,1,50, sf::Color::Black, sf::Color(237,210,103,0));
-    guiManager.addButton(1002, true, 910, 465, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260 ,1,50, sf::Color::Black, sf::Color(237,210,103,0));
-    guiManager.addButton(1003, true, 910, 565, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260 ,1,50, sf::Color::Black, sf::Color(237,210,103,0));
+    guiManager.addButton(1000, true, 910, 265, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260,1,50, sf::Color::Black, sf::Color(237,210,103,0));
+    guiManager.addButton(1001, true, 910, 365, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260,1,50, sf::Color::Black, sf::Color(237,210,103,0));
+    guiManager.addButton(1002, true, 910, 465, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260,1,50, sf::Color::Black, sf::Color(237,210,103,0));
+    guiManager.addButton(1003, true, 910, 565, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260,1,50, sf::Color::Black, sf::Color(237,210,103,0));
 
     //skill 4 5 6
-    guiManager.addButton(1004, true, 910, 965, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260 ,1,50, sf::Color::Black, sf::Color(237,210,103,0));
-    guiManager.addButton(1005, true, 910, 1065, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260 ,1,50, sf::Color::Black, sf::Color(237,210,103,0));
-    guiManager.addButton(1006, true, 910, 1165, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260 ,1,50, sf::Color::Black, sf::Color(237,210,103,0));
+    guiManager.addButton(1004, true, 910, 965, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260,1,50, sf::Color::Black, sf::Color(237,210,103,0));
+    guiManager.addButton(1005, true, 910, 1065, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260,1,50, sf::Color::Black, sf::Color(237,210,103,0));
+    guiManager.addButton(1006, true, 910, 1165, std::string("Media/Image/Menu/Buttons/Options_Button_a.png"), std::string(""), 800, 260,1,50, sf::Color::Black, sf::Color(237,210,103,0));
 
 
     //Back and Apply
     guiManager.addButton(100, false, 1700, 1000, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Apply"), 1760, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
     guiManager.addButton(101, false, 20, 1000, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Back"), 80, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+
+    */
+
+    option_windowMode.setGuiManager(&guiManager);
+    option_windowMode.addChoice(std::make_pair("Fullscreen", 0));
+    option_windowMode.addChoice(std::make_pair("Windowed",   1));
+
+    option_wind.setGuiManager(&guiManager);
+    option_fps       .addChoice(std::make_pair ("V-Sync", 0));
+    option_fps       .addChoice(std::make_pair ("60  Fps", 60));
+    option_fps       .addChoice(std::make_pair ("144 Fps", 144));
+    option_fps       .addChoice(std::make_pair ("288 Fps", 288));
+    option_fps       .addChoice(std::make_pair ("Unlimited", -1));
+
+
+
+    option_windowMode.initValue(0);
 }
 
 State_OptionsMenu::~State_OptionsMenu()
 {
-
+    std::cout << "Options Menu Destroyed" << std::endl;
 }
 
 void State_OptionsMenu::processImput(sf::Keyboard::Key key,bool isPressed)
 {
-    if(key == sf::Keyboard::Up)
-    {
-        keyboard_up = isPressed;
-    }
-    else if(key == sf::Keyboard::Down)
-    {
-        keyboard_down = isPressed;
-    }
+
 }
 
 void State_OptionsMenu::update(sf::Time elapsedTime)
 {
+    /*
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         bool change = false;
@@ -434,7 +454,7 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
             for(int x = 5; x <= 10; x++)
             {
                 sf::Vector2i tempCoords = guiManager.getButtonCoords(x);
-                guiManager.moveSprite(x, tempCoords.x , tempCoords.y+ 28);
+                guiManager.moveSprite(x, tempCoords.x, tempCoords.y+ 28);
             }
             break;
         case -1:
@@ -469,7 +489,7 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
             for(int x = 20; x <= 21; x++)
             {
                 sf::Vector2i tempCoords = guiManager.getButtonCoords(x);
-                guiManager.moveSprite(x, tempCoords.x , tempCoords.y+ 28);
+                guiManager.moveSprite(x, tempCoords.x, tempCoords.y+ 28);
             }
 
             break;
@@ -502,7 +522,8 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
             goto scrollSelector;;
         case 1:
             scrollAmount_g += 28;
-            /*
+
+
             for(int x = 0; x <= 0; x++)
             {
                 sf::Vector2i tempCoords = guiManager.getButtonCoords(x);
@@ -518,8 +539,9 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
                 guiManager.moveSprite(x, tempCoords.x, tempCoords.y - 28);
             }
             break;
-            */
+
         }
+
         break;
     case input:
         switch (Data_Desktop::getInstance().getMouseWheelDelta())
@@ -543,7 +565,7 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
             for(int x = 1000; x <= 1006; x++)
             {
                 sf::Vector2i tempCoords = guiManager.getButtonCoords(x);
-                guiManager.moveSprite(x, tempCoords.x , tempCoords.y + 28);
+                guiManager.moveSprite(x, tempCoords.x, tempCoords.y + 28);
             }
             break;
         case -1:
@@ -557,10 +579,12 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
         }
         break;
     }
+    */
 }
 
 std::string State_OptionsMenu::checkKeyName(char c)
 {
+    /*
     if(c == 'C')
     {
         return std::string("Control");
@@ -594,11 +618,13 @@ std::string State_OptionsMenu::checkKeyName(char c)
     std::string r;
     ss >> r;
     return r;
+    */
 }
 
 void State_OptionsMenu::displayTextures()
 {
     window.draw(background);
+    /*
     guiManager.buttonCheck();
 
     switch (optionsTab)
@@ -1010,6 +1036,7 @@ void State_OptionsMenu::displayTextures()
         break;
     }
     guiManager.drawGui();
+    */
 }
 
 

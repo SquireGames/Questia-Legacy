@@ -1,0 +1,41 @@
+#ifndef OPTIONMANAGER_H
+#define OPTIONMANAGER_H
+
+#include <vector>
+
+#include "Option.h"
+#include "Option_Base.h"
+
+#include "GuiManager.h"
+
+struct ButtonData
+{
+    std::string buttonName;
+};
+
+struct OptionData
+{
+    std::pair <std::string, bool> leftButton =      std::pair <std::string, bool> ("nil", false);
+    std::pair <std::string, bool> rightButton =     std::pair <std::string, bool> ("nil", false);
+    std::pair <std::string, bool> functionButton =  std::pair <std::string, bool> ("nil", false);
+};
+
+class OptionManager
+{
+public:
+    //ctor and dtor
+    OptionManager(GuiManagerNew* _guiManager);
+    ~OptionManager();
+
+    void addOption(Option_Base* option);
+    void initLists();
+
+    bool handleGui();
+
+private:
+    GuiManagerNew* guiManager;
+
+    std::vector <std::pair <Option_Base*, OptionData> > optionVector;
+};
+
+#endif // OPTIONMANAGER_H

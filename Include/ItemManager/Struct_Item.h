@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 
-#include "Struct_Animation.h"
+#include "Utl/SpriteSheet.h"
 
 enum ItemUsage {ground, inventory, equipped};
 enum ItemType {use, combat, inactive};
@@ -63,8 +63,8 @@ struct Struct_Item
 
     //std::map <int, std::map < > >
 
-    Struct_Animation usageSprite;
-    Struct_Animation inventorySprite;
+    SpriteSheet usageSprite;
+    SpriteSheet inventorySprite;
 
 
 
