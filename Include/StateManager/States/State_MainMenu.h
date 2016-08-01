@@ -11,6 +11,8 @@
 #include "ResourceManager.h"
 #include "GuiManager.h"
 
+#include "SaveFile_Options.h"
+
 class State_MainMenu : public State
 {
 public:
@@ -23,6 +25,8 @@ public:
 
 private:
     GuiLoader guiLoader;
+
+    SaveFile_Options saveFile;
 
     sf::RenderWindow& window;
 

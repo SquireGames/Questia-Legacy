@@ -18,6 +18,7 @@
 #include "GuiLoader.h"
 
 #include "Utl/Utl.h"
+#include "FileData.h"
 
 #include "StateManager/States/State_OptionsMenu/Option.h"
 #include "Option_Base.h"
@@ -51,18 +52,19 @@ private:
 
     ///options
     //display
-    Option<int> option_windowMode     {Option<int>()};
-    Option<int> option_fps            {Option<int>()};
-    Option<std::string> option_font           {Option<std::string>()};
+    Option<int> option_windowMode       {Option<int>()};
+    Option<int> option_fps              {Option<int>()};
+    Option<std::string> option_font     {Option<std::string>()};
+    Option<std::string> option_guiPack  {Option<std::string>()};
     //audio
-    Option<int> option_musicVolume    {Option<int>()};
+    Option<int> option_musicVolume      {Option<int>()};
     //input
-    Option<char> option_key_moveUp    {Option<char>()};
-    Option<char> option_key_moveDown  {Option<char>()};
-    Option<char> option_key_moveLeft  {Option<char>()};
-    Option<char> option_key_moveRight {Option<char>()};
+    Option<char> option_key_moveUp      {Option<char>()};
+    Option<char> option_key_moveDown    {Option<char>()};
+    Option<char> option_key_moveLeft    {Option<char>()};
+    Option<char> option_key_moveRight   {Option<char>()};
     //game
-    Option<int> option_deleteData     {Option<int>()};
+    Option<int> option_deleteData       {Option<int>()};
 };
 
 #endif // STATE_OPTIONSMENU_H

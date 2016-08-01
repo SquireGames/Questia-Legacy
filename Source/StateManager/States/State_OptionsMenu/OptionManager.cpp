@@ -109,6 +109,9 @@ void OptionManager::saveOptions(SaveFile_Options& saveFile)
 {
     for(const auto& it : optionVector)
     {
-        saveFile.saveOption(it.first, it.first->getOptionName());
+        if(it.first->isChanged())
+        {
+            saveFile.saveOption(it.first, it.first->getOptionName());
+        }
     }
 }

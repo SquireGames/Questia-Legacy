@@ -14,9 +14,11 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
     //font
     guiManager.setFont(Data_Desktop::getInstance().font1);
     //loader
+    guiLoader.setGuiPack(saveFile.getGuiPack());
     guiLoader.loadGui(guiManager, "options");
 
     ///options
+    ///display
     //windowMode
     option_windowMode.setList("displayList");
     option_windowMode.setOptionName(saveFile.getWindowModeName());
@@ -33,9 +35,20 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
     //font
     option_font.setList("displayList");
     option_font.setOptionName(saveFile.getFontName());
-    option_font.addChoice(std::make_pair ("Lato-Regular", "Lato-Regular.ttf"));
-    option_font.addChoice(std::make_pair ("Lato-Medium", "Lato-Medium.ttf"));
+    option_font.addChoice(std::make_pair ("Lato Regular", "Lato-Regular.ttf"));
+    option_font.addChoice(std::make_pair ("Lato Medium", "Lato-Medium.ttf"));
+    option_font.addChoice(std::make_pair ("Open Sans Regular", "OpenSans-Regular.ttf"));
     option_font.addChoice(std::make_pair ("acidstructure", "acidstructure.ttf"));
+    //guiPack
+    option_guiPack.setList("displayList");
+    option_guiPack.setOptionName(saveFile.getGuiPackName());
+    for(const auto& it : utl::getFiles("Data_2/Gui Pack", false))
+    {
+        option_guiPack.addChoice(std::make_pair (it, it));
+    }
+
+
+    ///audio
     //music volume
     option_musicVolume.setList("audioList");
     option_musicVolume.setOptionName(saveFile.getMusicName());
@@ -44,15 +57,16 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
                                   });
     //starting values
     option_windowMode.init(saveFile.getWindowMode());
-    option_windowMode.init(saveFile.getWindowMode());
     option_fps.init(saveFile.getFps());
     option_font.init(saveFile.getFont());
     option_musicVolume.init(saveFile.getMusicVolume());
+    option_guiPack.init(saveFile.getGuiPack());
     //storing
     optionManager.addOption(&option_windowMode);
     optionManager.addOption(&option_fps);
     optionManager.addOption(&option_font);
     optionManager.addOption(&option_musicVolume);
+    optionManager.addOption(&option_guiPack);
     //initialization
     optionManager.initLists();
 
@@ -151,6 +165,7 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
             optionManager.saveOptions(saveFile);
             saveFile.writeOptions();
 
+            //window modes
             if(option_windowMode.isChanged())
             {
                 switch (option_windowMode.getValue())
@@ -164,27 +179,28 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
                 }
                 Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(window.getSize().x,window.getSize().y),window.getPosition());
             }
-            if(option_fps.isChanged())
+            //fps
+            if(option_fps.getValue() == 0)
             {
-                if(option_fps.getValue() == 0)
-                {
-                    window.setVerticalSyncEnabled(true);
-                }
-                else if (option_fps.getValue() == -1)
-                {
-                    window.setFramerateLimit(100000);
-                    window.setVerticalSyncEnabled(false);
-                }
-                else
-                {
-                    window.setFramerateLimit(option_fps.getValue());
-                    window.setVerticalSyncEnabled(false);
-                }
+                window.setVerticalSyncEnabled(true);
             }
+            else if (option_fps.getValue() == -1)
+            {
+                window.setFramerateLimit(100000);
+                window.setVerticalSyncEnabled(false);
+            }
+            else
+            {
+                window.setFramerateLimit(option_fps.getValue());
+                window.setVerticalSyncEnabled(false);
+            }
+            //font
             if(option_font.isChanged())
             {
                 Data_Desktop::getInstance().changeFont(option_font.getValue());
             }
+            //music
+            //...
 
             StateManager::getInstance().changeState(new State_Transition(window, 3));
         }

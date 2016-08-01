@@ -13,6 +13,8 @@ public:
 
     virtual std::string getValueString() = 0;
 
+    virtual bool isChanged() = 0;
+
     virtual std::string getList() = 0;
     virtual void setList(std::string) = 0;
 

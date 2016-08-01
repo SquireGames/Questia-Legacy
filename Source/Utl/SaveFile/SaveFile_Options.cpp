@@ -5,6 +5,7 @@ SaveFile_Options::SaveFile_Options():
     , fps(0)
     , font("Lato-Regular.ttf")
     , musicVolume(0)
+    , guiPack("Default")
 {
     saveFile.setFilePath("options.cfg");
 
@@ -40,6 +41,10 @@ void SaveFile_Options::reloadOptions()
     {
         musicVolume = utl::asInt(saveFile.getItem(musicVolumeName));
     }
+    if(saveFile.getItem(guiPackName) != "nil")
+    {
+        guiPack = saveFile.getItem(guiPackName);
+    }
 }
 
 void SaveFile_Options::saveOption(Option_Base* option, std::string optionName)
@@ -69,6 +74,10 @@ void SaveFile_Options::saveOption(Option_Base* option, std::string optionName)
             musicVolume = utl::asInt(option->getValueString());
         }
     }
+    else if(optionName == guiPackName)
+    {
+        guiPack = option->getValueString();
+    }
 }
 
 
@@ -76,10 +85,11 @@ void SaveFile_Options::writeOptions()
 {
     saveFile.clearSave();
 
-    saveFile.saveItem(windowModeName, windowMode); //fullscreen
-    saveFile.saveItem(fpsName, fps); //v-sync
+    saveFile.saveItem(windowModeName, windowMode);
+    saveFile.saveItem(fpsName, fps);
     saveFile.saveItem(fontName, font);
-    saveFile.saveItem(musicVolumeName, musicVolume); //muted
+    saveFile.saveItem(musicVolumeName, musicVolume);
+    saveFile.saveItem(guiPackName, guiPack);
 
     saveFile.writeFile();
 }
@@ -100,6 +110,10 @@ int SaveFile_Options::getMusicVolume()
 {
     return musicVolume;
 }
+std::string SaveFile_Options::getGuiPack()
+{
+    return guiPack;
+}
 std::string SaveFile_Options::getWindowModeName()
 {
     return windowModeName;
@@ -115,4 +129,8 @@ std::string SaveFile_Options::getFontName()
 std::string SaveFile_Options::getMusicName()
 {
     return musicVolumeName;
+}
+std::string SaveFile_Options::getGuiPackName()
+{
+    return guiPackName;
 }

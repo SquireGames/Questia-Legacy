@@ -13,11 +13,13 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     window(mWindow)
     , resourceManager()
     , guiManager(mWindow, resourceManager)
+    , saveFile()
 {
     ///gui
     //font
     guiManager.setFont(Data_Desktop::getInstance().font1);
     //loader
+    guiLoader.setGuiPack(saveFile.getGuiPack());
     guiLoader.loadGui(guiManager, "mainMenu");
 
     ///music

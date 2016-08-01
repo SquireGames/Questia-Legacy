@@ -5,6 +5,7 @@
 #include "GuiManager.h"
 
 #include "Utl/Utl.h"
+#include "FileData.h"
 
 class GuiLoader
 {
@@ -13,10 +14,11 @@ public:
     ~GuiLoader();
 
     void loadGui(GuiManagerNew& guiManager, std::string gui);
+    void setGuiPack(std::string guiPack);
 
 private:
     std::string primaryPack = "Default";
-    std::string secondaryPack = "nil";
+    std::string secondaryPack = "Default";
 
     SaveFile guiFile;
 
