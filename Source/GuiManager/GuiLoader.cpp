@@ -24,12 +24,6 @@ void GuiLoader::loadGui(GuiManagerNew& guiManager, std::string gui)
             std::vector<std::string> command = utl::separateString(guiCommands[it], '|');
             const unsigned int& commands = command.size();
 
-            for(unsigned int commandIt = 0; commandIt != commands; commandIt++)
-            {
-                std::cout << commandIt + 1 << "-" << command[commandIt] << std::endl;
-            }
-            std::cout << "---------------" << std::endl;
-
             if(commands >= 3)
             {
                 if(command[0] == "create")

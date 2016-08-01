@@ -15,7 +15,7 @@ int utl::asInt(const std::string& _string)
 
 bool utl::isNumber(const std::string& _string)
 {
-    return (_string.find_first_not_of("0123456789.") == std::string::npos);
+    return (_string.find_first_not_of("0123456789.-") == std::string::npos);
 }
 
 std::vector <std::string> utl::separateString (std::string saveString, char delimiter)

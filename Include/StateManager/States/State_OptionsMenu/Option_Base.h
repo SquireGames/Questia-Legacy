@@ -11,7 +11,7 @@ public:
     Option_Base();
     virtual ~Option_Base();
 
-    virtual bool isChanged() = 0;
+    virtual std::string getValueString() = 0;
 
     virtual std::string getList() = 0;
     virtual void setList(std::string) = 0;

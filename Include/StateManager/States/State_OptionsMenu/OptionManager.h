@@ -6,6 +6,8 @@
 #include "Option.h"
 #include "Option_Base.h"
 
+#include "SaveFile_Options.h"
+
 #include "GuiManager.h"
 
 struct ButtonData
@@ -33,6 +35,8 @@ public:
 
     void addOption(Option_Base* option);
     void initLists();
+
+    void saveOptions(SaveFile_Options& saveFile);
 
     bool handleGui();
 

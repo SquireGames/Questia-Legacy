@@ -14,11 +14,12 @@ const sf::Time Application::timePerFrame = sf::seconds(1.f/144.f);
 Application::Application():
     mStatisticsUpdateTime()
     , mStatisticsFramesCount(0)
+    , saveFile()
 {
-    //
-    Data_Desktop::getInstance().loadOptions();
+    //temp
+    Data_Desktop::getInstance().changeFont(saveFile.getFont());
 
-    switch (utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("window mode")))
+    switch (saveFile.getWindowMode())
     {
     case 0:
         mWindow.create(sf::VideoMode(1920, 1080),"Questia",sf::Style::Fullscreen);
@@ -40,17 +41,20 @@ void Application::run()
 {
     Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(mWindow.getSize().x,mWindow.getSize().y),mWindow.getPosition());
 
-    if(utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")) == 0)
+    if(saveFile.getFps() == 0)
     {
         mWindow.setVerticalSyncEnabled(true);
     }
-    else
+    else if (saveFile.getFps() == -1)
     {
-        mWindow.setFramerateLimit(utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("FPS cap")));
+        mWindow.setFramerateLimit(100000);
         mWindow.setVerticalSyncEnabled(false);
     }
-
-    //mWindow.setFramerateLimit(2000); mWindow.setVerticalSyncEnabled(false);
+    else
+    {
+        mWindow.setFramerateLimit(saveFile.getFps());
+        mWindow.setVerticalSyncEnabled(false);
+    }
 
     sf::View beginningView;
     beginningView.setSize(1920,1080);
@@ -235,5 +239,4 @@ Application::~Application()
     std::cout<<"--------------------"<<std::endl;
     std::cout<<" Questia Terminated "<<std::endl;
     std::cout<<"--------------------"<<std::endl;
-    //throw std::runtime_error("Success");
 }

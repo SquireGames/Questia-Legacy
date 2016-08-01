@@ -24,6 +24,12 @@ void Option<T>::init(T value)
 }
 
 template <class T>
+bool Option<T>::isChanged()
+{
+    return (oldOption == newOption) ? false : true;
+}
+
+template <class T>
 void Option<T>::setOptionName (std::string _optionName)
 {
     optionName = _optionName;
@@ -36,21 +42,15 @@ std::string Option<T>::getOptionName ()
 }
 
 template <class T>
-void Option<T>::setValue(T value)
-{
-    newOption = value;
-}
-
-template <class T>
 T Option<T>::getValue()
 {
     return newOption;
 }
 
 template <class T>
-bool Option<T>::isChanged()
+std::string Option<T>::getValueString()
 {
-    return (oldOption == newOption) ? false : true;
+    return utl::asString(newOption);
 }
 
 template <class T>
@@ -90,6 +90,8 @@ void Option<T>::iterateForward()
     {
         choiceIterator++;
         visibleOption = choiceIterator->first;
+
+        newOption = choiceIterator->second;
     }
 }
 
@@ -100,6 +102,7 @@ void Option<T>::iterateBackward()
     {
         choiceIterator--;
         visibleOption = choiceIterator->first;
+        newOption = choiceIterator->second;
     }
 }
 

@@ -46,7 +46,7 @@ bool SaveFile::readFile()
                     firstCharacter = entry.at(0);
                 }
 
-                if(firstCharacter != '/')
+                if(firstCharacter != '/' || firstCharacter != '(')
                 {
                     if(firstCharacter != ' ')
                     {
@@ -113,7 +113,7 @@ std::string SaveFile::getItem(std::string itemName)
             return saveList[it].second;
         }
     }
-    return std::string("ERROR: NO ITEM FOUND");
+    return std::string("nil");
 }
 
 void SaveFile::addComment(std::string item, std::string _comment)

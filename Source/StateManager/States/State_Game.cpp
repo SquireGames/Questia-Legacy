@@ -86,7 +86,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
     if(save_entities.readFile())
     {
-        std::vector<std::pair<std::string, std::string> >& entityVector = save_entities.getSaveList();
+        std::vector<std::pair<std::string, std::string> > entityVector = save_entities.getSaveList();
         for(unsigned int it = 0; it != entityVector.size(); it++)
         {
             std::vector<std::string> entityInfo = utl::separateString(entityVector[it].second, ',');

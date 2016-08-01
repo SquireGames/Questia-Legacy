@@ -61,7 +61,7 @@ public:
     }
     std::string getItem(std::string itemName);
 
-    std::vector <std::pair <std::string, std::string> >& getSaveList() {return saveList;}
+    std::vector <std::pair <std::string, std::string> > getSaveList() {return saveList;}
 
 
 

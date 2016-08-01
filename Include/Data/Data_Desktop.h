@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "SaveFile.h"
+#include "Utl.h"
 
 class Data_Desktop
 {
@@ -34,7 +35,7 @@ public:
 
     std::vector<std::string> getFiles(std::string directory, bool isWithDirectory);
 
-    void changeFont(int font);
+    void changeFont(std::string fontName);
     sf::Font font1;
 
     sf::Keyboard::Key getKey(int keyNumber);

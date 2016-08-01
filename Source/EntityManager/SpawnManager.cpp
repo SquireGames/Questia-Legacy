@@ -20,7 +20,7 @@ void SpawnManager::loadSpawnFile(std::string mapName, SaveFile& save_spawnSave, 
     // vector of ID, iterator position
     std::vector <std::pair <int, int>> pastSpawn;
 
-    std::vector<std::pair<std::string, std::string> >& spawnSaveVector = save_spawnSave.getSaveList();
+    std::vector<std::pair<std::string, std::string> > spawnSaveVector = save_spawnSave.getSaveList();
     for(unsigned int it = 0; it != spawnSaveVector.size(); it++)
     {
         pastSpawn.push_back(std::make_pair(utl::asInt(spawnSaveVector[it].first), it));

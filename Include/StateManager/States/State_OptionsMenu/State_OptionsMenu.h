@@ -7,13 +7,14 @@
 #include <List>
 #include <memory>
 
+#include "Data_Desktop.h"
+
 #include "StateManager/State.h"
 #include "StateManager/StateManager.h"
 #include "StateManager/States/State_Transition.h"
 
 #include "ResourceManager.h"
 #include "GuiManager.h"
-
 #include "GuiLoader.h"
 
 #include "Utl/Utl.h"
@@ -52,7 +53,7 @@ private:
     //display
     Option<int> option_windowMode     {Option<int>()};
     Option<int> option_fps            {Option<int>()};
-    Option<int> option_font           {Option<int>()};
+    Option<std::string> option_font           {Option<std::string>()};
     //audio
     Option<int> option_musicVolume    {Option<int>()};
     //input

@@ -95,10 +95,10 @@ void Data_Desktop::loadOptions()
     if(!save_options.readFile()) // New save
     {
         save_options.clearSave();
-        save_options.saveItem("window mode"     ,0);
-        save_options.saveItem("FPS cap"         ,0);
-        save_options.saveItem("music volume"    ,0);
-        save_options.saveItem("font"            ,1);
+        save_options.saveItem("window mode",0);
+        save_options.saveItem("FPS cap",0);
+        save_options.saveItem("music volume",0);
+        save_options.saveItem("font",1);
         save_options.saveItem("key_moveUp",    'w');
         save_options.saveItem("key_moveDown",  's');
         save_options.saveItem("key_moveLeft",  'a');
@@ -121,7 +121,6 @@ void Data_Desktop::loadOptions()
     keyMap[4] = getConvertedKey(save_options.getItem("key_skill4").at(0));
     keyMap[5] = getConvertedKey(save_options.getItem("key_skill5").at(0));
     keyMap[6] = getConvertedKey(save_options.getItem("key_skill6").at(0));
-    changeFont(utl::asInt(save_options.getItem("font")));
 }
 
 void Data_Desktop::writeOptions(int windowMode, int fps, int soundVolume, int font,
@@ -152,24 +151,14 @@ void Data_Desktop::writeOptions(int windowMode, int fps, int soundVolume, int fo
     keyMap[6] = getConvertedKey(skill6Key);
 }
 
-void Data_Desktop::changeFont(int font)
+void Data_Desktop::changeFont(std::string fontName)
 {
-    switch(font)
+    if(!font1.loadFromFile(utl::conjoinString({"Media/Fonts/", fontName})))
     {
-    case 0:
-        font1.loadFromFile("Media/Fonts/default.ttf");
-        break;
-    case 1:
-        font1.loadFromFile("Media/Fonts/Lato-Medium.ttf");
-        break;
-    case 2:
-        font1.loadFromFile("Media/Fonts/Lato-Regular.ttf");
-        break;
-    case 3:
         font1.loadFromFile("Media/Fonts/acidstructure.ttf");
-        break;
     }
 }
+
 
 sf::Keyboard::Key Data_Desktop::getConvertedKey(char key)
 {

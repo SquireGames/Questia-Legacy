@@ -8,6 +8,8 @@
 
 #include "Option_Base.h"
 
+#include "Utl.h"
+
 template <class T>
 class Option : public Option_Base
 {
@@ -15,8 +17,11 @@ public:
     Option();
 
     void init(T value);
-    void setValue(T value);
+
     T getValue();
+    std::string getValueString();
+
+    bool isChanged();
 
     void iterateForward();
     void iterateBackward();
@@ -27,8 +32,6 @@ public:
 
     void setList(std::string _listName);
     std::string getList();
-
-    bool isChanged();
 
     void setOptionName (std::string _optionName);
     std::string getOptionName ();
