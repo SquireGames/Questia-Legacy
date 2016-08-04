@@ -266,7 +266,7 @@ void GuiLoader::loadGui(GuiManagerNew& guiManager, std::string gui)
                                     guiManager.setButtonAtr(getButtonAtrCharacteristic(command[2]), false);
                                 }
                             }
-                            else if(getButtonAtrCharacteristic(command[2]) == gui::ButtonAtrCharacteristic::flip)
+                            else if(getButtonAtrCharacteristic(command[2]) == gui::ButtonAtrCharacteristic::flip || getButtonAtrCharacteristic(command[2]) == gui::ButtonAtrCharacteristic::direction)
                             {
                                 //set ButtonAtr AtrCharacteristic(flip) char
                                 guiManager.setButtonAtr(getButtonAtrCharacteristic(command[2]), command[3].at(0));
@@ -309,7 +309,7 @@ void GuiLoader::loadGui(GuiManagerNew& guiManager, std::string gui)
                                     guiManager.setButtonAtr(command[2], command[3], getButtonAtrCharacteristic(command[4]), false);
                                 }
                             }
-                            else if(getButtonAtrCharacteristic(command[4]) == gui::ButtonAtrCharacteristic::flip)
+                            else if(getButtonAtrCharacteristic(command[4]) == gui::ButtonAtrCharacteristic::flip || getButtonAtrCharacteristic(command[4]) == gui::ButtonAtrCharacteristic::direction)
                             {
                                 //set ButtonAtr ButtonName AtrName  AtrCharacteristic(flip) char
                                 guiManager.setButtonAtr(command[2], command[3], getButtonAtrCharacteristic(command[4]), command[5].at(0));
@@ -520,6 +520,10 @@ gui::ButtonAtr GuiLoader::getButtonAtr(std::string buttonAtr)
     {
         return gui::ButtonAtr::Hover;
     }
+    else if(buttonAtr == "Percent")
+    {
+        return gui::ButtonAtr::Percent;
+    }
 }
 
 gui::ButtonAtrCharacteristic GuiLoader::getButtonAtrCharacteristic(std::string buttonAtrCharacteristic)
@@ -555,6 +559,18 @@ gui::ButtonAtrCharacteristic GuiLoader::getButtonAtrCharacteristic(std::string b
     else if(buttonAtrCharacteristic == "Transparency" || buttonAtrCharacteristic == "Alpha")
     {
         return gui::ButtonAtrCharacteristic::transparency;
+    }
+    else if(buttonAtrCharacteristic == "Size")
+    {
+        return gui::ButtonAtrCharacteristic::size;
+    }
+    else if(buttonAtrCharacteristic == "Direction")
+    {
+        return gui::ButtonAtrCharacteristic::direction;
+    }
+    else if(buttonAtrCharacteristic == "Percent")
+    {
+        return gui::ButtonAtrCharacteristic::percentage;
     }
 }
 

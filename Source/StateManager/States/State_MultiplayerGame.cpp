@@ -25,7 +25,7 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     , newGuiManager(mWindow, resourceManager)
     , entityManager (EntityManager::ManagerType::multiplayer, mWindow, resourceManager, lightManager)
     , spawnManager (true, entityManager)
-    , characterManager(mWindow, entityManager, guiManager)
+    , characterManager(mWindow, entityManager, newGuiManager)
     , itemManager(mWindow, resourceManager)
     , multiplayerManager("Temporary server name")
     , commandsManager(mWindow, entityManager, &multiplayerManager, timeManager)

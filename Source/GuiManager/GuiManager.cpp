@@ -541,7 +541,7 @@ void GuiManager::drawGui()
 
     if(gameOverlay)
     {
-        window.draw(guiSprite);
+        //window.draw(guiSprite);
 
         window.draw(hpSprite);
         window.draw(mpSprite);

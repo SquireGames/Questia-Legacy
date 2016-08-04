@@ -18,7 +18,10 @@
 #include "Data/CommandsManager.h"
 #include "MultiplayerManager/MultiplayerManager.h"
 
+#include "GuiLoader.h"
+
 #include "Utl/SaveFile/SaveFile.h"
+#include "SaveFile_Options.h"
 #include "Data/Data_Desktop.h"
 
 class State_Game : public State
@@ -35,6 +38,9 @@ private:
     bool pause;
     unsigned char tick;
 
+    //perm
+    SaveFile_Options saveFile;
+
     sf::Vector2f player_Velocity;
     sf::Vector2f player_Coordinates;
     sf::Vector2f player_MapCoordinates;
@@ -47,8 +53,8 @@ private:
     ResourceManager resourceManager;
     TileEngine tileEngine;
     EntityManager entityManager;
-    GuiManager guiManager;
-    GuiManagerNew newGuiManager;
+    GuiManagerNew guiManager;
+    GuiLoader guiLoader;
     SpawnManager spawnManager;
     CharacterManager characterManager;
     ItemManager itemManager;

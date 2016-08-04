@@ -65,7 +65,14 @@ void Button::copyToThisButton(Button& newButton, const Button& oldButton)
     }
     for(std::map<std::string, PercentSprite*>::const_iterator it = oldButton.heldPercentSprites.begin(); it != oldButton.heldPercentSprites.end(); ++it)
     {
-
+        newButton.addButtonAtr(it->first, gui::ButtonAtr::Percent);
+        newButton.heldPercentSprites[it->first]->spritePercentage = oldButton.heldPercentSprites.at(it->first)->spritePercentage;
+        newButton.heldPercentSprites[it->first]->normalSprite     = oldButton.heldPercentSprites.at(it->first)->normalSprite;
+        newButton.heldPercentSprites[it->first]->directionOfGap   = oldButton.heldPercentSprites.at(it->first)->directionOfGap;
+        newButton.heldPercentSprites[it->first]->isChanged        = oldButton.heldPercentSprites.at(it->first)->isChanged;
+        newButton.heldPercentSprites[it->first]->position         = oldButton.heldPercentSprites.at(it->first)->position;
+        newButton.heldPercentSprites[it->first]->rectOverlay      = oldButton.heldPercentSprites.at(it->first)->rectOverlay;
+        newButton.heldPercentSprites[it->first]->originalTextureRect = oldButton.heldPercentSprites.at(it->first)->originalTextureRect;
     }
 }
 //}
@@ -218,6 +225,9 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
     {
         switch (atrChar)
         {
+        case gui::ButtonAtrCharacteristic::texture:
+            heldPercentSprites[atrName]->normalSprite.setTexture(resourceManager.getTexture(value));
+            break;
         default:
             break;
         }
@@ -243,6 +253,11 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
         case gui::ButtonAtrCharacteristic::coords:
             heldSprites[atrName]->position = value;
             break;
+        case gui::ButtonAtrCharacteristic::size:
+            heldSprites[atrName]->normalSprite.setScale(
+                sf::Vector2f((float)value.first/heldSprites[atrName]->normalSprite.getLocalBounds().width,
+                             (float)value.second/heldSprites[atrName]->normalSprite.getLocalBounds().height));
+            break;
         default:
             break;
         }
@@ -259,6 +274,23 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
     {
         switch (atrChar)
         {
+        case gui::ButtonAtrCharacteristic::coords:
+            heldPercentSprites[atrName]->position = value;
+            break;
+        case gui::ButtonAtrCharacteristic::size:
+            if(heldPercentSprites[atrName]->normalSprite.getTexture() != nullptr)
+            {
+                heldPercentSprites[atrName]->normalSprite.setScale(
+                    sf::Vector2f((float)value.first/heldPercentSprites[atrName]->normalSprite.getLocalBounds().width,
+                                 (float)value.second/heldPercentSprites[atrName]->normalSprite.getLocalBounds().height));
+            }
+            else
+            {
+                heldPercentSprites[atrName]->rectOverlay.setSize(sf::Vector2f(value.first, value.second));
+                heldPercentSprites[atrName]->originalTextureRect.width = value.first;
+                heldPercentSprites[atrName]->originalTextureRect.height = value.second;
+            }
+            break;
         default:
             break;
         }
@@ -302,6 +334,9 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
     {
         switch (atrChar)
         {
+        case gui::ButtonAtrCharacteristic::color:
+            heldPercentSprites[atrName]->rectOverlay.setFillColor(color);
+            break;
         default:
             break;
         }
@@ -360,6 +395,104 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
     {
         switch (atrChar)
         {
+        case gui::ButtonAtrCharacteristic::percentage:
+        {
+            float percent = (float)value / 100;
+            heldPercentSprites[atrName]->spritePercentage = percent;
+            if(heldPercentSprites[atrName]->normalSprite.getTexture() != nullptr)
+            {
+                switch (heldPercentSprites[atrName]->directionOfGap)
+                {
+                case gui::Direction::up:
+                {
+                    sf::IntRect spriteRect = heldPercentSprites[atrName]->originalTextureRect;
+                    spriteRect.height *= percent;
+                    heldPercentSprites[atrName]->normalSprite.setTextureRect(spriteRect);
+                }
+                break;
+                case gui::Direction::down:
+                {
+                    sf::IntRect spriteRect = heldPercentSprites[atrName]->originalTextureRect;
+                    spriteRect.height *= percent;
+                    heldPercentSprites[atrName]->normalSprite.setTextureRect(spriteRect);
+                }
+                break;
+                case gui::Direction::left:
+                {
+                    sf::IntRect spriteRect = heldPercentSprites[atrName]->originalTextureRect;
+                    spriteRect.width *= percent;
+                    heldPercentSprites[atrName]->normalSprite.setTextureRect(spriteRect);
+                }
+                break;
+                case gui::Direction::right:
+                {
+                    sf::IntRect spriteRect = heldPercentSprites[atrName]->originalTextureRect;
+                    spriteRect.width *= percent;
+                    heldPercentSprites[atrName]->normalSprite.setTextureRect(spriteRect);
+                }
+                break;
+                }
+
+            }
+            else
+            {
+                switch (heldPercentSprites[atrName]->directionOfGap)
+                {
+                case gui::Direction::up:
+                {
+                    heldPercentSprites[atrName]->rectOverlay.setOrigin(0, -1 * heldPercentSprites[atrName]->originalTextureRect.height * (1-percent));
+                    heldPercentSprites[atrName]->rectOverlay.setSize(sf::Vector2f(
+                                heldPercentSprites[atrName]->originalTextureRect.width,
+                                heldPercentSprites[atrName]->originalTextureRect.height * percent));
+                }
+                break;
+                case gui::Direction::down:
+                {
+                    heldPercentSprites[atrName]->rectOverlay.setSize(sf::Vector2f(
+                                heldPercentSprites[atrName]->originalTextureRect.width,
+                                heldPercentSprites[atrName]->originalTextureRect.height * percent));
+                }
+                break;
+                case gui::Direction::left:
+                {
+                    heldPercentSprites[atrName]->rectOverlay.setOrigin(-1 * heldPercentSprites[atrName]->originalTextureRect.width * (1-percent), 0);
+                    heldPercentSprites[atrName]->rectOverlay.setSize(sf::Vector2f(
+                                heldPercentSprites[atrName]->originalTextureRect.width * percent,
+                                heldPercentSprites[atrName]->originalTextureRect.height));
+                }
+                break;
+                case gui::Direction::right:
+                {
+                    heldPercentSprites[atrName]->rectOverlay.setSize(sf::Vector2f(
+                                heldPercentSprites[atrName]->originalTextureRect.width * percent,
+                                heldPercentSprites[atrName]->originalTextureRect.height));
+                }
+                break;
+                }
+            }
+        }
+        break;
+
+        case gui::ButtonAtrCharacteristic::transparency:
+        {
+            if(heldPercentSprites[atrName]->normalSprite.getTexture() != nullptr)
+            {
+                sf::Color newColor = heldPercentSprites[atrName]->normalSprite.getColor();
+                float trans = static_cast <float> (value);
+                trans = trans * 255 / 100;
+                newColor.a = trans;
+                heldPercentSprites[atrName]->normalSprite.setColor(newColor);
+            }
+            else
+            {
+                sf::Color newColor = heldPercentSprites[atrName]->rectOverlay.getFillColor();
+                float trans = static_cast <float> (value);
+                trans = trans * 255 / 100;
+                newColor.a = trans;
+                heldPercentSprites[atrName]->rectOverlay.setFillColor(newColor);
+            }
+        }
+        break;
         default:
             break;
         }
@@ -414,6 +547,7 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
                         heldSprites[atrName]->normalSprite.getLocalBounds().height));
             }
         }
+
         break;
         default:
             break;
@@ -440,12 +574,87 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
     {
         switch (atrChar)
         {
+        case gui::ButtonAtrCharacteristic::direction:
+        {
+            if(heldPercentSprites[atrName]->normalSprite.getTexture() != nullptr)
+            {
+                if(value == 'u')
+                {
+                    heldPercentSprites[atrName]->directionOfGap = gui::Direction::up;
+
+                    heldPercentSprites[atrName]->normalSprite.setOrigin(0, heldPercentSprites[atrName]->normalSprite.getLocalBounds().height);
+                    heldPercentSprites[atrName]->normalSprite.setScale(heldPercentSprites[atrName]->normalSprite.getScale().x,heldPercentSprites[atrName]->normalSprite.getScale().y * -1);
+
+                    heldPercentSprites[atrName]->originalTextureRect = sf::IntRect(
+                                0,
+                                heldPercentSprites[atrName]->normalSprite.getLocalBounds().height,
+                                heldPercentSprites[atrName]->normalSprite.getLocalBounds().width,
+                                -1 * heldPercentSprites[atrName]->normalSprite.getLocalBounds().height);
+                }
+                else if(value == 'd')
+                {
+                    heldPercentSprites[atrName]->directionOfGap = gui::Direction::down;
+
+                    heldPercentSprites[atrName]->originalTextureRect = sf::IntRect(
+                                0,
+                                0,
+                                heldPercentSprites[atrName]->normalSprite.getLocalBounds().width,
+                                heldPercentSprites[atrName]->normalSprite.getLocalBounds().height);
+
+                }
+                else if(value == 'l')
+                {
+                    heldPercentSprites[atrName]->directionOfGap = gui::Direction::left;
+
+                    heldPercentSprites[atrName]->normalSprite.setOrigin(heldPercentSprites[atrName]->normalSprite.getLocalBounds().width, 0);
+                    heldPercentSprites[atrName]->normalSprite.setScale(heldPercentSprites[atrName]->normalSprite.getScale().x * -1,heldPercentSprites[atrName]->normalSprite.getScale().y);
+
+                    heldPercentSprites[atrName]->originalTextureRect = sf::IntRect(
+                                heldPercentSprites[atrName]->normalSprite.getLocalBounds().width,
+                                0,
+                                -1 * heldPercentSprites[atrName]->normalSprite.getLocalBounds().width,
+                                heldPercentSprites[atrName]->normalSprite.getLocalBounds().height);
+                }
+                else if(value == 'r')
+                {
+                    heldPercentSprites[atrName]->directionOfGap = gui::Direction::right;
+
+                    heldPercentSprites[atrName]->originalTextureRect = sf::IntRect(
+                                0,
+                                0,
+                                heldPercentSprites[atrName]->normalSprite.getLocalBounds().width,
+                                heldPercentSprites[atrName]->normalSprite.getLocalBounds().height);
+                }
+            }
+            else
+            {
+                heldPercentSprites[atrName]->rectOverlay.setOrigin(0,0);
+                heldPercentSprites[atrName]->rectOverlay.setSize(sf::Vector2f(
+                            heldPercentSprites[atrName]->originalTextureRect.width,
+                            heldPercentSprites[atrName]->originalTextureRect.height));
+                if(value == 'u')
+                {
+                    heldPercentSprites[atrName]->directionOfGap = gui::Direction::up;
+                }
+                else if(value == 'd')
+                {
+                    heldPercentSprites[atrName]->directionOfGap = gui::Direction::down;
+                }
+                else if(value == 'l')
+                {
+                    heldPercentSprites[atrName]->directionOfGap = gui::Direction::left;
+                }
+                else if(value == 'r')
+                {
+                    heldPercentSprites[atrName]->directionOfGap = gui::Direction::right;
+                }
+            }
+        }
         default:
             break;
         }
     }
 }
-
 
 void Button::addButtonAtr (std::string atrName, gui::ButtonAtr buttonAtr)
 {
@@ -490,7 +699,17 @@ void Button::addButtonAtr (std::string atrName, gui::ButtonAtr buttonAtr)
     break;
     case gui::ButtonAtr::Percent:
     {
-
+        PercentSprite* newPercent = new PercentSprite;
+        newPercent->isChanged = true;
+        newPercent->position = std::make_pair(0,0);
+        newPercent->spritePercentage = 1.f;
+        newPercent->directionOfGap = gui::Direction::right;
+        newPercent->normalSprite.setPosition(newPercent->position.first  + buttonPosition.first,
+                                             newPercent->position.second + buttonPosition.second);
+        newPercent->rectOverlay.setPosition(newPercent->position.first  + buttonPosition.first,
+                                            newPercent->position.second + buttonPosition.second);
+        newPercent->originalTextureRect = sf::IntRect(0,0,0,0);
+        heldPercentSprites[atrName] = newPercent;
     }
     break;
     default:
@@ -571,7 +790,36 @@ void Button::drawButton()
                 }
             }
         }
-
+        for(std::map<std::string, PercentSprite*>::iterator it = heldPercentSprites.begin(); it != heldPercentSprites.end(); it++)
+        {
+            if(it->second->isChanged || isCoordsChanged)
+            {
+                if(it->second->normalSprite.getTexture() != nullptr)
+                {
+                    it->second->normalSprite.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
+                                                         buttonPosition.second + it->second->position.second + scrollAmount_y);
+                    window.draw(it->second->normalSprite);
+                }
+                else
+                {
+                    it->second->rectOverlay.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
+                                                        buttonPosition.second + it->second->position.second + scrollAmount_y);
+                    window.draw(it->second->rectOverlay);
+                }
+                it->second->isChanged = false;
+            }
+            else
+            {
+                if(it->second->normalSprite.getTexture() != nullptr)
+                {
+                    window.draw(it->second->normalSprite);
+                }
+                else
+                {
+                    window.draw(it->second->rectOverlay);
+                }
+            }
+        }
         isCoordsChanged = false;
     }
 }

@@ -1,6 +1,6 @@
 #include "CharacterManager/CharacterManager.h"
 
-CharacterManager::CharacterManager(sf::RenderWindow &_window, EntityManager& _entityManager, GuiManager& _guiManager):
+CharacterManager::CharacterManager(sf::RenderWindow &_window, EntityManager& _entityManager, GuiManagerNew& _guiManager):
     window(_window)
     , entityManager(_entityManager)
     , guiManager (_guiManager)

@@ -68,7 +68,10 @@ Entity_Player::~Entity_Player()
 
 void Entity_Player::drawEntity(sf::RenderWindow &window)
 {
-    animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x-(animation.getSheetWidth()/2.f), coordinates.y-(animation.getSheetHeight()/2.f)-12.5);
+    animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x-((float)animation.getSheetWidth()/2.f), coordinates.y-((float)animation.getSheetHeight()/2.f)-12.5f);
+    //std::cout << "width: " << animation.getSheetWidth() << std::endl;
+    //std::cout << "height: " << animation.getSheetHeight() << std::endl;
+    //std::cout << "----------------------" << std::endl;
     window.draw(animation.getSprite(animationDirection-1, animationStep-1));
 
     if(isInDebugMode)

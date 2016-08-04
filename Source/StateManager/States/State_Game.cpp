@@ -20,8 +20,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , timeManager(4,0)
     , lightManager(mWindow, timeManager, resourceManager)
     , tileEngine (mWindow, resourceManager)
-    , guiManager(mWindow, resourceManager, true)
-    , newGuiManager(mWindow, resourceManager)
+    , guiManager(mWindow, resourceManager)
     , entityManager (EntityManager::ManagerType::singleplayer, mWindow, resourceManager, lightManager)
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
@@ -54,10 +53,20 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     //etc
     , pause(false)
     , tick (0)
-{
-    //std::vector<std::string> path = Data_Desktop::getInstance().getFiles("Maps");
 
-    //{saves
+    //perm
+    , saveFile()
+{
+    ///gui
+    //font
+    guiManager.setFont(Data_Desktop::getInstance().font1);
+    //loader
+    guiLoader.setGuiPack(saveFile.getGuiPack());
+    guiLoader.loadGui(guiManager, "game");
+
+
+
+    //{savesso
     //location
     std::stringstream sStream;
     sStream << "Saves/Characters/" << Data_Desktop::getInstance().getCharacterSelection() << "/" << "location" << ".txt";
@@ -105,7 +114,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     ///views
     gameView.setSize(1920,1080);
     gameView.setCenter(960,540);
-    gameView.zoom(0.5f);
+    gameView.zoom(1.f);
 
     overlayView.setSize(1920,1080);
     overlayView.setCenter(960,540);
@@ -135,17 +144,23 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
 
     ///rebindable keys
+    moveKey0.keyInput = sf::Keyboard::W;
+    moveKey1.keyInput = sf::Keyboard::S;
+    moveKey2.keyInput = sf::Keyboard::A;
+    moveKey3.keyInput = sf::Keyboard::D;
+
+
     moveKey0.keyType = 0;
-    moveKey0.keyInput = Data_Desktop::getInstance().getKey(0);
+    //moveKey0.keyInput = Data_Desktop::getInstance().getKey(0);
     keybindVector.push_back(moveKey0);
     moveKey1.keyType = 0;
-    moveKey1.keyInput = Data_Desktop::getInstance().getKey(1);
+    //moveKey1.keyInput = Data_Desktop::getInstance().getKey(1);
     keybindVector.push_back(moveKey1);
     moveKey2.keyType = 0;
-    moveKey2.keyInput = Data_Desktop::getInstance().getKey(2);
+    //moveKey2.keyInput = Data_Desktop::getInstance().getKey(2);
     keybindVector.push_back(moveKey2);
     moveKey3.keyType = 0;
-    moveKey3.keyInput = Data_Desktop::getInstance().getKey(3);
+    //moveKey3.keyInput = Data_Desktop::getInstance().getKey(3);
     keybindVector.push_back(moveKey3);
     skillKey4.keyType = 0;
     skillKey4.keyInput = Data_Desktop::getInstance().getKey(4);
@@ -171,48 +186,8 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
     itemManager.spawnItem("item:test", ItemUsage::ground, 64, 64);
 
-    newGuiManager.setFont(Data_Desktop::getInstance().font1);
-
-    //{ gui pause buttons
-    ///pause button template
-    newGuiManager.createButtonTemplate("pauseTemplate");
-    //sprite
-    newGuiManager.createButtonAtr("pauseTemplate", "sprite", gui::ButtonAtr::Sprite);
-    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Game/Gui/Buttons/PauseButton.png");
-    //text
-    newGuiManager.createButtonAtr("pauseTemplate", "text", gui::ButtonAtr::Text);
-    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::charSize, 50);
-    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color::Black);
-    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::coords, std::make_pair(92, 10));
-    //bounds
-    newGuiManager.setButton("pauseTemplate", gui::ButtonCharacteristic::bounds, "sprite");
-    //hover
-    newGuiManager.createButtonAtr("pauseTemplate", "hover", gui::ButtonAtr::Hover);
-    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::color, sf::Color (153,153,0,111));
-
-    ///pause buttons
-    //main menu
-    newGuiManager.createButton("mainMenu", "pauseTemplate");
-    newGuiManager.setButton("mainMenu", gui::ButtonCharacteristic::coords, std::make_pair(753, 400));
-    newGuiManager.setButtonAtr("mainMenu", "text", gui::ButtonAtrCharacteristic::text, "Main Menu");
-    //exit game
-    newGuiManager.createButton("exitGame", "pauseTemplate");
-    newGuiManager.setButton("exitGame", gui::ButtonCharacteristic::coords, std::make_pair(753, 600));
-    newGuiManager.setButtonAtr("exitGame", "text", gui::ButtonAtrCharacteristic::text, "Exit Game");
-
-    ///pause background
-    newGuiManager.createButton("_pauseBackground");
-    newGuiManager.createButtonAtr("_pauseBackground", "sprite", gui::ButtonAtr::Sprite);
-    newGuiManager.setButtonAtr(gui::ButtonAtrCharacteristic::texture, "Media/Image/Game/Gui/PauseOverlay.png");
-
-    ///groups
-    //pause menu
-    newGuiManager.createGroup("pauseMenu");
-    newGuiManager.addToGroup("_pauseBackground");
-    newGuiManager.addToGroup("mainMenu");
-    newGuiManager.addToGroup("exitGame");
-    newGuiManager.setGroupAtr(gui::ButtonCharacteristic::isVisible, false);
-    //}
+    ///font
+    guiManager.setFont(Data_Desktop::getInstance().font1);
 }
 
 State_Game::~State_Game()
@@ -224,13 +199,10 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 {
     if(pause)
     {
-        if(key == sf::Keyboard::Escape)
+        if(key == sf::Keyboard::Escape && isPressed == false)
         {
-            if(guiManager.buttonTimer())
-            {
-                newGuiManager.setGroupAtr("pauseMenu", gui::ButtonCharacteristic::isVisible, false);
-                pause = false;
-            }
+            guiManager.setGroupAtr("pauseMenu", gui::ButtonCharacteristic::isVisible, false);
+            pause = false;
         }
     }
     else
@@ -256,7 +228,7 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 
         if(key == sf::Keyboard::Tilde && !isPressed)
         {
-            guiManager.toggleOverlay();
+            //guiManager.toggleOverlay();
         }
         else if(key == sf::Keyboard::T)
         {
@@ -267,13 +239,10 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
             isInDebugMode = false;
         }
 
-        else if(key == sf::Keyboard::Escape)
+        else if(key == sf::Keyboard::Escape && isPressed == false)
         {
-            if(guiManager.buttonTimer())
-            {
-                newGuiManager.setGroupAtr("pauseMenu", gui::ButtonCharacteristic::isVisible, true);
-                pause = true;
-            }
+            guiManager.setGroupAtr("pauseMenu", gui::ButtonCharacteristic::isVisible, true);
+            pause = true;
         }
     }
 
@@ -306,7 +275,8 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 
 void State_Game::update(sf::Time elapsedTime)
 {
-    newGuiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
+    ///update mouse
+    guiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
 
     commandsManager.getCharImput(Data_Desktop::getInstance().getMostRecentChar());
     commandsManager.update();
@@ -332,7 +302,6 @@ void State_Game::update(sf::Time elapsedTime)
         if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
             entityManager.doAttack(2, playerAngle, entityManager.getPlayerID(), entityManager.getPlayerCoordinates().x,  entityManager.getPlayerCoordinates().y);
-            guiManager.changeVisibility(1, false);
         }
 
         //Angle
@@ -365,23 +334,32 @@ void State_Game::update(sf::Time elapsedTime)
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
 
     /* Gui */
-    guiManager.addStats(std::string("FPS: "), Data_Desktop::getInstance().get_FPS());
-    guiManager.addStats(std::string("Coordinates: "), tempCoords_x, std::string(" , "), tempCoords_y);
-    guiManager.addStats(std::string("Entities: "), entityManager.getEntityCount());
-    guiManager.addStats(std::string("Hour  : "), (int) timeManager.getHour());
-    guiManager.addStats(std::string("Minute: "), (int) timeManager.getMinute());
-    guiManager.addStats(std::string("Time: "), (float) timeManager.getDecimalTime());
+    //guiManager.addStats(std::string("FPS: "), Data_Desktop::getInstance().get_FPS());
+    //guiManager.addStats(std::string("Coordinates: "), tempCoords_x, std::string(" , "), tempCoords_y);
+    //guiManager.addStats(std::string("Entities: "), entityManager.getEntityCount());
+    //guiManager.addStats(std::string("Hour  : "), (int) timeManager.getHour());
+    //guiManager.addStats(std::string("Minute: "), (int) timeManager.getMinute());
+    //guiManager.addStats(std::string("Time: "), (float) timeManager.getDecimalTime());
 
+    int HP, MP, ST;
+    int maxHP, maxMP, maxST;
+    int HPP, MPP, STP;
+    std::tie(HP,MP,ST,maxHP,maxMP,maxST) = entityManager.getPlayerStats();
+    HPP = (float)HP * 100/(float)maxHP;
+    MPP = (float)MP * 100/(float)maxMP;
+    STP = (float)ST * 100/(float)maxST;
 
-    guiManager.setStats(entityManager.getPlayerStats());
+    guiManager.setButtonAtr("hpBar", "percent", gui::ButtonAtrCharacteristic::percentage, HPP);
+    guiManager.setButtonAtr("mpBar", "percent", gui::ButtonAtrCharacteristic::percentage, MPP);
+    guiManager.setButtonAtr("stBar", "percent", gui::ButtonAtrCharacteristic::percentage, STP);
 
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        if(newGuiManager.isClicked("mainMenu"))
+        if(guiManager.isClicked("mainMenu"))
         {
             StateManager::getInstance().changeState(new State_Transition(window, 1));
         }
-        else if(newGuiManager.isClicked("exitGame"))
+        else if(guiManager.isClicked("exitGame"))
         {
             window.close();
         }
@@ -398,13 +376,11 @@ void State_Game::displayTextures()
     lightManager.drawLighting_2();
 
     window.setView(overlayView);
-    guiManager.buttonCheck();
     commandsManager.drawCommandArea();
-    guiManager.drawGui();
 
-    newGuiManager.drawButtons();
+    guiManager.drawButtons();
 
-    //window.draw(alignment);
+    window.draw(alignment);
 }
 
 

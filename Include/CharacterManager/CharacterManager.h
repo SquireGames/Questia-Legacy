@@ -6,7 +6,7 @@
 class CharacterManager
 {
 public:
-    CharacterManager(sf::RenderWindow &_window, EntityManager& _entityManager, GuiManager& _guiManager);
+    CharacterManager(sf::RenderWindow &_window, EntityManager& _entityManager, GuiManagerNew& _guiManager);
     ~CharacterManager();
 
     void handleInput(int actionType, bool isPressed, int player);
@@ -14,7 +14,7 @@ public:
 private:
     sf::RenderWindow &window;
     EntityManager& entityManager;
-    GuiManager& guiManager;
+    GuiManagerNew& guiManager;
 };
 
 #endif // CHARACTERMANAGER_H

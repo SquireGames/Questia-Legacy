@@ -39,7 +39,10 @@ enum class ButtonAtrCharacteristic {sprite,
                                     color,
                                     charSize,
                                     text,
-                                    transparency
+                                    transparency,
+                                    size,
+                                    percentage,
+                                    direction
                                    };
 };
 
@@ -64,22 +67,21 @@ struct ButtonText
 struct OverlaySprite
 {
     sf::RectangleShape rectOverlay;
-    //sf::Sprite spriteOverlay;
 
     std::pair <int, int> position;
 
     bool isChanged;
     bool isHoveredOver;
-    //enum OverlayMode {rect, spr};
-    //OverlayMode overlayMode;
 };
 
 struct PercentSprite
 {
     sf::Sprite normalSprite;
+    sf::RectangleShape rectOverlay;
 
     float spritePercentage;
     gui::Direction directionOfGap;
+    sf::IntRect originalTextureRect;
 
     std::pair <int, int> position;
 
@@ -125,13 +127,13 @@ struct Button
     void setButton(gui::ButtonCharacteristic buttonChar, int value);
     void setButton(gui::ButtonCharacteristic buttonChar, std::pair <int, int> value);
 
+    void addButtonAtr (std::string atrName, gui::ButtonAtr buttonAtr);
+
     void setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrChar, std::string value);
     void setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrChar, std::pair<int, int> value);
     void setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrChar, sf::Color color);
     void setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrChar, int value);
     void setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrChar, char value);
-
-    void addButtonAtr (std::string atrName, gui::ButtonAtr buttonAtr);
 
     void update(std::pair <int, int> mouseCoords);
     void drawButton();
