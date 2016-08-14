@@ -17,7 +17,7 @@ TileEngine_Editor::TileEngine_Editor(sf::RenderWindow &_window, std::string mapN
     editTileMap[0] = tileEngine.getMapVector(0);
     editTileMap[1] = tileEngine.getMapVector(1);
 
-    tile_Texture_overlay.loadFromFile("Media/Image/Editor/tile_overlay.png");
+    //tile_Texture_overlay.loadFromFile("Media/Image/Editor/tile_overlay.png");
     tile_Sprite_overlay.setTexture(tile_Texture_overlay);
 }
 

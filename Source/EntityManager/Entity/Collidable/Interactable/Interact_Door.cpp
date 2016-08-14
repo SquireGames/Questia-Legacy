@@ -14,8 +14,8 @@ Interact_Door::Interact_Door (ResourceManager &res, int _ID, int x, int y, int t
         {
         case 1:
         {
-            entitySprite.setTexture(resource.getTexture("Media/Image/Game/Map_1/Door_1a.png"));
-            entitySprite2.setTexture(resource.getTexture("Media/Image/Game/Map_1/Door_1b.png"));
+            entitySprite.setTexture(resource.getTexture("Media/Image/Game/MapEntity/Door/Door_1a.png"));
+            entitySprite2.setTexture(resource.getTexture("Media/Image/Game/MapEntity/Door/Door_1b.png"));
 
             bounds = sf::Vector2f (64, 32);
             break;

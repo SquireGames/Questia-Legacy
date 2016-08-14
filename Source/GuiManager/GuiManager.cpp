@@ -426,12 +426,6 @@ std::string GuiManagerNew::createListEntry()
 
 
 
-
-
-
-
-
-
 //
 //
 //
@@ -450,7 +444,7 @@ GuiManager::GuiManager(sf::RenderWindow &_window,  ResourceManager &res, bool ga
 {
     if(gameOverlay)
     {
-        if(!guiTexture.loadFromFile("Media/Image/Game/Gui/playerGui.png")) {}
+        //if(!guiTexture.loadFromFile("Media/Image/Game/Gui/playerGui.png")) {}
         guiSprite.setTexture(guiTexture);
         guiSprite.setPosition(0,973);
 

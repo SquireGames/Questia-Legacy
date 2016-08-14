@@ -33,10 +33,10 @@ Hostile_Goblin::Hostile_Goblin( ResourceManager &res, EntityManager &entityManag
 
     , entityState(melee)
 {
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Hostile/hostile_goblin.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Goblin/Hostile/hostile_goblin.png"));
     entitySprite.setTextureRect(sf::IntRect(27,0,24,50));
 
-    entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Gui/Health.png"));
+    entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Entity/Shared/Health.png"));
 
     getSaveCharacteristics()["animationStep"] = utl::asString(count_entityStep);
 }

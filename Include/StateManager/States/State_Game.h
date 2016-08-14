@@ -107,6 +107,7 @@ private:
 
     //TEMP
     sf::Sprite alignment;
+    sf::Sprite alignment2;
 
 
 };

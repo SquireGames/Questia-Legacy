@@ -40,7 +40,7 @@ CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _enti
         visibleText[it] = text;
     }
 
-    texture_chatArea.loadFromFile("Media/Image/Game/Gui/ChatBox.png");
+    texture_chatArea.loadFromFile("Media/Image/Gui/Game/ChatBox.png");
     sprite_chatArea.setPosition(POS_CHAT_X, POS_CHAT_Y);
     sprite_chatArea.setTexture(texture_chatArea);
 }
@@ -74,7 +74,7 @@ CommandsManager::CommandsManager(sf::RenderWindow &_window, EntityManager& _enti
         visibleText[it] = text;
     }
 
-    texture_chatArea.loadFromFile("Media/Image/Game/Gui/ChatBox.png");
+    texture_chatArea.loadFromFile("Media/Image/Gui/Game/ChatBox.png");
     sprite_chatArea.setPosition(POS_CHAT_X, POS_CHAT_Y);
     sprite_chatArea.setTexture(texture_chatArea);
 }

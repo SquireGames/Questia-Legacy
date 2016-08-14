@@ -6,7 +6,7 @@ State_MultiplayerSelection::State_MultiplayerSelection(sf::RenderWindow &mWindow
     , guiManager(mWindow, resourceManager)
 {
     ///background
-    aMenuImage.setTexture(resourceManager.getTexture("Media/Image/Menu/aMenu.png"));
+    aMenuImage.setTexture(resourceManager.getTexture("Media/Image/Gui/Menu/aMenu.png"));
 }
 
 State_MultiplayerSelection::~State_MultiplayerSelection()

@@ -24,25 +24,25 @@ State_MapSelector::State_MapSelector(sf::RenderWindow &mWindow):
     , selectedMap(-1)
     , deleteProgress (0)
 {
-    background.setTexture(resourceManager.getTexture("Media/Image/Menu/Options.png"));
+    background.setTexture(resourceManager.getTexture("Media/Image/Gui/Menu/Options.png"));
     mapFiles = Data_Desktop::getInstance().getFiles("Maps", false);
     mapCount = mapFiles.size();
 
-    guiManager.addButton(1, false, 1700, 1000, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Open"), 1760, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager.addButton(2, false, 20, 1000, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Back"), 80, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager.addButton(3, false, 20, 300, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("New Map"), 50, 305,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager.addButton(4, false, 20, 500, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Delete Map"), 40, 505,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager.addButton(1, false, 1700, 1000, std::string("Media/Image/Gui/Menu/Button_Editor.png"), std::string("Open"), 1760, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager.addButton(2, false, 20, 1000, std::string("Media/Image/Gui/Menu/Button_Editor.png"), std::string("Back"), 80, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager.addButton(3, false, 20, 300, std::string("Media/Image/Gui/Menu/Button_Editor.png"), std::string("New Map"), 50, 305,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager.addButton(4, false, 20, 500, std::string("Media/Image/Gui/Menu/Button_Editor.png"), std::string("Delete Map"), 40, 505,1,30, sf::Color::Black, sf::Color(153,153,0,111));
 
     for(int it = 20; it!= mapCount+20; it++)
     {
-        guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
+        guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Gui/Menu/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
     }
 
     selectedMapOverlay.setPosition(-1000,-1000);
     selectedMapOverlay.setSize(sf::Vector2f(1150, 80));
     selectedMapOverlay.setFillColor(sf::Color(192, 192, 192, 100));
 
-    newMapTile.setTexture(resourceManager.getTexture(std::string("Media/Image/Menu/Buttons/Options_Setting.png")));
+    newMapTile.setTexture(resourceManager.getTexture(std::string("Media/Image/Gui/Menu/Options_Setting.png")));
     newMapTile.setPosition(385, 100);
     userImput.setFont(Data_Desktop::getInstance().font1);
     userImput.setPosition(850, 120);
@@ -106,7 +106,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
                 mapCount = mapFiles.size();
                 for(unsigned int it = 20; it!= mapCount+20; it++)
                 {
-                    guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
+                    guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Gui/Menu/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
                 isMakingNewMap = false;
             }
@@ -269,7 +269,7 @@ void State_MapSelector::update(sf::Time elapsedTime)
                 mapCount = mapFiles.size();
                 for(unsigned int it = 20; it!= mapCount+20; it++)
                 {
-                    guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
+                    guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Gui/Menu/Options_Setting2.png"), mapFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
             }
         }

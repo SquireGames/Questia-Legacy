@@ -3,6 +3,10 @@
 #include "EntityManager/Entity/Collidable/Living/Player/Entity_Player.h"
 #include "Utl/Utl.h"
 
+#define PLAYER_WIDTH 43*2
+#define PLAYER_HEIGHT 68*2
+
+
 extern bool isInDebugMode;
 
 Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,
@@ -49,11 +53,14 @@ Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager,
     , wasRunning(false)
     , runningTick(0)
 
-    , animation(res, "Media/Image/Game/Player/Customization/Skin/White.png", 8, 3)
+    , animation(res, "Media/Image/Game/Entity/Player/White.png", 8, 3)
     , colRect()
 {
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Player/Character_Base.png"));
-    entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Gui/Health.png"));
+    animation.setSize(PLAYER_WIDTH, PLAYER_HEIGHT);
+    animation.setOrigin(0.25 * PLAYER_WIDTH, 0.25 * PLAYER_HEIGHT);
+
+    //entitySprite.setTexture(res.getTexture("Media/Image/Game/Player/Character_Base.png"));
+    entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Entity/Shared/Health.png"));
 
     lightID = lightManager.create_lightSource(coordinates, 20, 4, sf::Vector2f(200,200));
 
@@ -68,10 +75,9 @@ Entity_Player::~Entity_Player()
 
 void Entity_Player::drawEntity(sf::RenderWindow &window)
 {
-    animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x-((float)animation.getSheetWidth()/2.f), coordinates.y-((float)animation.getSheetHeight()/2.f)-12.5f);
-    //std::cout << "width: " << animation.getSheetWidth() << std::endl;
-    //std::cout << "height: " << animation.getSheetHeight() << std::endl;
-    //std::cout << "----------------------" << std::endl;
+    animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x, coordinates.y);
+    std::cout << coordinates.x << ", " << coordinates.y << std::endl;
+
     window.draw(animation.getSprite(animationDirection-1, animationStep-1));
 
     if(isInDebugMode)

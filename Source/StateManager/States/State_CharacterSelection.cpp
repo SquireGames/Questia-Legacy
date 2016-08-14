@@ -28,26 +28,26 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
 
     , save_location()
 {
-    background.setTexture(resourceManager.getTexture("Media/Image/Menu/Options.png"));
+    background.setTexture(resourceManager.getTexture("Media/Image/Gui/Menu/Options.png"));
 
     characterFiles = Data_Desktop::getInstance().getFiles("Saves/Characters", false);
     characterCount = characterFiles.size();
 
-    guiManager.addButton(1, false, 1700, 1000, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Play"), 1760, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager.addButton(2, false, 20, 1000, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Back"), 80, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager.addButton(3, false, 20, 300, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("New Character"), 30, 308,1,25, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager.addButton(4, false, 20, 500, std::string("Media/Image/Menu/Buttons/Button_Editor.png"), std::string("Delete Character"), 30, 508,1,25, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager.addButton(1, false, 1700, 1000, std::string("Media/Image/Gui/Menu/Button_Editor.png"), std::string("Play"), 1760, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager.addButton(2, false, 20, 1000, std::string("Media/Image/Gui/Menu/Button_Editor.png"), std::string("Back"), 80, 1005,1,30, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager.addButton(3, false, 20, 300, std::string("Media/Image/Gui/Menu/Button_Editor.png"), std::string("New Character"), 30, 308,1,25, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager.addButton(4, false, 20, 500, std::string("Media/Image/Gui/Menu/Button_Editor.png"), std::string("Delete Character"), 30, 508,1,25, sf::Color::Black, sf::Color(153,153,0,111));
 
     for(int it = 20; it != characterCount + 20; it++)
     {
-        guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
+        guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Gui/Menu/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
     }
 
     selectedCharacterOverlay.setPosition(-1000,-1000);
     selectedCharacterOverlay.setSize(sf::Vector2f(1150, 80));
     selectedCharacterOverlay.setFillColor(sf::Color(192, 192, 192, 100));
 
-    newCharacterTile.setTexture(resourceManager.getTexture(std::string("Media/Image/Menu/Buttons/Options_Setting.png")));
+    newCharacterTile.setTexture(resourceManager.getTexture(std::string("Media/Image/Gui/Menu/Options_Setting.png")));
     newCharacterTile.setPosition(385, 100);
     userImput.setFont(Data_Desktop::getInstance().font1);
     userImput.setPosition(850, 120);
@@ -63,14 +63,14 @@ State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
     questions[2] = std::string("Customization:");
 
     // Class selection
-    guiManager_options.addButton(1, true, 215,  140, std::string("Media/Image/Menu/Classes/Knight.png"), classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description), 230,  660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager_options.addButton(2, true, 735,  140, std::string("Media/Image/Menu/Classes/Ranger.png"), classManager.returnCharacterInformation(Character::ClassType::ranger, Character::InformationType::description), 750,  660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
-    guiManager_options.addButton(3, true, 1255, 140, std::string("Media/Image/Menu/Classes/Mage.png")  , classManager.returnCharacterInformation(Character::ClassType::mage,   Character::InformationType::description), 1270, 660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager_options.addButton(1, true, 215,  140, std::string("Media_3/Image/Menu/Classes/Knight.png"), classManager.returnCharacterInformation(Character::ClassType::knight, Character::InformationType::description), 230,  660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager_options.addButton(2, true, 735,  140, std::string("Media_3/Image/Menu/Classes/Ranger.png"), classManager.returnCharacterInformation(Character::ClassType::ranger, Character::InformationType::description), 750,  660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
+    guiManager_options.addButton(3, true, 1255, 140, std::string("Media_3/Image/Menu/Classes/Mage.png")  , classManager.returnCharacterInformation(Character::ClassType::mage,   Character::InformationType::description), 1270, 660, 1, 25, sf::Color::Black, sf::Color(153,153,0,111));
 
     // Character customization
-    hairTypes = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Hair", true);
-    eyeTypes  = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Eyes", true);
-    skinTypes = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Skin", true);
+    //hairTypes = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Hair", true);
+    //eyeTypes  = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Eyes", true);
+    //skinTypes = Data_Desktop::getInstance().getFiles("Media/Image/Game/Player/Customization/Skin", true);
 }
 
 State_CharacterSelection::~State_CharacterSelection()
@@ -122,7 +122,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                 characterCount = characterFiles.size();
                 for(unsigned int it = 20; it!= characterCount+20; it++)
                 {
-                    guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
+                    guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Gui/Menu/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
                 isMakingNewCharacter = false;
             }
@@ -320,7 +320,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
                     characterCount = characterFiles.size();
                     for(unsigned int it = 20; it!= characterCount+20; it++)
                     {
-                        guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
+                        guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Gui/Menu/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                     }
                 }
             }
@@ -343,7 +343,7 @@ void State_CharacterSelection::update(sf::Time elapsedTime)
             {
                 for(unsigned int it = 20; it!= characterCount+20; it++)
                 {
-                    guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Menu/Buttons/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
+                    guiManager.addButton(it, false, 385, 100 + (OPTION_SPACING * (it - 20)), std::string("Media/Image/Gui/Menu/Options_Setting2.png"), characterFiles[it-20], 500, 120 + (OPTION_SPACING * (it - 20)) ,1,35, sf::Color::Black, sf::Color(237,210,103,100));
                 }
                 isMakingNewCharacter = false;
                 options.clear();

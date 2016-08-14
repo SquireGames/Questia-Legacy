@@ -23,7 +23,7 @@ Attack_Slash::Attack_Slash( ResourceManager &res, int _attackID,int _attackerID,
 {
     angle = fixAngle(angle);
 
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Attacks/Melee/sword_club.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Items/Weapons/Shared/Sword/Club/sword_club.png"));
     entitySprite.setTextureRect(sf::IntRect(0, 35, 7, -35));
     entitySprite.setOrigin(3.5,0); //set the origin to the middle of the attack
     entitySprite.setRotation(angle - 180);

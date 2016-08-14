@@ -14,7 +14,7 @@ Interact_Roof::Interact_Roof(ResourceManager &res, int _ID, int x, int y, int ty
         {
         case 1:
         {
-            entitySprite.setTexture(resource.getTexture("Media/Image/Game/Map_1/Roof.png"));
+            entitySprite.setTexture(resource.getTexture("Media/Image/Game/MapEntity/Roof/Roof.png"));
             bounds = sf::Vector2f (320, 288);
             break;
         }

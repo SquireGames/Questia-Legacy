@@ -17,7 +17,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     window(mWindow)
     //managers
     , resourceManager()
-    , timeManager(4,0)
+    , timeManager(0,0)
     , lightManager(mWindow, timeManager, resourceManager)
     , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager)
@@ -182,7 +182,10 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     lightManager.create_lightSource(sf::Vector2f(23*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
     lightManager.create_lightSource(sf::Vector2f(30*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
 
-    alignment.setTexture(resourceManager.getTexture("Media/Image/Alignment.png"));
+    alignment.setTexture(resourceManager.getTexture("Media/Image/Gui/Game/Alignment.png"));
+    alignment2.setTexture(resourceManager.getTexture("Media/Image/Gui/Game/Alignment.png"));
+
+    alignment2.setOrigin(1920/2, 1080/2);
 
     itemManager.spawnItem("item:test", ItemUsage::ground, 64, 64);
 
@@ -309,8 +312,8 @@ void State_Game::update(sf::Time elapsedTime)
         angle = angle * 180 / 3.14159265;
 
         //Coordinates
-        player_MapCoordinates.x = (int)entityManager.getPlayerCoordinates().x/32 + 1;
-        player_MapCoordinates.y = (int)entityManager.getPlayerCoordinates().y/32 + 1;
+        player_MapCoordinates.x = (int)entityManager.getPlayerCoordinates().x/64;
+        player_MapCoordinates.y = (int)entityManager.getPlayerCoordinates().y/64;
         tempCoords_x = player_MapCoordinates.x-1;
         tempCoords_y = player_MapCoordinates.y-1;
 
@@ -374,12 +377,12 @@ void State_Game::displayTextures()
     itemManager.drawItems();
     entityManager.drawEntity();
     lightManager.drawLighting_2();
+    window.draw(alignment2);
 
     window.setView(overlayView);
     commandsManager.drawCommandArea();
 
     guiManager.drawButtons();
-
     window.draw(alignment);
 }
 

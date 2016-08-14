@@ -180,13 +180,14 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     lightManager.create_lightSource(sf::Vector2f(23*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
     lightManager.create_lightSource(sf::Vector2f(30*32 + 12,26*32), 100, 3, sf::Vector2f(200,200));
 
-    alignment.setTexture(resourceManager.getTexture("Media/Image/Alignment.png"));
+    //alignment.setTexture(resourceManager.getTexture("Media/Image/Alignment.png"));
 
     itemManager.spawnItem("item:test", ItemUsage::ground, 64, 64);
 
     newGuiManager.setFont(Data_Desktop::getInstance().font1);
 
     //{ gui pause buttons
+    /*
     ///pause button template
     newGuiManager.createButtonTemplate("pauseTemplate");
     //sprite
@@ -225,6 +226,7 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     newGuiManager.addToGroup("mainMenu");
     newGuiManager.addToGroup("exitGame");
     newGuiManager.setGroupAtr(gui::ButtonCharacteristic::isVisible, false);
+    */
     //}
 }
 

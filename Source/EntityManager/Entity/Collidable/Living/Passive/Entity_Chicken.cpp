@@ -27,16 +27,16 @@ Entity_Chicken::Entity_Chicken( ResourceManager& res, EntityManager& entityManag
 
     , res(res)
 {
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_N.png"));
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_NE.png"));
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_NW.png"));
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_W.png"));
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_E.png"));
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_S.png"));
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_SW.png"));
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_SE.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_N.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_NE.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_NW.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_W.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_E.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_S.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_SW.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_SE.png"));
 
-    entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Gui/Health.png"));
+    entitySprite_HP.setTexture(res.getTexture("Media/Image/Game/Entity/Shared/Health.png"));
 }
 
 sf::Vector2f Entity_Chicken::getSideRadius()
@@ -158,20 +158,20 @@ void Entity_Chicken::update(int effect, int (&returnCollision)[4])
     {
         if(!mIsMovingLeft && !mIsMovingRight)
         {
-            entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_N.png"));
+            entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_N.png"));
 
         }
         else
         {
             if(mIsMovingLeft)
             {
-                entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_NW.png"));
+                entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_NW.png"));
 
             }
             else if (mIsMovingRight)
             {
 
-                entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_NE.png"));
+                entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_NE.png"));
 
             }
         }
@@ -181,20 +181,20 @@ void Entity_Chicken::update(int effect, int (&returnCollision)[4])
         if(!mIsMovingLeft&&!mIsMovingRight)
         {
 
-            entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_S.png"));
+            entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_S.png"));
 
         }
         else
         {
             if(mIsMovingLeft)
             {
-                entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_SW.png"));
+                entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_SW.png"));
 
             }
             else if (mIsMovingRight)
             {
 
-                entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_SE.png"));
+                entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_SE.png"));
             }
         }
     }
@@ -202,12 +202,12 @@ void Entity_Chicken::update(int effect, int (&returnCollision)[4])
     {
         if(mIsMovingLeft)
         {
-            entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_W.png"));
+            entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_W.png"));
 
         }
         else if (mIsMovingRight)
         {
-            entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Passive/Chicken/Chicken_E.png"));
+            entitySprite.setTexture(res.getTexture("Media/Image/Game/Entity/Livestock/Chicken/Chicken_E.png"));
 
         }
     }

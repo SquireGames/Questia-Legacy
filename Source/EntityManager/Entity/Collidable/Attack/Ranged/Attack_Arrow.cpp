@@ -23,7 +23,7 @@ Attack_Arrow::Attack_Arrow( ResourceManager &res, EntityManager &entityManager, 
 {
     angle = fixAngle(angle);
 
-    entitySprite.setTexture(res.getTexture("Media/Image/Game/Attacks/Ranged/Arrow.png"));
+    entitySprite.setTexture(res.getTexture("Media/Image/Game/Items/Weapons/Shared/Arrow/Basic/Arrow.png"));
     entitySprite.setOrigin(2,10); //set the origin to the middle of the attack
     entitySprite.setRotation(angle);
 

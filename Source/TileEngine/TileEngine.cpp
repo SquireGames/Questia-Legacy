@@ -45,13 +45,13 @@ void TileEngine::local_loadMap(std::string mapName, int layer, bool isLimitingTe
         std::vector <std::vector <sf::Vector2i> > tileVector;
         std::vector<sf::Vector2i> tempMap;
 
-        std::vector<std::string> tilesIndexName = Data_Desktop::getInstance().getFiles("Media/Tiles/", false);
+        std::vector<std::string> tilesIndexName = Data_Desktop::getInstance().getFiles("Media/Image/Game/Tiles", false);
         for(std::string& tileIndexSt : tilesIndexName)
         {
             std::map<int, sf::Sprite> tileID;
             std::stringstream ss;
             std::string tileIDDir;
-            ss << "Media/Tiles/" << tileIndexSt;
+            ss << "Media/Image/Game/Tiles/" << tileIndexSt;
             ss >> tileIDDir;
             std::vector<std::string> tilesIDName = Data_Desktop::getInstance().getFiles(tileIDDir , false);
 
@@ -62,11 +62,11 @@ void TileEngine::local_loadMap(std::string mapName, int layer, bool isLimitingTe
                     ss.clear();
                     if(tileIndexSt.length() < 2)
                     {
-                        ss << "Media/Tiles/0" << tileIndexSt;
+                        ss << "Media/Image/Game/Tiles/0" << tileIndexSt;
                     }
                     else
                     {
-                        ss << "Media/Tiles/" << tileIndexSt;
+                        ss << "Media/Image/Game/Tiles/" << tileIndexSt;
                     }
 
                     if(std::atoi(tileIDSt.c_str()) < 10)
@@ -136,7 +136,7 @@ void TileEngine::local_loadMap(std::string mapName, int layer, bool isLimitingTe
                                 if(command == "texture:")
                                 {
                                     std::string textureLocation;
-                                    ss2 << "Media/Tiles/" << var << "/" << var2 << ".png";
+                                    ss2 << "Media/Image/Game/Tiles/" << var << "/" << var2 << ".png";
                                     ss2 >> textureLocation;
                                     std::cout<< textureLocation <<std::endl;
                                     tileSpriteCopy.setTexture(resourceManager.getTexture(textureLocation));
@@ -217,6 +217,14 @@ void TileEngine::local_loadMap(std::string mapName, int layer, bool isLimitingTe
 
         tileMap[layer] = tileVector;
     }
+
+    for(auto& it1 : tileIndex)
+    {
+        for(auto& it2 : it1.second)
+        {
+            it2.second.scale(2,2);
+        }
+    }
 }
 
 void TileEngine::loadMap(std::string mapName, bool isLimitingTextures)//, SpawnManager& spawnManager)
@@ -259,9 +267,9 @@ void TileEngine::drawMap(sf::Vector2f coordinates)
 
     for(unsigned int it = 0; it != layers; it++)
     {
-        for (float x =(coordinates.y-13); x < (coordinates.y+10); x++)
+        for (float x =(coordinates.y-13); x < (coordinates.y+6); x++)
         {
-            for (float y =(coordinates.x-20); y < (coordinates.x+18); y++)
+            for (float y =(coordinates.x-20); y < (coordinates.x+20); y++)
             {
                 if (x>-1 && y > -1 && x < mapHeight && y < mapWidth)
                 {
@@ -275,14 +283,14 @@ void TileEngine::drawMap(sf::Vector2f coordinates)
 void TileEngine::loadTiles(float x, float y, int index, int id)
 {
     sf::Sprite& sprite = tileIndex[index][id];
-    sprite.setPosition(y * 32.f, x * 32.f);
+    sprite.setPosition(y * 64.f, x * 64.f);
     window.draw(sprite);
 }
 
 void TileEngine::loadTiles(float x, float y, int index, int id, int transparency)
 {
     sf::Sprite& sprite = tileIndex[index][id];
-    sprite.setPosition(y * 32.f, x * 32.f);
+    sprite.setPosition(y * 64.f, x * 64.f);
     sf::Color tempColor = sprite.getColor();
     sprite.setColor(sf::Color(0,0,0,transparency));
     window.draw(sprite);

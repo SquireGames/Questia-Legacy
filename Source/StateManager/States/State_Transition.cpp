@@ -19,7 +19,7 @@ State_Transition::State_Transition(sf::RenderWindow &mWindow, int stateID):
 {
     std::cout<<"DEBUG: Transition Initialized"<<std::endl;
 
-    if(!aLoadingTexture.loadFromFile("Media/Image/BasicLoading.png")) {}
+    if(!aLoadingTexture.loadFromFile("Media/Image/Gui/Menu/BasicLoading.png")) {}
     aLoadingImage.setTexture(aLoadingTexture);
     aLoadingImage.setPosition(0.f,0.f);
 
