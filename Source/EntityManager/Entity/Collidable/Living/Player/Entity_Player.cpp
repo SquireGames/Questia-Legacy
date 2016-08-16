@@ -76,7 +76,7 @@ Entity_Player::~Entity_Player()
 void Entity_Player::drawEntity(sf::RenderWindow &window)
 {
     animation.getSprite(animationDirection-1, animationStep-1).setPosition(coordinates.x, coordinates.y);
-    std::cout << coordinates.x << ", " << coordinates.y << std::endl;
+    //std::cout << coordinates.x << ", " << coordinates.y << std::endl;
 
     window.draw(animation.getSprite(animationDirection-1, animationStep-1));
 

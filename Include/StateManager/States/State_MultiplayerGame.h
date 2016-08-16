@@ -46,7 +46,7 @@ private:
     sf::RenderWindow& window;
 
     ResourceManager resourceManager;
-    TileEngine tileEngine;
+    //TileEngine tileEngine;
     EntityManager entityManager;
     GuiManager guiManager;
     GuiManagerNew newGuiManager;

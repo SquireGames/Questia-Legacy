@@ -7,25 +7,38 @@
 
 namespace utl
 {
-    enum Direction {none = 0, up = 1, upRight = 2, right = 3, downRight = 4, down = 5, downLeft = 6, left = 7, upLeft = 8};
+enum Direction {none = 0, up = 1, upRight = 2, right = 3, downRight = 4, down = 5, downLeft = 6, left = 7, upLeft = 8};
 
-    int asInt(const std::string& _string);
-    float asFloat(const std::string& _string);
+int asInt(const std::string& _string);
+float asFloat(const std::string& _string);
 
-    bool isNumber(const std::string& _string);
+bool isNumber(const std::string& _string);
 
-    std::vector <std::string> separateString (std::string saveString, char delimiter);
-    std::string conjoinString (std::vector <std::string> stringParts, char delimiter);
-    std::string conjoinString (std::vector <std::string> stringParts);
+std::vector <std::string> separateString (std::string saveString, char delimiter);
+std::string conjoinString (std::vector <std::string> stringParts, char delimiter);
+std::string conjoinString (std::vector <std::string> stringParts);
 
-    template <class T>
-    std::string asString (T _item)
-    {
-        std::stringstream ss;
-        ss << _item;
-        std::string item = ss.str();
-        return item;
-    }
+template <class T>
+std::string asString (T _item)
+{
+    std::stringstream ss;
+    ss << _item;
+    std::string item = ss.str();
+    return item;
+}
+
+struct Vector2i
+{
+    Vector2i() : x(0), y(0) {}
+    Vector2i(int _x, int _y): x(_x), y(_y) {}
+    int x, y;
+};
+struct Vector2ui
+{
+    Vector2ui() : x(0), y(0) {}
+    Vector2ui(unsigned int _x, unsigned int _y): x(_x), y(_y) {}
+    unsigned int x, y;
+};
 }
 
 #endif // UTL_H

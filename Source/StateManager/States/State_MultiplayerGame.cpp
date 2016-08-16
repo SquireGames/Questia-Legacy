@@ -20,7 +20,7 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     , resourceManager()
     , timeManager(4,0)
     , lightManager(mWindow, timeManager, resourceManager)
-    , tileEngine (mWindow, resourceManager)
+   // , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager, true)
     , newGuiManager(mWindow, resourceManager)
     , entityManager (EntityManager::ManagerType::multiplayer, mWindow, resourceManager, lightManager)
@@ -134,7 +134,7 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
 
     ///loading the map
-    tileEngine.loadMap("Tutorial_1", true);
+    //tileEngine.loadMap("Tutorial_1", true);
     /*
     if(save_spawn.readFile())
     {
@@ -389,7 +389,7 @@ void State_MultiplayerGame::update(sf::Time elapsedTime)
         playerAngle = angle;
     }
 
-    entityManager.update(tileEngine, player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
+    //entityManager.update(tileEngine, player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
     spawnManager.checkSpawns();
     multiplayerManager.sendData(entityManager);
     multiplayerManager.update();
@@ -425,7 +425,7 @@ void State_MultiplayerGame::update(sf::Time elapsedTime)
 void State_MultiplayerGame::displayTextures()
 {
     window.setView(gameView);
-    tileEngine.drawMap(player_MapCoordinates);
+   // tileEngine.drawMap(player_MapCoordinates);
     lightManager.drawLighting_1();
     itemManager.drawItems();
     entityManager.drawEntity();

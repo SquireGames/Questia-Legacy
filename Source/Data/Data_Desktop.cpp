@@ -109,10 +109,6 @@ void Data_Desktop::loadOptions()
         save_options.writeFile();
     }
 
-    save_options.addComment("window mode", "0 - fullscreen, 1 - windowed");
-    save_options.addComment("FPS cap", "0 - V-Sync, 1+ - FPS max");
-    save_options.addComment("music volume", "percent");
-    save_options.addComment("font", "0 - default.ttf, 1+ - in game fonts");
 
     keyMap[0] = getConvertedKey(save_options.getItem("key_moveUp").at(0));
     keyMap[1] = getConvertedKey(save_options.getItem("key_moveDown").at(0));

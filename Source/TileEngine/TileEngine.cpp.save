@@ -15,15 +15,7 @@ TileEngineNew::TileEngineNew(sf::RenderWindow &_window, ResourceManager& _resour
 {
     tileStorage.emplace(std::make_pair(1,1), Tile(window, resourceManager));
     tileStorage.at(std::make_pair(1,1)).setTexture("Media/Image/Game/Tiles/01/01.png");
-    tileStorage.at(std::make_pair(1,1)).setSize(1,1);
-
-    tileStorage.emplace(std::make_pair(4,21), Tile(window, resourceManager));
-    tileStorage.at(std::make_pair(4,21)).setTexture("Media/Image/Game/Tiles/04/21.png");
-    tileStorage.at(std::make_pair(4,21)).setSize(1,1);
-
-    tileStorage.emplace(std::make_pair(75,1), Tile(window, resourceManager));
-    tileStorage.at(std::make_pair(75,1)).setTexture("Media/Image/Game/Tiles/75/01.png");
-    tileStorage.at(std::make_pair(75,1)).setSize(1,1);
+    //tileStorage.at(std::make_pair(1,1)).setSize(1,1);
 }
 
 TileEngineNew::~TileEngineNew()
@@ -42,33 +34,26 @@ void TileEngineNew::loadMap(std::string mapName)
     maxTileSize_x = 1;
 
     tileMap.resize(totalTiles);
-    std::fill(tileMap.begin(), tileMap.end(), utl::Vector2ui(0,0));
 
-    tileMap[getTile(0,0,0)] = {1,1};
-    tileMap[getTile(1,0,0)] = {1,1};
-    tileMap[getTile(2,0,0)] = {1,1};
-    tileMap[getTile(0,1,0)] = {4,21};
-
-    tileMap[getTile(0,1,1)] = {75,1};
-    tileMap[getTile(0,0,1)] = {75,1};
+    tileMap[getTile(1,1,0)] = {1,1};
 }
 
 void TileEngineNew::drawMap()
 {
     //find boundaries
-    int drawMin_x = (cameraPosition.x / 64.f) - (0.5 * tileFit_x);
-    int drawMin_y = (cameraPosition.y / 64.f) - (0.5 * tileFit_y);
-    int drawMax_x = (cameraPosition.x / 64.f) + (0.5 * tileFit_x);
-    int drawMax_y = (cameraPosition.y / 64.f) + (0.5 * tileFit_y);
+    int drawMin_x = (cameraPosition.x / 64) - (0.5 * tileFit_x);
+    int drawMin_y = (cameraPosition.y / 64) - (0.5 * tileFit_y);
+    int drawMax_x = (cameraPosition.x / 64) + (0.5 * tileFit_x);
+    int drawMax_y = (cameraPosition.y / 64) + (0.5 * tileFit_y);
 
     //make sure they are within the map
     if(drawMin_x < 0)
     {
-        drawMin_x = 0;
+        drawMax_x = 0;
     }
     if(drawMin_y < 0)
     {
-        drawMin_y = 0;
+        drawMax_y = 0;
     }
     if(drawMax_x > (mapWidth-1))
     {
@@ -79,20 +64,12 @@ void TileEngineNew::drawMap()
         drawMax_y = (mapHeight-1);
     }
 
-    /*
-    std::cout << "drawMin_x = " << drawMin_x << std::endl;
-    std::cout << "drawMax_x = " << drawMax_x << std::endl;
-    std::cout << "drawMin_y = " << drawMin_y << std::endl;
-    std::cout << "drawMax_y = " << drawMax_y << std::endl;
-    std::cout << "tileFit_x = " << tileFit_x << std::endl;
-    */
-
-    //iterate map
-    for(int layerIt = 0; layerIt != mapLayers; layerIt++)
+    //draw the map
+    for(int tileIt_x = drawMin_x; tileIt_x != drawMax_x; tileIt_x++)
     {
-        for(int tileIt_x = drawMin_x; tileIt_x <= drawMax_x; tileIt_x++)
+        for(int tileIt_y = drawMin_y; tileIt_y != drawMax_x; tileIt_y++)
         {
-            for(int tileIt_y = drawMin_y; tileIt_y <= drawMax_y; tileIt_y++)
+            for(int layerIt = 0; layerIt != mapLayers; layerIt++)
             {
                 //get tile index and id
                 const utl::Vector2ui& currentTileIndex = tileMap[getTile(tileIt_x, tileIt_y, layerIt)];
@@ -101,7 +78,7 @@ void TileEngineNew::drawMap()
                 if(currentTileIndex.x != 0)
                 {
                     //get actual tile
-                    Tile& currentTile = tileStorage.at(std::make_pair(currentTileIndex.x, currentTileIndex.y));
+                    Tile& currentTile = tileStorage.at(std::make_pair(1, 1));
 
                     //move to correct position and draw
                     currentTile.setPosition(tileIt_x, tileIt_y);

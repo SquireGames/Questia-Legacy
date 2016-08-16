@@ -48,8 +48,6 @@ public:
         addItem(itemName, item);
     }
 
-    void addComment(std::string item, std::string _comment); // only works on saveItems, wont save on reload
-
     std::vector<std::string> getItemList()
     {
         std::vector<std::string> itemList;

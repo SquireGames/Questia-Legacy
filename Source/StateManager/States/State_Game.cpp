@@ -27,6 +27,8 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , itemManager(mWindow, resourceManager)
     , commandsManager(mWindow, entityManager, timeManager)
 
+    , tileEngineNew(window, resourceManager)
+
     //character info
     , player_Velocity(1,1)
     , player_MapCoordinates(0,0)
@@ -191,6 +193,9 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
     ///font
     guiManager.setFont(Data_Desktop::getInstance().font1);
+
+    ///NEW TILE ENGINE
+    tileEngineNew.loadMap("TEST");
 }
 
 State_Game::~State_Game()
@@ -372,7 +377,10 @@ void State_Game::update(sf::Time elapsedTime)
 void State_Game::displayTextures()
 {
     window.setView(gameView);
-    tileEngine.drawMap(player_MapCoordinates);
+    //tileEngine.drawMap(player_MapCoordinates);
+    tileEngineNew.drawMap();
+
+
     lightManager.drawLighting_1();
     itemManager.drawItems();
     entityManager.drawEntity();

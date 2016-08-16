@@ -115,11 +115,3 @@ std::string SaveFile::getItem(std::string itemName)
     }
     return std::string("nil");
 }
-
-void SaveFile::addComment(std::string item, std::string _comment)
-{
-    sStream << ':' << '(' << _comment << ')';
-    commentList[item] = sStream.str();
-    sStream.str(std::string());
-    sStream.clear();
-}

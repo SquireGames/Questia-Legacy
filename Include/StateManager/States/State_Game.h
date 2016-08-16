@@ -62,6 +62,8 @@ private:
     LightManager lightManager;
     TimeManager timeManager;
 
+    TileEngineNew tileEngineNew;
+
     int tempCoords_x, tempCoords_y;
     float playerAngle;
 

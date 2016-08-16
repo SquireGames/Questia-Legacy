@@ -61,7 +61,7 @@ public:
         switch(tileType)
         {
         case TileType::sprite:
-            tileSprite.setPosition(x * 64, y * 64);
+            tileSprite.setPosition(64 * x, 64 * y);
             break;
         case TileType::animation:
             break;
@@ -72,7 +72,7 @@ public:
         switch(tileType)
         {
         case TileType::sprite:
-            tileSprite.setScale(64.f / tileSprite.getLocalBounds().width * tilesWidth, 64 / tileSprite.getLocalBounds().height * tilesHeight);
+            tileSprite.setScale(tile64 * tilesWidth, 64 * tilesHeight);
             break;
         case TileType::animation:
             break;
@@ -145,7 +145,7 @@ protected:
     const unsigned int tileFit_y = (1080.f / 64.f) + 2; // +2 for transitioning tiles
 
     ///data
-    utl::Vector2i cameraPosition {utl::Vector2i(0,0)};
+    utl::Vector2i cameraPosition;
 
 
     ///helpers
