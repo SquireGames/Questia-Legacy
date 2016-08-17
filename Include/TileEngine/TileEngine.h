@@ -12,105 +12,9 @@
 #include "Utl.h"
 #include "SpriteSheet.h"
 
-///not stored in actual map but moved and drawn to screen
-class Tile
-{
-public:
-    Tile(sf::RenderWindow& _window, ResourceManager& _resourceManager):
-        window(_window)
-        , resourceManager(_resourceManager)
-    {
+#include "SaveFile_TileEngine.h"
 
-    }
-    ~Tile()
-    {
-
-    }
-
-    //tile animated or static
-    enum class TileType {sprite, animation};
-    TileType tileType = TileType::sprite;
-
-    //draws tile
-    void drawTile()
-    {
-        switch(tileType)
-        {
-        case TileType::sprite:
-            window.draw(tileSprite);
-            break;
-        case TileType::animation:
-            break;
-        }
-    }
-
-    //tile init
-    void setTexture(std::string filePath)
-    {
-        switch(tileType)
-        {
-        case TileType::sprite:
-            tileSprite.setTexture(resourceManager.getTexture(filePath));
-            break;
-        case TileType::animation:
-            break;
-        }
-    }
-    void setPosition(int x, int y)
-    {
-        switch(tileType)
-        {
-        case TileType::sprite:
-            tileSprite.setPosition(x * 64, y * 64);
-            break;
-        case TileType::animation:
-            break;
-        }
-    }
-    void setSize(unsigned int tilesWidth, unsigned int tilesHeight)
-    {
-        switch(tileType)
-        {
-        case TileType::sprite:
-            tileSprite.setScale(64.f / tileSprite.getLocalBounds().width * tilesWidth, 64 / tileSprite.getLocalBounds().height * tilesHeight);
-            break;
-        case TileType::animation:
-            break;
-        }
-    }
-    void setRotate(unsigned int degrees)
-    {
-        switch(tileType)
-        {
-        case TileType::sprite:
-            break;
-        case TileType::animation:
-            break;
-        }
-    }
-    void setFlip(utl::Direction direction)
-    {
-        switch(tileType)
-        {
-        case TileType::sprite:
-            break;
-        case TileType::animation:
-            break;
-        }
-    }
-
-    //vars for saving
-    int index = -1, id = -1;
-
-private:
-    //possible types to render
-    sf::Sprite tileSprite;
-    //SpriteSheetNew tileSpriteSheet;
-
-    //default
-    sf::RenderWindow& window;
-    ResourceManager& resourceManager;
-};
+#include "Tile.h"
 
 class TileEngineNew
 {
@@ -120,13 +24,19 @@ public:
     ~TileEngineNew();
 
     //loads map
-    void loadMap(std::string mapName);
+    void loadMap(std::string _mapName);
 
     //draws map
     void drawMap();
 
     //set tiles drawn from player position
     void setPosition(int x, int y);
+
+    ///temp editor
+    void createMap()
+    {
+        saveFile.createMap("TEST", 4, 4, 2);
+    }
 
 protected:
     ///map
@@ -138,7 +48,7 @@ protected:
     //stores map dimensions
     unsigned int mapWidth = 0, mapHeight = 0, mapLayers = 0;
     //largest tile in map for tile culling
-    unsigned int maxTileSize_x = 1, mapTileSize_y = 1;
+    unsigned int maxTileSize_x = 1, maxTileSize_y = 1;
 
     //tiles fit on screen
     const unsigned int tileFit_x = (1920.f / 64.f) + 2; // +2 for transitioning tiles
@@ -146,7 +56,8 @@ protected:
 
     ///data
     utl::Vector2i cameraPosition {utl::Vector2i(0,0)};
-
+    SaveFile_TileEngine saveFile;
+    std::string mapName = "nil";
 
     ///helpers
     //for map
@@ -164,6 +75,11 @@ class TileEngineNew_Editor : public TileEngineNew
     //ctor
     TileEngineNew_Editor(sf::RenderWindow& _window, ResourceManager& _resourceManager): TileEngineNew(_window, _resourceManager) {}
 };
+
+
+
+
+
 
 
 

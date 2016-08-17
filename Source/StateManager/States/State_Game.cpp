@@ -21,6 +21,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     , lightManager(mWindow, timeManager, resourceManager)
     , tileEngine (mWindow, resourceManager)
     , guiManager(mWindow, resourceManager)
+    , guiLoader()
     , entityManager (EntityManager::ManagerType::singleplayer, mWindow, resourceManager, lightManager)
     , spawnManager (true, entityManager)
     , characterManager(mWindow, entityManager, guiManager)
@@ -195,6 +196,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     guiManager.setFont(Data_Desktop::getInstance().font1);
 
     ///NEW TILE ENGINE
+    tileEngineNew.createMap();
     tileEngineNew.loadMap("TEST");
 }
 
@@ -341,13 +343,6 @@ void State_Game::update(sf::Time elapsedTime)
     gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
 
-    /* Gui */
-    //guiManager.addStats(std::string("FPS: "), Data_Desktop::getInstance().get_FPS());
-    //guiManager.addStats(std::string("Coordinates: "), tempCoords_x, std::string(" , "), tempCoords_y);
-    //guiManager.addStats(std::string("Entities: "), entityManager.getEntityCount());
-    //guiManager.addStats(std::string("Hour  : "), (int) timeManager.getHour());
-    //guiManager.addStats(std::string("Minute: "), (int) timeManager.getMinute());
-    //guiManager.addStats(std::string("Time: "), (float) timeManager.getDecimalTime());
 
     int HP, MP, ST;
     int maxHP, maxMP, maxST;
@@ -357,9 +352,13 @@ void State_Game::update(sf::Time elapsedTime)
     MPP = (float)MP * 100/(float)maxMP;
     STP = (float)ST * 100/(float)maxST;
 
+    ///gui
+    //game
     guiManager.setButtonAtr("hpBar", "percent", gui::ButtonAtrCharacteristic::percentage, HPP);
     guiManager.setButtonAtr("mpBar", "percent", gui::ButtonAtrCharacteristic::percentage, MPP);
     guiManager.setButtonAtr("stBar", "percent", gui::ButtonAtrCharacteristic::percentage, STP);
+    //debug
+    guiManager.setButtonAtr("fpsText", "text", gui::ButtonAtrCharacteristic::text, utl::asString(Data_Desktop::getInstance().get_FPS()));
 
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
@@ -379,7 +378,6 @@ void State_Game::displayTextures()
     window.setView(gameView);
     //tileEngine.drawMap(player_MapCoordinates);
     tileEngineNew.drawMap();
-
 
     lightManager.drawLighting_1();
     itemManager.drawItems();

@@ -9,10 +9,11 @@
 
 #include "TileEngine/TileEngine.h"
 
-TileEngineNew::TileEngineNew(sf::RenderWindow &_window, ResourceManager& _resourceManager):
+TileEngineNew::TileEngineNew(sf::RenderWindow& _window, ResourceManager& _resourceManager):
     resourceManager(_resourceManager)
     , window(_window)
 {
+    /*
     tileStorage.emplace(std::make_pair(1,1), Tile(window, resourceManager));
     tileStorage.at(std::make_pair(1,1)).setTexture("Media/Image/Game/Tiles/01/01.png");
     tileStorage.at(std::make_pair(1,1)).setSize(1,1);
@@ -24,6 +25,7 @@ TileEngineNew::TileEngineNew(sf::RenderWindow &_window, ResourceManager& _resour
     tileStorage.emplace(std::make_pair(75,1), Tile(window, resourceManager));
     tileStorage.at(std::make_pair(75,1)).setTexture("Media/Image/Game/Tiles/75/01.png");
     tileStorage.at(std::make_pair(75,1)).setSize(1,1);
+    */
 }
 
 TileEngineNew::~TileEngineNew()
@@ -31,33 +33,30 @@ TileEngineNew::~TileEngineNew()
 
 }
 
-void TileEngineNew::loadMap(std::string mapName)
+void TileEngineNew::loadMap(std::string _mapName)
 {
-    mapWidth = 3;
-    mapHeight = 3;
-    mapLayers = 2;
+    //get info
+    MapData mapData = saveFile.openMap(_mapName, window, resourceManager);
 
-    unsigned int totalTiles = mapWidth * mapHeight * mapLayers;
+    //set info
+    mapWidth = mapData.width;
+    mapHeight = mapData.height;
+    mapLayers = mapData.layers;
+    maxTileSize_x = mapData.maxTileSize_x;
+    maxTileSize_y = mapData.maxTileSize_y;
 
-    maxTileSize_x = 1;
+    //overriding the map fixes the need to clear it
+    tileMap = std::move(mapData.tileMap);
+    tileStorage = std::move(mapData.tileStorage);
 
-    tileMap.resize(totalTiles);
-    std::fill(tileMap.begin(), tileMap.end(), utl::Vector2ui(0,0));
-
-    tileMap[getTile(0,0,0)] = {1,1};
-    tileMap[getTile(1,0,0)] = {1,1};
-    tileMap[getTile(2,0,0)] = {1,1};
-    tileMap[getTile(0,1,0)] = {4,21};
-
-    tileMap[getTile(0,1,1)] = {75,1};
-    tileMap[getTile(0,0,1)] = {75,1};
+    mapName = _mapName;
 }
 
 void TileEngineNew::drawMap()
 {
     //find boundaries
-    int drawMin_x = (cameraPosition.x / 64.f) - (0.5 * tileFit_x);
-    int drawMin_y = (cameraPosition.y / 64.f) - (0.5 * tileFit_y);
+    int drawMin_x = (cameraPosition.x / 64.f) - (0.5 * tileFit_x) - (maxTileSize_x - 1);
+    int drawMin_y = (cameraPosition.y / 64.f) - (0.5 * tileFit_y) - (maxTileSize_x - 1);
     int drawMax_x = (cameraPosition.x / 64.f) + (0.5 * tileFit_x);
     int drawMax_y = (cameraPosition.y / 64.f) + (0.5 * tileFit_y);
 
@@ -78,14 +77,6 @@ void TileEngineNew::drawMap()
     {
         drawMax_y = (mapHeight-1);
     }
-
-    /*
-    std::cout << "drawMin_x = " << drawMin_x << std::endl;
-    std::cout << "drawMax_x = " << drawMax_x << std::endl;
-    std::cout << "drawMin_y = " << drawMin_y << std::endl;
-    std::cout << "drawMax_y = " << drawMax_y << std::endl;
-    std::cout << "tileFit_x = " << tileFit_x << std::endl;
-    */
 
     //iterate map
     for(int layerIt = 0; layerIt != mapLayers; layerIt++)

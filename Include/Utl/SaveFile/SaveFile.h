@@ -18,7 +18,10 @@ public:
     SaveFile();
     ~SaveFile();
 
-    void setFilePath(std::string _fileName) {fileName = _fileName;}
+    void setFilePath(std::string _fileName)
+    {
+        fileName = _fileName;
+    }
 
     bool readFile();  // gets updated vector
     void writeFile(); // saves changes
@@ -59,7 +62,10 @@ public:
     }
     std::string getItem(std::string itemName);
 
-    std::vector <std::pair <std::string, std::string> > getSaveList() {return saveList;}
+    std::vector <std::pair <std::string, std::string> > getSaveList()
+    {
+        return saveList;
+    }
 
 
 

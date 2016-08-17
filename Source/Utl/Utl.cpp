@@ -18,6 +18,11 @@ bool utl::isNumber(const std::string& _string)
     return (_string.find_first_not_of("0123456789.-") == std::string::npos);
 }
 
+bool utl::isWithAnyCharacter(const std::string& _string, const std::string& characters)
+{
+    return (_string.find_first_of(characters) != std::string::npos);
+}
+
 std::vector <std::string> utl::separateString (std::string saveString, char delimiter)
 {
     std::stringstream sStream;
@@ -30,6 +35,12 @@ std::vector <std::string> utl::separateString (std::string saveString, char deli
         returnVector.push_back(entry);
     }
     return returnVector;
+}
+std::vector <std::string> utl::separateString (std::string saveString, std::string delimiters)
+{
+    std::vector<std::string> parts;
+    boost::split(parts, saveString, boost::is_any_of(delimiters));
+    return parts;
 }
 
 std::string utl::conjoinString (std::vector <std::string> stringParts, char delimiter)
