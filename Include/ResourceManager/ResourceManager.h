@@ -11,10 +11,12 @@ public:
     ResourceManager();
     ~ResourceManager();
     sf::Texture& getTexture(std::string filename);
+    sf::Texture& getBlankTexture(std::string textureName);
+    void kill(std::string filename);
 
 private:
     std::map <std::string, sf::Texture> textureMap;
-    bool firstTime;
+    bool firstTime = true;
 };
 
 #endif // RESOURCEMANAGER_H

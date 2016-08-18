@@ -97,6 +97,7 @@ void TileEngineNew::drawMap()
                     //move to correct position and draw
                     currentTile.setPosition(tileIt_x, tileIt_y);
                     currentTile.drawTile();
+                    //no sprite batching because of tile scaling and animations
                 }
             }
         }

@@ -196,7 +196,6 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     guiManager.setFont(Data_Desktop::getInstance().font1);
 
     ///NEW TILE ENGINE
-    tileEngineNew.createMap();
     tileEngineNew.loadMap("TEST");
 }
 

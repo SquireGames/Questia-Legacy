@@ -3,14 +3,19 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Data_Desktop.h"
+
 #include "StateManager/State.h"
 
 #include "Data_Desktop.h"
 #include "TileEngine_Editor.h"
+
 #include "ResourceManager.h"
+
 #include "GuiManager.h"
+#include "GuiLoader.h"
 
-
+#include "SaveFile_Options.h"
 
 class State_TileMapEditor : public State
 {
@@ -25,28 +30,15 @@ public:
 private:
     sf::RenderWindow& window;
 
-    TileEngine_Editor tileEngineEditor;
     ResourceManager resourceManager;
-    GuiManager guiManager;
+    TileEngine_Editor tileEngineEditor;
+
+    GuiManagerNew guiManager;
+    GuiLoader guiLoader;
+
+    SaveFile_Options saveFile_options;
 
     sf::View mapView;
-    sf::View overlayView;
-
-    sf::Vector2f velocity;
-    sf::Vector2f coordinates;
-    sf::Vector2f coordinates_t;
-
-    float scrollMultiplier;
-
-    bool mIsMovingUp;
-    bool mIsMovingDown;
-    bool mIsMovingLeft;
-    bool mIsMovingRight;
-
-    int selectionSize;
-    int selectedLayer;
-
-    sf::Vector2f player_MapCoordinates;
 };
 
 #endif // STATE_TILEMAPEDITOR_H

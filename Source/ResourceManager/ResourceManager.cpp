@@ -3,7 +3,6 @@
 
 ResourceManager::ResourceManager():
     textureMap()
-    , firstTime(true)
 {
 
 }
@@ -20,7 +19,6 @@ sf::Texture& ResourceManager::getTexture(std::string filename)
         firstTime = false;
         textureMap.clear();
     }
-    //auto is cool
     for(auto it = textureMap.begin(); it != textureMap.end(); it++)
     {
         if(filename == it->first)
@@ -41,4 +39,32 @@ sf::Texture& ResourceManager::getTexture(std::string filename)
     std::cout<< "DEBUG: Texture '" << filename << "' was not found"<< std::endl;
     textureMap[filename] = tex;
     return textureMap[filename];
+}
+
+sf::Texture& ResourceManager::getBlankTexture(std::string textureName)
+{
+    if(firstTime)
+    {
+        firstTime = false;
+        textureMap.clear();
+    }
+    for(auto it = textureMap.begin(); it != textureMap.end(); it++)
+    {
+        if(textureName == it->first)
+        {
+            return it->second;
+        }
+    }
+    // if not loaded
+    textureMap.insert(std::make_pair(textureName, sf::Texture()));
+    std::cout<< "DEBUG: Blank Texture '" << textureName << "' was created"<< std::endl;
+    return textureMap[textureName];
+}
+
+void ResourceManager::kill(std::string filename)
+{
+    if(textureMap.count(filename))
+    {
+        textureMap.erase(filename);
+    }
 }

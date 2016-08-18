@@ -1,49 +1,37 @@
 #ifndef TILEENGINE_EDITOR_H
 #define TILEENGINE_EDITOR_H
 
+#include <iostream>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+
 #include "TileEngine.h"
 #include "ResourceManager.h"
 
-#include <SFML/Graphics.hpp>
-#include <SFML/System/Vector2.hpp>
+#include "Utl.h"
 
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <fstream>
-#include <string>
-#include <vector>
+#include "SaveFile_TileEngine.h"
 
-
-class TileEngine_Editor
+class TileEngine_Editor : public TileEngineNew
 {
 public:
-    TileEngine_Editor(sf::RenderWindow &_window, std::string mapName);
-    ~TileEngine_Editor();
+    //ctor + dtor
+    TileEngine_Editor(sf::RenderWindow& _window, ResourceManager& _resourceManager);
+    ~TileEngine_Editor() = default;
 
-    void reLoadMap();
-    void tile_hover(sf::Vector2f mousePosition,  int selectionSize, sf::Vector2f coordinates);
-    void tileSelection(sf::Vector2f mousePosition, sf::Vector2f coordinates);
-    void replaceTile(sf::Vector2f mousePosition, int selectionSize, sf::Vector2f coordinates, int layer);
-    void saveCurrentMap();
+    void createMap(std::string mapName, unsigned int width, unsigned int height, unsigned int layers);
 
-    void returnIDList(sf::RenderWindow &window);
+    //gets called instead of base class
+    void loadMap(std::string _mapName);
+    void drawMap();
 
-    void drawTileMap(sf::RenderWindow &window, sf::Vector2f coordinates, float scaler, int layer, bool isDrawingCollision);
-    void drawTileMap(sf::RenderWindow &window, sf::Vector2f coordinates, float scaler, int layer, int transparency);
-
-    TileEngine tileEngine;
 private:
-    sf::RenderWindow& window;
-    ResourceManager resourceManager;
+    //grid to know where invisible tiles are
+    void drawGridLines();
+    sf::VertexArray gridLines;
 
-    sf::Vector2i newTileSelection;
-    sf::Vector2i currentTileLocation;
-
-    sf::Texture tile_Texture_overlay;
-    sf::Sprite  tile_Sprite_overlay;
-
-    std::map<int, std::vector<std::vector <sf::Vector2i> > > editTileMap;
-
-    int numberOfTiles;
+    //save
+    SaveFile_TileEngine saveFile;
 };
+
 #endif // TILEENGINE_EDITOR_H

@@ -23,20 +23,11 @@ public:
     TileEngineNew(sf::RenderWindow& _window, ResourceManager& _resourceManager);
     ~TileEngineNew();
 
-    //loads map
     void loadMap(std::string _mapName);
-
-    //draws map
     void drawMap();
 
     //set tiles drawn from player position
     void setPosition(int x, int y);
-
-    ///temp editor
-    void createMap()
-    {
-        saveFile.createMap("TEST", 4, 4, 2);
-    }
 
 protected:
     ///map
@@ -62,19 +53,12 @@ protected:
     ///helpers
     //for map
     int getTile(unsigned int x, unsigned int y, unsigned int layer);
-    //for getting tile
-    int getTile(unsigned int x, unsigned int y);
 
     ///default
     sf::RenderWindow &window;
     ResourceManager& resourceManager;
 };
 
-class TileEngineNew_Editor : public TileEngineNew
-{
-    //ctor
-    TileEngineNew_Editor(sf::RenderWindow& _window, ResourceManager& _resourceManager): TileEngineNew(_window, _resourceManager) {}
-};
 
 
 

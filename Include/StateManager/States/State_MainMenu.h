@@ -2,8 +2,14 @@
 #define STATE_MAINMENU_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
-#include <StateManager/State.h>
+
+#include <iostream>
+
+#include "StateManager/State.h"
+#include "StateManager/StateManager.h"
+#include "StateManager/States/State_Transition.h"
 
 #include "GuiLoader.h"
 
@@ -12,6 +18,11 @@
 #include "GuiManager.h"
 
 #include "SaveFile_Options.h"
+
+#include "Utl/Utl.h"
+
+//TODO REMOVE TEMP
+#include "TextureAtlas.h"
 
 class State_MainMenu : public State
 {
@@ -25,6 +36,9 @@ public:
 
 private:
     GuiLoader guiLoader;
+
+    TextureAtlasData textureAtlasData;
+    sf::Sprite tempSprite;
 
     SaveFile_Options saveFile;
 

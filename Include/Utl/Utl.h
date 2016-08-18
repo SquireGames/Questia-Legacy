@@ -43,6 +43,15 @@ struct Vector2ui
     Vector2ui(unsigned int _x, unsigned int _y): x(_x), y(_y) {}
     unsigned int x, y;
 };
+
+struct IntRect
+{
+    IntRect() = default;
+    IntRect(int _x, int _y,int _width,int _height) : x(_x), y(_y), width(_width), height(_height) {}
+
+    int x, y, width, height;
+};
+
 }
 
 #endif // UTL_H
