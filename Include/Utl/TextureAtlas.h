@@ -5,6 +5,8 @@
 #include <map>
 #include <tuple>
 
+#include <iostream>
+
 #include "ResourceManager.h"
 #include "Utl.h"
 
@@ -35,6 +37,8 @@ public:
     {
         maxWidth = 0;
         maxHeight = 0;
+        maxWidthCurrentLayer = 0;
+        layers = 1;
         textureList.clear();
         textureLocations.clear();
     }
@@ -46,7 +50,10 @@ private:
     int maxTextureSize = sf::Texture::getMaximumSize();
     //used for checking layer space left
     int maxWidth = 0;
+    int maxWidthCurrentLayer = 0;
     int maxHeight = 0;
+    //used for current layer space left
+    int layers = 1;
 
     //stores all textures
     std::vector<std::pair <std::string, sf::Texture*> > textureList;

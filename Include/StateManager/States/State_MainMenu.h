@@ -21,9 +21,6 @@
 
 #include "Utl/Utl.h"
 
-//TODO REMOVE TEMP
-#include "TextureAtlas.h"
-
 class State_MainMenu : public State
 {
 public:
@@ -36,9 +33,6 @@ public:
 
 private:
     GuiLoader guiLoader;
-
-    TextureAtlasData textureAtlasData;
-    sf::Sprite tempSprite;
 
     SaveFile_Options saveFile;
 

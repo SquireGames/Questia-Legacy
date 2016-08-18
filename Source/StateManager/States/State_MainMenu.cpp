@@ -5,7 +5,6 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     , resourceManager()
     , guiManager(mWindow, resourceManager)
     , saveFile()
-    , textureAtlasData(nullptr)
 {
     ///gui
     //font
@@ -19,14 +18,6 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     musicSound.setBuffer(musicBuffer);
     musicSound.setVolume(utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")));
     musicSound.play();
-
-    //TEMP
-    TextureAtlas textureAtlas(resourceManager);
-    textureAtlas.addTexture("Media/Image/Game/Tiles/01/01.png", "1");
-    textureAtlas.addTexture("Media/Image/Game/Tiles/04/21.png", "2");
-    textureAtlasData = std::move (textureAtlas.compileTextures("kekman"));
-
-    tempSprite.setTexture(*textureAtlasData.texture);
 }
 
 
@@ -72,6 +63,5 @@ void State_MainMenu::update(sf::Time elapsedTime)
 void State_MainMenu::displayTextures()
 {
     guiManager.drawButtons();
-    window.draw(tempSprite);
 }
 
