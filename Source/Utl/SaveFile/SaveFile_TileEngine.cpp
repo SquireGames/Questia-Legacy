@@ -1,6 +1,8 @@
 #include "SaveFile_TileEngine.h"
 
-SaveFile_TileEngine::SaveFile_TileEngine()
+SaveFile_TileEngine::SaveFile_TileEngine(ResourceManager& _resourceManager):
+    resourceManager(_resourceManager)
+    , textureAtlas(_resourceManager)
 {
 
 }
@@ -10,7 +12,7 @@ SaveFile_TileEngine::~SaveFile_TileEngine()
 }
 
 
-MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& window, ResourceManager& resourceManager)
+MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& window)
 {
     //create map
     MapData mapData;
@@ -33,15 +35,28 @@ MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& wind
     unsigned int totalTiles = mapData.width * mapData.height * mapData.layers;
 
     ///tileStorage
+    textureAtlas.addTexture("1,1",  "Media/Image/Game/Tiles/01/01.png");
+    textureAtlas.addTexture("4,21", "Media/Image/Game/Tiles/04/21.png");
+
+    //now texture exists in resourceManager
+    TextureAtlasData compiledTexture = textureAtlas.compileTextures("TILESTORAGE");
+
     mapData.tileStorage.emplace(std::make_pair(1,1), Tile(window, resourceManager));
-    mapData.tileStorage.at(std::make_pair(1,1)).setTexture("Media/Image/Game/Tiles/01/01.png");
+    //mapData.tileStorage.at(std::make_pair(1,1)).setTexture("Media/Image/Game/Tiles/01/01.png");
+
+    mapData.tileStorage.at(std::make_pair(1,1)).texturePosition = compiledTexture.textureCoords.at("1,1");
     mapData.tileStorage.at(std::make_pair(1,1)).setSize(1,1);
+
     mapData.tileStorage.emplace(std::make_pair(4,21), Tile(window, resourceManager));
-    mapData.tileStorage.at(std::make_pair(4,21)).setTexture("Media/Image/Game/Tiles/04/21.png");
+    //mapData.tileStorage.at(std::make_pair(4,21)).setTexture("Media/Image/Game/Tiles/04/21.png");
+    mapData.tileStorage.at(std::make_pair(4,21)).texturePosition = compiledTexture.textureCoords.at("4,21");
     mapData.tileStorage.at(std::make_pair(4,21)).setSize(1,1);
+
     mapData.tileStorage.emplace(std::make_pair(75,1), Tile(window, resourceManager));
     mapData.tileStorage.at(std::make_pair(75,1)).setTexture("Media/Image/Game/Tiles/75/01.png");
     mapData.tileStorage.at(std::make_pair(75,1)).setSize(1,1);
+
+
 
     ///tileMap
     mapData.tileMap.resize(totalTiles);
@@ -123,7 +138,7 @@ bool SaveFile_TileEngine::createMap(std::string mapName, unsigned int width, uns
     saveFile_map.setFilePath(filePath + file_map);
     //get the map string
     const std::string nullTile  =    "0,0|";
-    const std::string nullTileEnd  = "0,0 ";
+    const std::string nullTileEnd  = "0,0";
     std::vector <std::string> tileLine;
     //-1 to account for end
     for(unsigned int it = 0; it != width - 1; it++)

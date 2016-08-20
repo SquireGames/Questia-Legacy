@@ -27,7 +27,7 @@ public:
     ~TextureAtlas();
 
     //returns if there is space, otherwise make another one
-    bool addTexture(std::string fileLocation, std::string textureName);
+    bool addTexture(std::string name, std::string fileLocation);
 
     //returns the textures and coords of texture bounds
     TextureAtlasData compileTextures(std::string textureName);
@@ -44,7 +44,7 @@ public:
     }
 
 private:
-    ResourceManager& resourceManager;
+    ResourceManager* resourceManager = nullptr;
 
     //Depending on graphics card, game minimum being 512 x 512
     int maxTextureSize = sf::Texture::getMaximumSize();

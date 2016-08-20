@@ -20,7 +20,7 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &mWindow):
     window.setView(mapView);
 
     //load map
-    tileEngineEditor.createMap("TEST",200,200,4);
+    tileEngineEditor.createMap("TEST",500,500,4);
     tileEngineEditor.loadMap("TEST");
     tileEngineEditor.setPosition(0,0);
 }

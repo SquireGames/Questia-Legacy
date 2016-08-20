@@ -4,6 +4,7 @@
 TileEngine_Editor::TileEngine_Editor(sf::RenderWindow& _window, ResourceManager& _resourceManager):
     TileEngineNew(_window, _resourceManager)
     , gridLines()
+    , saveFile(_resourceManager)
 {
     gridLines.setPrimitiveType(sf::PrimitiveType::Lines);
 }

@@ -53,10 +53,20 @@ protected:
     ///helpers
     //for map
     int getTile(unsigned int x, unsigned int y, unsigned int layer);
+    int getChunk(unsigned int x, unsigned int y, unsigned int layer);
 
     ///default
     sf::RenderWindow &window;
     ResourceManager& resourceManager;
+
+    ///chunk renderer
+    //TODO make sure to resize for cache precision
+    //chunk size is 8x8 tiles
+    std::vector <sf::VertexArray> chunkVector;
+    //chunks
+    unsigned int chunks_x = 0, chunks_y = 0;
+    //texture
+    sf::Texture* textureAtlas = nullptr;
 };
 
 

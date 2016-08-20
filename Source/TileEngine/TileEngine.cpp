@@ -12,6 +12,7 @@
 TileEngineNew::TileEngineNew(sf::RenderWindow& _window, ResourceManager& _resourceManager):
     resourceManager(_resourceManager)
     , window(_window)
+    , saveFile(_resourceManager)
 {
     /*
     tileStorage.emplace(std::make_pair(1,1), Tile(window, resourceManager));
@@ -35,8 +36,12 @@ TileEngineNew::~TileEngineNew()
 
 void TileEngineNew::loadMap(std::string _mapName)
 {
+    resourceManager.getTexture("TILESTORAGE");
     //get info
-    MapData mapData = saveFile.openMap(_mapName, window, resourceManager);
+    MapData mapData = std::move(saveFile.openMap(_mapName, window));
+
+    //get texture
+    textureAtlas = &resourceManager.getBlankTexture("TILESTORAGE");
 
     //set info
     mapWidth = mapData.width;
@@ -45,10 +50,104 @@ void TileEngineNew::loadMap(std::string _mapName)
     maxTileSize_x = mapData.maxTileSize_x;
     maxTileSize_y = mapData.maxTileSize_y;
 
+    //get chunk size
+    int remainder_x = mapWidth % 8;
+    int remainder_y = mapHeight % 8;
+    //exact chunk tiles
+    if(remainder_x == 0)
+    {
+        chunks_x = mapWidth / 8;
+    }
+    //incomplete tile = new tile
+    else
+    {
+        chunks_x = ((mapWidth - remainder_x) / 8) + 1;
+    }
+    if(remainder_y == 0)
+    {
+        chunks_y = mapHeight / 8;
+    }
+    //incomplete tile = new tile
+    else
+    {
+        chunks_y = ((mapHeight - remainder_y) / 8) + 1;
+    }
+
+    //set size of chunk vector
+    chunkVector.resize(chunks_x * chunks_y * mapLayers);
+    //fill chunkVector with full vertexArrays
+    sf::VertexArray emptyChunk;
+    emptyChunk.setPrimitiveType(sf::PrimitiveType::Quads);
+    //4 vertices per tile, 8 x 8 tiles
+    emptyChunk.resize(4 * 64);
+    //making sure its filled
+    for(unsigned int it = 0; it != 4 * 64; it++)
+    {
+        emptyChunk[it] = sf::Vertex();
+    }
+    //fill chunk vector with chunks
+    for(unsigned int it = 0; it != chunkVector.size(); it++)
+    {
+        chunkVector[it] = emptyChunk;
+    }
+
     //overriding the map fixes the need to clear it
     tileMap = std::move(mapData.tileMap);
     tileStorage = std::move(mapData.tileStorage);
 
+    //filling the chunks with tiles
+    //iterate through all chunks
+    for(unsigned int it_layer = 0; it_layer != mapLayers; it_layer++)
+    {
+        for(unsigned int it_chunk_x = 0; it_chunk_x != mapWidth; it_chunk_x++)
+        {
+            for(unsigned int it_chunk_y = 0; it_chunk_y != mapHeight; it_chunk_y++)
+            {
+                //top left of chunk on the x axis
+                int chunkOrigin_x = 8 * it_chunk_x;
+                int chunkOrigin_y = 8 * it_chunk_y;
+
+                //resets every chunk, used for vectorArray position
+                int chunkQuadIterator = 0;
+
+                //iterate through tiles, 8x8
+                for(unsigned int it_tile_x = 0; it_tile_x != 8 && it_tile_x + chunkOrigin_x < mapWidth; it_tile_x++)
+                {
+                    for(unsigned int it_tile_y = 0; it_tile_y != 8 && it_tile_y + chunkOrigin_y < mapHeight; it_tile_y++)
+                    {
+                        //get tile number
+                        int currentTile_x = chunkOrigin_x + it_tile_x;
+                        int currentTile_y = chunkOrigin_y + it_tile_y;
+
+                        //get tile index and id
+                        const utl::Vector2ui& tileID = tileMap[getTile(currentTile_x, currentTile_y, it_layer)];
+                        const Tile& tileData = tileStorage.at(std::make_pair(tileID.x, tileID.y));
+
+                        //set the coords
+                        //top left
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(currentTile_x * 64, currentTile_y * 64);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(tileData.texturePosition.x, tileData.texturePosition.y);
+                        chunkQuadIterator++;
+
+                        /*
+                        //top right
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(currentTile_x * 64 + 64, currentTile_y * 64);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(tileData.texturePosition.x + tileData.texturePosition.width, tileData.texturePosition.y);
+                        //bottom right
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(currentTile_x * 64 + 64, currentTile_y * 64 + 64);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(tileData.texturePosition.x + tileData.texturePosition.width, tileData.texturePosition.y + tileData.texturePosition.height);
+                        chunkQuadIterator++;
+                        //bottom left
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(currentTile_x * 64, currentTile_y * 64 + 64);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(tileData.texturePosition.x, tileData.texturePosition.y + tileData.texturePosition.height);
+                        chunkQuadIterator++;
+                        */
+                    }
+                }
+            }
+        }
+    }
+    //saving map names
     mapName = _mapName;
 }
 
@@ -114,6 +213,10 @@ void TileEngineNew::setPosition(int x, int y)
 int TileEngineNew::getTile(unsigned int x, unsigned int y, unsigned int layer)
 {
     return x + (mapWidth * y) + (layer * mapWidth * mapHeight);
+}
+int TileEngineNew::getChunk(unsigned int x, unsigned int y, unsigned int layer)
+{
+    return x + (chunks_x * y) + (layer * chunks_x * chunks_y);
 }
 
 

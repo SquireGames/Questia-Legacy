@@ -3,12 +3,13 @@
 
 #include <SFML/Window.hpp>
 
-#include "SaveFile.h"
-
-#include "FileData.h"
 #include "Utl.h"
+#include "SaveFile.h"
+#include "FileData.h"
 
 #include "Tile.h"
+
+#include "TextureAtlas.h"
 
 struct MapData
 {
@@ -26,11 +27,11 @@ class SaveFile_TileEngine
 {
 public:
     //ctor + dtor
-    SaveFile_TileEngine();
+    SaveFile_TileEngine(ResourceManager& _resourceManager);
     ~SaveFile_TileEngine();
 
     //shared
-    MapData openMap(std::string mapName, sf::RenderWindow& window, ResourceManager& resourceManager);
+    MapData openMap(std::string mapName, sf::RenderWindow& window);
 
     ///editor
     //creating map
@@ -47,6 +48,12 @@ private:
     const std::string name_width = "width";
     const std::string name_height = "height";
     const std::string name_layers = "layers";
+
+    //for tilework
+    ResourceManager& resourceManager;
+
+    //saves textures in 1 sheet
+    TextureAtlas textureAtlas;
 };
 
 #endif // SAVEFILE_TILEENGINE_H

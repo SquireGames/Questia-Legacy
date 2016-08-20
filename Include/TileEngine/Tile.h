@@ -93,6 +93,9 @@ public:
         }
     }
 
+    //for 0,0 tiles
+    utl::IntRect texturePosition = utl::IntRect(0,0,0,0);
+
 private:
     //possible types to render
     sf::Sprite tileSprite;

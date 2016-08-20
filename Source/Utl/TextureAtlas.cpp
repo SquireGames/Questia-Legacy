@@ -1,7 +1,7 @@
 #include "TextureAtlas.h"
 
 TextureAtlas::TextureAtlas(ResourceManager& _resourceManager):
-    resourceManager(_resourceManager)
+    resourceManager(&_resourceManager)
 {
 
 }
@@ -11,7 +11,7 @@ TextureAtlas::~TextureAtlas()
     //dtor
 }
 
-bool TextureAtlas::addTexture(std::string fileLocation, std::string name)
+bool TextureAtlas::addTexture(std::string name, std::string fileLocation)
 {
     //deleted after, used for getting texture data
     sf::Texture tempTexture;
@@ -41,7 +41,7 @@ bool TextureAtlas::addTexture(std::string fileLocation, std::string name)
         }
 
         //add to vector for saving
-        textureList.push_back(std::make_pair(name, &resourceManager.getTexture(fileLocation)));
+        textureList.push_back(std::make_pair(name, &resourceManager->getTexture(fileLocation)));
         textureLocations.push_back(fileLocation);
         return true;
     }
@@ -63,7 +63,7 @@ bool TextureAtlas::addTexture(std::string fileLocation, std::string name)
         }
 
         //add to vector for saving
-        textureList.push_back(std::make_pair(name, &resourceManager.getTexture(fileLocation)));
+        textureList.push_back(std::make_pair(name, &resourceManager->getTexture(fileLocation)));
         textureLocations.push_back(fileLocation);
         return true;
     }
@@ -72,7 +72,7 @@ bool TextureAtlas::addTexture(std::string fileLocation, std::string name)
 
 TextureAtlasData TextureAtlas::compileTextures(std::string textureName)
 {
-    TextureAtlasData textureData(&resourceManager.getBlankTexture(textureName));
+    TextureAtlasData textureData(&resourceManager->getBlankTexture(textureName));
     textureData.texture->create(maxWidth, maxHeight);
 
     //used to combine all textures
@@ -117,5 +117,12 @@ TextureAtlasData TextureAtlas::compileTextures(std::string textureName)
 
     //set texture
     *textureData.texture = resultTexture.getTexture();
+
+    //delete unneeded textures
+    for(std::string& it : textureLocations)
+    {
+        resourceManager->kill(it);
+    }
+
     return textureData;
 }

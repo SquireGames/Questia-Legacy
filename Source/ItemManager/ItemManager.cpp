@@ -69,7 +69,7 @@ void ItemManager::createItem(Struct_Item* item, int IDNumber, std::string itemNa
                                "Item Name", "Item Desc",
                                coord_x, coord_y,   //coords
                                1, 1,   //grid size
-                               "Media/Image/Game/Items/Test/Test_Inv.png", "None", //sprite loc
+                               "Media/Image/Game/Items/Test/Test_Inv.png", "Media/Image/Game/Items/Test/Test_Inv.png", //sprite loc
                                itemUsage, ItemType::inactive, AttackType::none);
     }
     else

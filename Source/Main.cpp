@@ -16,3 +16,6 @@ int main()
         /*D*/   std::cout<<std::endl<<"Exception: "<<exc.what()<<std::endl;
     }
 }
+
+///WHEN YOU GO BACK TO THIS:
+//figure out why ResourceManager is not allowing access to textureMap

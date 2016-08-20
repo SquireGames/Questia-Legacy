@@ -342,6 +342,8 @@ void State_Game::update(sf::Time elapsedTime)
     gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
 
+    tileEngineNew.setPosition(entityManager.getPlayerCoordinates().x, entityManager.getPlayerCoordinates().y);
+
 
     int HP, MP, ST;
     int maxHP, maxMP, maxST;

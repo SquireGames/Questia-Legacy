@@ -1,8 +1,7 @@
 #include "ResourceManager.h"
 #include <iostream>
 
-ResourceManager::ResourceManager():
-    textureMap()
+ResourceManager::ResourceManager()
 {
 
 }
@@ -33,12 +32,12 @@ sf::Texture& ResourceManager::getTexture(std::string filename)
     {
         textureMap.insert(std::make_pair(filename, tex));
         std::cout<< "DEBUG: Texture '" << filename << "' was loaded"<< std::endl;
-        return textureMap[filename];
+        return textureMap.at(filename);
     }
 
     std::cout<< "DEBUG: Texture '" << filename << "' was not found"<< std::endl;
     textureMap[filename] = tex;
-    return textureMap[filename];
+    return textureMap.at(filename);
 }
 
 sf::Texture& ResourceManager::getBlankTexture(std::string textureName)

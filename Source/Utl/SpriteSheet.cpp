@@ -32,12 +32,14 @@ SpriteSheet::SpriteSheet(ResourceManager& _resourceManager, std::string imageLoc
             spriteMap[it_1] [it_2] = sheet;
 
             sf::IntRect tempRect = sheet.getTextureRect();
+            /*
             std::cout << "---------------------" << std::endl;
             std::cout << "x: " << tempRect.left << std::endl;
             std::cout << "y: " << tempRect.top << std::endl;
             std::cout << "width: " << tempRect.width << std::endl;
             std::cout << "height: " << tempRect.height << std::endl;
             std::cout << "---------------------" << std::endl;
+            */
         }
     }
     //account for boundary clipping

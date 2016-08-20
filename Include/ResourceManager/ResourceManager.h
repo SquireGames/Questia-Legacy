@@ -15,7 +15,7 @@ public:
     void kill(std::string filename);
 
 private:
-    std::map <std::string, sf::Texture> textureMap;
+    std::map <std::string, sf::Texture> textureMap {};
     bool firstTime = true;
 };
 
