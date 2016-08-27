@@ -9,7 +9,7 @@
 
 #include "Utl/Utl.h"
 
-const sf::Time Application::timePerFrame = sf::seconds(1.f/144.f);
+const sf::Time Application::timePerFrame = sf::seconds(1.f/128.f);
 
 Application::Application():
     mStatisticsUpdateTime()
@@ -214,7 +214,7 @@ void Application::update(sf::Time elapsedTime)
 
 void Application::updateStatistics(sf::Time elapsedTime)
 {
-    mStatisticsUpdateTime +=elapsedTime;
+    mStatisticsUpdateTime += elapsedTime;
     mStatisticsFramesCount += 1;
 
     if (mStatisticsUpdateTime >= sf::seconds(1.0f))
@@ -228,7 +228,7 @@ void Application::updateStatistics(sf::Time elapsedTime)
 
 void Application::render()
 {
-    mWindow.clear(sf::Color::White);
+    mWindow.clear(sf::Color::Black);
     StateManager::getInstance().displayTexturesState();
     mWindow.display();
 }

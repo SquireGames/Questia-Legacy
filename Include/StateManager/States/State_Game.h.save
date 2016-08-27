@@ -110,7 +110,7 @@ private:
     //TEMP
     sf::Sprite alignment;
     sf::Sprite alignment2;
-    sf::VertexArray visibleScreen;
+    sf::VertexArray visible
 };
 
 #endif // STATE_GAME_H

@@ -28,7 +28,7 @@ public:
     //spite and texture
     void setSize(unsigned int tilesWidth, unsigned int tilesHeight);
     void setRotate(int _degrees);
-    void setFlip(char direction);
+    void setFlip(utl::Direction direction);
 
     //for 0,0 tiles
     utl::IntRect texturePosition = utl::IntRect(0,0,0,0);

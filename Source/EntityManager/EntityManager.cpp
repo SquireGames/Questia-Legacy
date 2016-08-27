@@ -653,7 +653,7 @@ void EntityManager::attackCheck()
     }
 }
 
-void EntityManager::update(TileEngine& tileEngine, sf::Vector2f player_MapCoordinates, sf::Vector2f mouseCoordinates, float angle)
+void EntityManager::update(sf::Vector2f player_MapCoordinates, sf::Vector2f mouseCoordinates, float angle)
 {
     for(unsigned int x = 0; x < entityPlayableStack.size(); x++)
     {
@@ -682,7 +682,7 @@ void EntityManager::update(TileEngine& tileEngine, sf::Vector2f player_MapCoordi
     int returnCollision[4] = {0,0,0,0};
     for(unsigned int x = 0; x < entityCollidableStack.size(); x++)
     {
-        entityCollidableStack[x]->update(tileEngine.getMapCollision(entityCollidableStack[x]->getMapCoordinates(), entityCollidableStack[x]->getCoordinates(), entityCollidableStack[x]->getSideRadius(), entityCollidableStack[x]->getVelocity(), returnCollision), returnCollision);
+        entityCollidableStack[x]->update(1, returnCollision);
     }
 
     attackCheck();

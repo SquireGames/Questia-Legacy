@@ -14,19 +14,7 @@ TileEngineNew::TileEngineNew(sf::RenderWindow& _window, ResourceManager& _resour
     , window(_window)
     , saveFile(_resourceManager)
 {
-    /*
-    tileStorage.emplace(std::make_pair(1,1), Tile(window, resourceManager));
-    tileStorage.at(std::make_pair(1,1)).setTexture("Media/Image/Game/Tiles/01/01.png");
-    tileStorage.at(std::make_pair(1,1)).setSize(1,1);
 
-    tileStorage.emplace(std::make_pair(4,21), Tile(window, resourceManager));
-    tileStorage.at(std::make_pair(4,21)).setTexture("Media/Image/Game/Tiles/04/21.png");
-    tileStorage.at(std::make_pair(4,21)).setSize(1,1);
-
-    tileStorage.emplace(std::make_pair(75,1), Tile(window, resourceManager));
-    tileStorage.at(std::make_pair(75,1)).setTexture("Media/Image/Game/Tiles/75/01.png");
-    tileStorage.at(std::make_pair(75,1)).setSize(1,1);
-    */
 }
 
 TileEngineNew::~TileEngineNew()
@@ -36,6 +24,7 @@ TileEngineNew::~TileEngineNew()
 
 void TileEngineNew::loadMap(std::string _mapName)
 {
+    //get the texture atlas
     resourceManager.getTexture("TILESTORAGE");
     //get info
     MapData mapData = std::move(saveFile.openMap(_mapName, window));
@@ -77,9 +66,9 @@ void TileEngineNew::loadMap(std::string _mapName)
     chunkVector.resize(chunks_x * chunks_y * mapLayers);
     //fill chunkVector with full vertexArrays
     sf::VertexArray emptyChunk;
-    emptyChunk.setPrimitiveType(sf::PrimitiveType::Quads);
     //4 vertices per tile, 8 x 8 tiles
     emptyChunk.resize(4 * 64);
+    emptyChunk.setPrimitiveType(sf::PrimitiveType::Quads);
     //making sure its filled
     for(unsigned int it = 0; it != 4 * 64; it++)
     {
@@ -123,35 +112,175 @@ void TileEngineNew::loadMap(std::string _mapName)
                         const utl::Vector2ui& tileID = tileMap[getTile(currentTile_x, currentTile_y, it_layer)];
                         const Tile& tileData = tileStorage.at(std::make_pair(tileID.x, tileID.y));
 
+                        //to prevent texture bleeding
+                        float offset = 0.01;
+
+                        //texture int rect
+                        const utl::IntRect& texturePosition = tileData.texturePosition;
+                        //size
+                        const utl::Vector2i& tileSize = tileData.tileSize;
+                        //rotation
+                        const int& rotationDegrees = tileData.degrees;
+                        //flips
+                        const char& flip = tileData.flip;
+
+                        //size vertices and texture coords for flips and rotations
+                        utl::Vector2i posVerticies[4] = {utl::Vector2i(0                     + (currentTile_x * 64) - offset, 0                      + (currentTile_y * 64) - offset),
+                                                          utl::Vector2i(texturePosition.width + (currentTile_x * 64) + offset, 0                      + (currentTile_y * 64) - offset),
+                                                          utl::Vector2i(texturePosition.width + (currentTile_x * 64) + offset, texturePosition.height + (currentTile_y * 64) + offset),
+                                                          utl::Vector2i(0                     + (currentTile_x * 64) - offset, texturePosition.height + (currentTile_y * 64) + offset)
+                                                         };
+                        utl::Vector2i textureVerticies[4] = {utl::Vector2i(texturePosition.x                         + offset, texturePosition.y                          + offset),
+                                                              utl::Vector2i(texturePosition.x + texturePosition.width - offset, texturePosition.y                          + offset),
+                                                              utl::Vector2i(texturePosition.x + texturePosition.width - offset, texturePosition.y + texturePosition.height - offset),
+                                                              utl::Vector2i(texturePosition.x                         + offset, texturePosition.y + texturePosition.height - offset)
+                                                             };
+                        //apply transformations
+                        //size
+                        if(tileSize.x != -1)
+                        {
+                            posVerticies[0] = utl::Vector2i(0                + (currentTile_x * 64) - offset, 0               + (currentTile_y * 64) - offset);
+                            posVerticies[1] = utl::Vector2i(64 * tileSize.x  + (currentTile_x * 64) + offset, 0               + (currentTile_y * 64) - offset);
+                            posVerticies[2] = utl::Vector2i(64 * tileSize.x  + (currentTile_x * 64) + offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
+                            posVerticies[3] = utl::Vector2i(0                + (currentTile_x * 64) - offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
+                        }
+                        //flip
+                        if(flip != 'n')
+                        {
+                            utl::Vector2i tempVec(0,0);
+                            if(flip == 'x')
+                            {
+                                tempVec = textureVerticies[0];
+                                textureVerticies[0] = textureVerticies[1];
+                                textureVerticies[1] = tempVec;
+                                tempVec = textureVerticies[2];
+                                textureVerticies[2] = textureVerticies[3];
+                                textureVerticies[3] = tempVec;
+                            }
+                            else if(flip == 'y')
+                            {
+                                tempVec = textureVerticies[0];
+                                textureVerticies[0] = textureVerticies[3];
+                                textureVerticies[3] = tempVec;
+                                tempVec = textureVerticies[1];
+                                textureVerticies[1] = textureVerticies[2];
+                                textureVerticies[2] = tempVec;
+                            }
+                            else if(flip == 'b')
+                            {
+                                tempVec = textureVerticies[0];
+                                textureVerticies[0] = textureVerticies[2];
+                                textureVerticies[2] = tempVec;
+                                tempVec = textureVerticies[1];
+                                textureVerticies[1] = textureVerticies[3];
+                                textureVerticies[3] = tempVec;
+                            }
+                        }
+                        //rotate
+                        if(rotationDegrees != 0)
+                        {
+                            utl::Vector2i tempVec(0,0);
+                            if(rotationDegrees == 90)
+                            {
+                                tempVec = textureVerticies[0];
+                                textureVerticies[0] = textureVerticies[3];
+                                textureVerticies[3] = textureVerticies[2];
+                                textureVerticies[2] = textureVerticies[1];
+                                textureVerticies[1] = tempVec;
+                            }
+                            else if(rotationDegrees == 180)
+                            {
+                                tempVec = textureVerticies[0];
+                                textureVerticies[0] = textureVerticies[2];
+                                textureVerticies[2] = tempVec;
+                                tempVec = textureVerticies[1];
+                                textureVerticies[1] = textureVerticies[3];
+                                textureVerticies[3] = tempVec;
+                            }
+                            else if(rotationDegrees == 270)
+                            {
+                                tempVec = textureVerticies[0];
+                                textureVerticies[0] = textureVerticies[1];
+                                textureVerticies[1] = textureVerticies[2];
+                                textureVerticies[2] = textureVerticies[3];
+                                textureVerticies[3] = tempVec;
+                            }
+                        }
+
                         //set the coords
                         //top left
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(currentTile_x * 64, currentTile_y * 64);
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(tileData.texturePosition.x, tileData.texturePosition.y);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(posVerticies[0].x    , posVerticies[0].y);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(textureVerticies[0].x, textureVerticies[0].y);
                         chunkQuadIterator++;
-
-                        /*
                         //top right
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(currentTile_x * 64 + 64, currentTile_y * 64);
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(tileData.texturePosition.x + tileData.texturePosition.width, tileData.texturePosition.y);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(posVerticies[1].x    , posVerticies[1].y);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(textureVerticies[1].x, textureVerticies[1].y);
+                        chunkQuadIterator++;
                         //bottom right
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(currentTile_x * 64 + 64, currentTile_y * 64 + 64);
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(tileData.texturePosition.x + tileData.texturePosition.width, tileData.texturePosition.y + tileData.texturePosition.height);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(posVerticies[2].x    , posVerticies[2].y);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(textureVerticies[2].x, textureVerticies[2].y);
                         chunkQuadIterator++;
                         //bottom left
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(currentTile_x * 64, currentTile_y * 64 + 64);
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(tileData.texturePosition.x, tileData.texturePosition.y + tileData.texturePosition.height);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(posVerticies[3].x    , posVerticies[3].y);
+                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(textureVerticies[3].x, textureVerticies[3].y);
                         chunkQuadIterator++;
-                        */
                     }
                 }
             }
         }
     }
-    //saving map names
+//saving map names
     mapName = _mapName;
+
+//temp
+    tempSprite.setTexture(*textureAtlas);
 }
 
 void TileEngineNew::drawMap()
+{
+    //find boundaries
+    int drawMin_x = (cameraPosition.x / 64.f) - (0.5 * tileFit_x) - (maxTileSize_x - 1);
+    int drawMin_y = (cameraPosition.y / 64.f) - (0.5 * tileFit_y) - (maxTileSize_x - 1);
+    int drawMax_x = (cameraPosition.x / 64.f) + (0.5 * tileFit_x);
+    int drawMax_y = (cameraPosition.y / 64.f) + (0.5 * tileFit_y);
+
+    //make sure they are within the map
+    if(drawMin_x < 0)
+    {
+        drawMin_x = 0;
+    }
+    if(drawMin_y < 0)
+    {
+        drawMin_y = 0;
+    }
+    if(drawMax_x > (mapWidth-1))
+    {
+        drawMax_x = (mapWidth-1);
+    }
+    if(drawMax_y > (mapHeight-1))
+    {
+        drawMax_y = (mapHeight-1);
+    }
+
+    //floor rounds down to find correct chunk
+    int minChunk_x = std::floor((float)drawMin_x / 8.f);
+    int minChunk_y = std::floor((float)drawMin_y / 8.f);
+    int maxChunk_x = std::floor((float)drawMax_x / 8.f);
+    int maxChunk_y = std::floor((float)drawMax_y / 8.f);
+
+    //draw chunks
+    for (unsigned int it_layer = 0; it_layer != mapLayers; it_layer++)
+    {
+        for(unsigned int it_x = minChunk_x; it_x != (maxChunk_x + 1); it_x++)
+        {
+            for(unsigned int it_y = minChunk_y; it_y != (maxChunk_y + 1); it_y++)
+            {
+                window.draw(chunkVector[getChunk(it_x, it_y, it_layer)], textureAtlas);
+            }
+        }
+    }
+}
+void TileEngineNew::drawTiles()
 {
     //find boundaries
     int drawMin_x = (cameraPosition.x / 64.f) - (0.5 * tileFit_x) - (maxTileSize_x - 1);

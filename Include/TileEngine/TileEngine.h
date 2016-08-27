@@ -24,7 +24,10 @@ public:
     ~TileEngineNew();
 
     void loadMap(std::string _mapName);
+    //draws chunks
     void drawMap();
+    //draws separate tiles
+    void drawTiles();
 
     //set tiles drawn from player position
     void setPosition(int x, int y);
@@ -67,6 +70,9 @@ protected:
     unsigned int chunks_x = 0, chunks_y = 0;
     //texture
     sf::Texture* textureAtlas = nullptr;
+
+    //temp
+    sf::Sprite tempSprite;
 };
 
 

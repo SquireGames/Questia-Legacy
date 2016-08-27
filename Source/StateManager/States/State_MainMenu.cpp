@@ -18,22 +18,7 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
     musicSound.setBuffer(musicBuffer);
     musicSound.setVolume(utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")));
     musicSound.play();
-
-    sf::Vertex vertexTest;
-
-    sf::VertexArray vertexArrayTest;
-    vertexArrayTest.setPrimitiveType(sf::PrimitiveType::Quads);
-    vertexArrayTest.resize(4);
-    vertexArrayTest[0] = vertexTest;
-    vertexArrayTest[1] = vertexTest;
-    vertexArrayTest[2] = vertexTest;
-    vertexArrayTest[3] = vertexTest;
-
-
-    std::cout << "Bytes of array:  " << sizeof(vertexArrayTest) << std::endl;
-    std::cout << "Bytes of vertex: " << sizeof(vertexTest) << std::endl;
 }
-
 
 State_MainMenu::~State_MainMenu()
 {

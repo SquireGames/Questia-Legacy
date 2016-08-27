@@ -117,7 +117,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     ///views
     gameView.setSize(1920,1080);
     gameView.setCenter(960,540);
-    gameView.zoom(1.f);
+    gameView.zoom(1);
 
     overlayView.setSize(1920,1080);
     overlayView.setCenter(960,540);
@@ -197,6 +197,15 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
 
     ///NEW TILE ENGINE
     tileEngineNew.loadMap("TEST");
+
+    //temp
+    visibleScreen.setPrimitiveType(sf::PrimitiveType::LinesStrip);
+    visibleScreen.resize(5);
+    visibleScreen.append(sf::Vertex(sf::Vector2f(0,0), sf::Color::Black));
+    visibleScreen.append(sf::Vertex(sf::Vector2f(1920,0), sf::Color::Black));
+    visibleScreen.append(sf::Vertex(sf::Vector2f(1920,1080), sf::Color::Black));
+    visibleScreen.append(sf::Vertex(sf::Vector2f(0,1080), sf::Color::Black));
+    visibleScreen.append(sf::Vertex(sf::Vector2f(0,0), sf::Color::Black));
 }
 
 State_Game::~State_Game()
@@ -336,7 +345,7 @@ void State_Game::update(sf::Time elapsedTime)
         playerAngle = angle;
     }
 
-    entityManager.update(tileEngine, player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
+    entityManager.update(player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
     spawnManager.checkSpawns();
 
     gameView.setCenter(entityManager.getPlayerCoordinates());
@@ -379,18 +388,28 @@ void State_Game::displayTextures()
     window.setView(gameView);
     //tileEngine.drawMap(player_MapCoordinates);
     tileEngineNew.drawMap();
+    //tileEngineNew.drawTiles();
 
-    lightManager.drawLighting_1();
+    //lightManager.drawLighting_1();
     itemManager.drawItems();
     entityManager.drawEntity();
-    lightManager.drawLighting_2();
+    //lightManager.drawLighting_2();
     window.draw(alignment2);
 
     window.setView(overlayView);
     commandsManager.drawCommandArea();
 
     guiManager.drawButtons();
-    window.draw(alignment);
+
+    //window.draw(alignment);
+
+    //temp\
+    sf::View zoomOut;\
+    zoomOut.setSize(1920,1080);\
+    zoomOut.setCenter(1920/2, 1080/2);\
+    zoomOut.zoom(1.75);\
+    window.setView(zoomOut);\
+    window.draw(visibleScreen);
 }
 
 

@@ -29,8 +29,9 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
     option_fps.setOptionName(saveFile.getFpsName());
     option_fps.addChoice(std::make_pair ("V-Sync", 0));
     option_fps.addChoice(std::make_pair ("60  Fps", 60));
+    option_fps.addChoice(std::make_pair ("128 Fps", 128));
     option_fps.addChoice(std::make_pair ("144 Fps", 144));
-    option_fps.addChoice(std::make_pair ("288 Fps", 288));
+    option_fps.addChoice(std::make_pair ("256 Fps", 256));
     option_fps.addChoice(std::make_pair ("Unlimited", -1));
     //font
     option_font.setList("displayList");
