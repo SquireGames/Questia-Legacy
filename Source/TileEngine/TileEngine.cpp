@@ -47,7 +47,7 @@ void TileEngineNew::loadMap(std::string _mapName)
     {
         chunks_x = mapWidth / 8;
     }
-    //incomplete tile = new tile
+    //incomplete chunk = new chunk
     else
     {
         chunks_x = ((mapWidth - remainder_x) / 8) + 1;
@@ -56,24 +56,19 @@ void TileEngineNew::loadMap(std::string _mapName)
     {
         chunks_y = mapHeight / 8;
     }
-    //incomplete tile = new tile
+    //incomplete chunk = new chunk
     else
     {
         chunks_y = ((mapHeight - remainder_y) / 8) + 1;
     }
 
     //set size of chunk vector
-    chunkVector.resize(chunks_x * chunks_y * mapLayers);
-    //fill chunkVector with full vertexArrays
+    chunkVector.resize(chunks_x * chunks_y);
+
     sf::VertexArray emptyChunk;
     //4 vertices per tile, 8 x 8 tiles
-    emptyChunk.resize(4 * 64);
     emptyChunk.setPrimitiveType(sf::PrimitiveType::Quads);
-    //making sure its filled
-    for(unsigned int it = 0; it != 4 * 64; it++)
-    {
-        emptyChunk[it] = sf::Vertex();
-    }
+
     //fill chunk vector with chunks
     for(unsigned int it = 0; it != chunkVector.size(); it++)
     {
@@ -86,18 +81,15 @@ void TileEngineNew::loadMap(std::string _mapName)
 
     //filling the chunks with tiles
     //iterate through all chunks
-    for(unsigned int it_layer = 0; it_layer != mapLayers; it_layer++)
+    for(unsigned int it_chunk_x = 0; it_chunk_x != mapWidth; it_chunk_x++)
     {
-        for(unsigned int it_chunk_x = 0; it_chunk_x != mapWidth; it_chunk_x++)
+        for(unsigned int it_chunk_y = 0; it_chunk_y != mapHeight; it_chunk_y++)
         {
-            for(unsigned int it_chunk_y = 0; it_chunk_y != mapHeight; it_chunk_y++)
+            for(unsigned int it_layer = 0; it_layer != mapLayers; it_layer++)
             {
                 //top left of chunk on the x axis
                 int chunkOrigin_x = 8 * it_chunk_x;
                 int chunkOrigin_y = 8 * it_chunk_y;
-
-                //resets every chunk, used for vectorArray position
-                int chunkQuadIterator = 0;
 
                 //iterate through tiles, 8x8
                 for(unsigned int it_tile_x = 0; it_tile_x != 8 && it_tile_x + chunkOrigin_x < mapWidth; it_tile_x++)
@@ -110,130 +102,123 @@ void TileEngineNew::loadMap(std::string _mapName)
 
                         //get tile index and id
                         const utl::Vector2ui& tileID = tileMap[getTile(currentTile_x, currentTile_y, it_layer)];
-                        const Tile& tileData = tileStorage.at(std::make_pair(tileID.x, tileID.y));
 
-                        //to prevent texture bleeding
-                        float offset = 0.01;
-
-                        //texture int rect
-                        const utl::IntRect& texturePosition = tileData.texturePosition;
-                        //size
-                        const utl::Vector2i& tileSize = tileData.tileSize;
-                        //rotation
-                        const int& rotationDegrees = tileData.degrees;
-                        //flips
-                        const char& flip = tileData.flip;
-
-                        //size vertices and texture coords for flips and rotations
-                        utl::Vector2i posVerticies[4] = {utl::Vector2i(0                     + (currentTile_x * 64) - offset, 0                      + (currentTile_y * 64) - offset),
-                                                          utl::Vector2i(texturePosition.width + (currentTile_x * 64) + offset, 0                      + (currentTile_y * 64) - offset),
-                                                          utl::Vector2i(texturePosition.width + (currentTile_x * 64) + offset, texturePosition.height + (currentTile_y * 64) + offset),
-                                                          utl::Vector2i(0                     + (currentTile_x * 64) - offset, texturePosition.height + (currentTile_y * 64) + offset)
-                                                         };
-                        utl::Vector2i textureVerticies[4] = {utl::Vector2i(texturePosition.x                         + offset, texturePosition.y                          + offset),
-                                                              utl::Vector2i(texturePosition.x + texturePosition.width - offset, texturePosition.y                          + offset),
-                                                              utl::Vector2i(texturePosition.x + texturePosition.width - offset, texturePosition.y + texturePosition.height - offset),
-                                                              utl::Vector2i(texturePosition.x                         + offset, texturePosition.y + texturePosition.height - offset)
-                                                             };
-                        //apply transformations
-                        //size
-                        if(tileSize.x != -1)
+                        if(tileID.x != 0)
                         {
-                            posVerticies[0] = utl::Vector2i(0                + (currentTile_x * 64) - offset, 0               + (currentTile_y * 64) - offset);
-                            posVerticies[1] = utl::Vector2i(64 * tileSize.x  + (currentTile_x * 64) + offset, 0               + (currentTile_y * 64) - offset);
-                            posVerticies[2] = utl::Vector2i(64 * tileSize.x  + (currentTile_x * 64) + offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
-                            posVerticies[3] = utl::Vector2i(0                + (currentTile_x * 64) - offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
-                        }
-                        //flip
-                        if(flip != 'n')
-                        {
-                            utl::Vector2i tempVec(0,0);
-                            if(flip == 'x')
-                            {
-                                tempVec = textureVerticies[0];
-                                textureVerticies[0] = textureVerticies[1];
-                                textureVerticies[1] = tempVec;
-                                tempVec = textureVerticies[2];
-                                textureVerticies[2] = textureVerticies[3];
-                                textureVerticies[3] = tempVec;
-                            }
-                            else if(flip == 'y')
-                            {
-                                tempVec = textureVerticies[0];
-                                textureVerticies[0] = textureVerticies[3];
-                                textureVerticies[3] = tempVec;
-                                tempVec = textureVerticies[1];
-                                textureVerticies[1] = textureVerticies[2];
-                                textureVerticies[2] = tempVec;
-                            }
-                            else if(flip == 'b')
-                            {
-                                tempVec = textureVerticies[0];
-                                textureVerticies[0] = textureVerticies[2];
-                                textureVerticies[2] = tempVec;
-                                tempVec = textureVerticies[1];
-                                textureVerticies[1] = textureVerticies[3];
-                                textureVerticies[3] = tempVec;
-                            }
-                        }
-                        //rotate
-                        if(rotationDegrees != 0)
-                        {
-                            utl::Vector2i tempVec(0,0);
-                            if(rotationDegrees == 90)
-                            {
-                                tempVec = textureVerticies[0];
-                                textureVerticies[0] = textureVerticies[3];
-                                textureVerticies[3] = textureVerticies[2];
-                                textureVerticies[2] = textureVerticies[1];
-                                textureVerticies[1] = tempVec;
-                            }
-                            else if(rotationDegrees == 180)
-                            {
-                                tempVec = textureVerticies[0];
-                                textureVerticies[0] = textureVerticies[2];
-                                textureVerticies[2] = tempVec;
-                                tempVec = textureVerticies[1];
-                                textureVerticies[1] = textureVerticies[3];
-                                textureVerticies[3] = tempVec;
-                            }
-                            else if(rotationDegrees == 270)
-                            {
-                                tempVec = textureVerticies[0];
-                                textureVerticies[0] = textureVerticies[1];
-                                textureVerticies[1] = textureVerticies[2];
-                                textureVerticies[2] = textureVerticies[3];
-                                textureVerticies[3] = tempVec;
-                            }
-                        }
+                            const Tile& tileData = tileStorage.at(std::make_pair(tileID.x, tileID.y));
 
-                        //set the coords
-                        //top left
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(posVerticies[0].x    , posVerticies[0].y);
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(textureVerticies[0].x, textureVerticies[0].y);
-                        chunkQuadIterator++;
-                        //top right
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(posVerticies[1].x    , posVerticies[1].y);
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(textureVerticies[1].x, textureVerticies[1].y);
-                        chunkQuadIterator++;
-                        //bottom right
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(posVerticies[2].x    , posVerticies[2].y);
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(textureVerticies[2].x, textureVerticies[2].y);
-                        chunkQuadIterator++;
-                        //bottom left
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].position  = sf::Vector2f(posVerticies[3].x    , posVerticies[3].y);
-                        chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)][chunkQuadIterator].texCoords = sf::Vector2f(textureVerticies[3].x, textureVerticies[3].y);
-                        chunkQuadIterator++;
+                            //to prevent texture bleeding
+                            float offset = 0.01;
+
+                            //texture int rect
+                            const utl::IntRect& texturePosition = tileData.texturePosition;
+                            //size
+                            const utl::Vector2i& tileSize = tileData.tileSize;
+                            //rotation
+                            const int& rotationDegrees = tileData.degrees;
+                            //flips
+                            const char& flip = tileData.flip;
+
+                            //size vertices and texture coords for flips and rotations
+                            utl::Vector2i posVerticies[4] = {utl::Vector2i(0                     + (currentTile_x * 64) - offset, 0                      + (currentTile_y * 64) - offset),
+                                                             utl::Vector2i(texturePosition.width + (currentTile_x * 64) + offset, 0                      + (currentTile_y * 64) - offset),
+                                                             utl::Vector2i(texturePosition.width + (currentTile_x * 64) + offset, texturePosition.height + (currentTile_y * 64) + offset),
+                                                             utl::Vector2i(0                     + (currentTile_x * 64) - offset, texturePosition.height + (currentTile_y * 64) + offset)
+                                                            };
+                            utl::Vector2i textureVerticies[4] = {utl::Vector2i(texturePosition.x                         + offset, texturePosition.y                          + offset),
+                                                                 utl::Vector2i(texturePosition.x + texturePosition.width - offset, texturePosition.y                          + offset),
+                                                                 utl::Vector2i(texturePosition.x + texturePosition.width - offset, texturePosition.y + texturePosition.height - offset),
+                                                                 utl::Vector2i(texturePosition.x                         + offset, texturePosition.y + texturePosition.height - offset)
+                                                                };
+                            //apply transformations
+                            //size
+                            if(tileSize.x != -1)
+                            {
+                                posVerticies[0] = utl::Vector2i(0                + (currentTile_x * 64) - offset, 0               + (currentTile_y * 64) - offset);
+                                posVerticies[1] = utl::Vector2i(64 * tileSize.x  + (currentTile_x * 64) + offset, 0               + (currentTile_y * 64) - offset);
+                                posVerticies[2] = utl::Vector2i(64 * tileSize.x  + (currentTile_x * 64) + offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
+                                posVerticies[3] = utl::Vector2i(0                + (currentTile_x * 64) - offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
+                            }
+                            //flip
+                            if(flip != 'n')
+                            {
+                                utl::Vector2i tempVec(0,0);
+                                if(flip == 'x')
+                                {
+                                    tempVec = textureVerticies[0];
+                                    textureVerticies[0] = textureVerticies[1];
+                                    textureVerticies[1] = tempVec;
+                                    tempVec = textureVerticies[2];
+                                    textureVerticies[2] = textureVerticies[3];
+                                    textureVerticies[3] = tempVec;
+                                }
+                                else if(flip == 'y')
+                                {
+                                    tempVec = textureVerticies[0];
+                                    textureVerticies[0] = textureVerticies[3];
+                                    textureVerticies[3] = tempVec;
+                                    tempVec = textureVerticies[1];
+                                    textureVerticies[1] = textureVerticies[2];
+                                    textureVerticies[2] = tempVec;
+                                }
+                                else if(flip == 'b')
+                                {
+                                    tempVec = textureVerticies[0];
+                                    textureVerticies[0] = textureVerticies[2];
+                                    textureVerticies[2] = tempVec;
+                                    tempVec = textureVerticies[1];
+                                    textureVerticies[1] = textureVerticies[3];
+                                    textureVerticies[3] = tempVec;
+                                }
+                            }
+                            //rotate
+                            if(rotationDegrees != 0)
+                            {
+                                utl::Vector2i tempVec(0,0);
+                                if(rotationDegrees == 90)
+                                {
+                                    tempVec = textureVerticies[0];
+                                    textureVerticies[0] = textureVerticies[3];
+                                    textureVerticies[3] = textureVerticies[2];
+                                    textureVerticies[2] = textureVerticies[1];
+                                    textureVerticies[1] = tempVec;
+                                }
+                                else if(rotationDegrees == 180)
+                                {
+                                    tempVec = textureVerticies[0];
+                                    textureVerticies[0] = textureVerticies[2];
+                                    textureVerticies[2] = tempVec;
+                                    tempVec = textureVerticies[1];
+                                    textureVerticies[1] = textureVerticies[3];
+                                    textureVerticies[3] = tempVec;
+                                }
+                                else if(rotationDegrees == 270)
+                                {
+                                    tempVec = textureVerticies[0];
+                                    textureVerticies[0] = textureVerticies[1];
+                                    textureVerticies[1] = textureVerticies[2];
+                                    textureVerticies[2] = textureVerticies[3];
+                                    textureVerticies[3] = tempVec;
+                                }
+                            }
+
+                            //set the coords
+                            //top left
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[0].x, posVerticies[0].y), sf::Vector2f(textureVerticies[0].x, textureVerticies[0].y)));
+                            //top right
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[1].x, posVerticies[1].y), sf::Vector2f(textureVerticies[1].x, textureVerticies[1].y)));
+                            //bottom right
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[2].x, posVerticies[2].y), sf::Vector2f(textureVerticies[2].x, textureVerticies[2].y)));
+                            //bottom left
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[3].x, posVerticies[3].y), sf::Vector2f(textureVerticies[3].x, textureVerticies[2].y)));
+                        }
                     }
                 }
             }
         }
     }
-//saving map names
+    //saving map names
     mapName = _mapName;
-
-//temp
-    tempSprite.setTexture(*textureAtlas);
 }
 
 void TileEngineNew::drawMap()
@@ -269,14 +254,11 @@ void TileEngineNew::drawMap()
     int maxChunk_y = std::floor((float)drawMax_y / 8.f);
 
     //draw chunks
-    for (unsigned int it_layer = 0; it_layer != mapLayers; it_layer++)
+    for(unsigned int it_x = minChunk_x; it_x != (maxChunk_x + 1); it_x++)
     {
-        for(unsigned int it_x = minChunk_x; it_x != (maxChunk_x + 1); it_x++)
+        for(unsigned int it_y = minChunk_y; it_y != (maxChunk_y + 1); it_y++)
         {
-            for(unsigned int it_y = minChunk_y; it_y != (maxChunk_y + 1); it_y++)
-            {
-                window.draw(chunkVector[getChunk(it_x, it_y, it_layer)], textureAtlas);
-            }
+            window.draw(chunkVector[getChunk(it_x, it_y)], textureAtlas);
         }
     }
 }
@@ -325,7 +307,6 @@ void TileEngineNew::drawTiles()
                     //move to correct position and draw
                     currentTile.setPosition(tileIt_x, tileIt_y);
                     currentTile.drawTile();
-                    //no sprite batching because of tile scaling and animations
                 }
             }
         }
@@ -343,9 +324,9 @@ int TileEngineNew::getTile(unsigned int x, unsigned int y, unsigned int layer)
 {
     return x + (mapWidth * y) + (layer * mapWidth * mapHeight);
 }
-int TileEngineNew::getChunk(unsigned int x, unsigned int y, unsigned int layer)
+int TileEngineNew::getChunk(unsigned int x, unsigned int y)
 {
-    return x + (chunks_x * y) + (layer * chunks_x * chunks_y);
+    return x + (chunks_x * y);
 }
 
 

@@ -56,7 +56,7 @@ protected:
     ///helpers
     //for map
     int getTile(unsigned int x, unsigned int y, unsigned int layer);
-    int getChunk(unsigned int x, unsigned int y, unsigned int layer);
+    int getChunk(unsigned int x, unsigned int y);
 
     ///default
     sf::RenderWindow &window;
@@ -70,9 +70,6 @@ protected:
     unsigned int chunks_x = 0, chunks_y = 0;
     //texture
     sf::Texture* textureAtlas = nullptr;
-
-    //temp
-    sf::Sprite tempSprite;
 };
 
 
