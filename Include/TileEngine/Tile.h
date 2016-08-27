@@ -42,6 +42,7 @@ public:
 private:
     //not always used
     sf::Sprite tileSprite;
+    utl::Vector2f tileOriginOffset = utl::Vector2f(0,0);
 
     //default
     sf::RenderWindow& window;

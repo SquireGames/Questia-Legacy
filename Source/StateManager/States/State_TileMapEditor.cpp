@@ -17,12 +17,13 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &mWindow):
     //verify view
     mapView.setSize(1920,1080);
     mapView.setCenter(960,540);
+    //mapView.zoom(2);
     window.setView(mapView);
 
     //load map
-    tileEngineEditor.createMap("TEST",500,500,4);
+    //tileEngineEditor.createMap("TEST",500,500,4);
     tileEngineEditor.loadMap("TEST");
-    tileEngineEditor.setPosition(0,0);
+    tileEngineEditor.setPosition(960,540);
 }
 
 State_TileMapEditor::~State_TileMapEditor()
@@ -49,6 +50,6 @@ void State_TileMapEditor::update(sf::Time)
 void State_TileMapEditor::displayTextures()
 {
     guiManager.drawButtons();
-    tileEngineEditor.drawMap();
+    tileEngineEditor.drawTiles();
 }
 

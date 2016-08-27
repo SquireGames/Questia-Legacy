@@ -43,6 +43,12 @@ struct Vector2ui
     Vector2ui(unsigned int _x, unsigned int _y): x(_x), y(_y) {}
     unsigned int x, y;
 };
+struct Vector2f
+{
+    Vector2f() : x(0), y(0) {}
+    Vector2f(float _x, float _y): x(_x), y(_y) {}
+    float x, y;
+};
 
 struct IntRect
 {
