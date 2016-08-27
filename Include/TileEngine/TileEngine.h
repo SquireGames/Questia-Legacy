@@ -28,6 +28,7 @@ public:
     void drawMap();
     //draws separate tiles
     void drawTiles();
+    void setViewportSize(float width, float height);
 
     //set tiles drawn from player position
     void setPosition(int x, int y);
@@ -45,8 +46,8 @@ protected:
     unsigned int maxTileSize_x = 1, maxTileSize_y = 1;
 
     //tiles fit on screen
-    const unsigned int tileFit_x = (1920.f / 64.f) + 2; // +2 for transitioning tiles
-    const unsigned int tileFit_y = (1080.f / 64.f) + 2; // +2 for transitioning tiles
+    unsigned int tileFit_x = (1920.f / 64.f) + 2; // +2 for transitioning tiles
+    unsigned int tileFit_y = (1080.f / 64.f) + 2; // +2 for transitioning tiles
 
     ///data
     utl::Vector2i cameraPosition {utl::Vector2i(0,0)};

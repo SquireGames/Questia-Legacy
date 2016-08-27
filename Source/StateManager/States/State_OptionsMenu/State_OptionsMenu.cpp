@@ -212,5 +212,3 @@ void State_OptionsMenu::displayTextures()
 {
     guiManager.drawButtons();
 }
-
-

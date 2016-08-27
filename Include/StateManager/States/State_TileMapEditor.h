@@ -39,6 +39,16 @@ private:
     SaveFile_Options saveFile_options;
 
     sf::View mapView;
+    sf::View overlayView;
+
+    utl::Vector2f cameraPosition = utl::Vector2f(0,0);
+    bool is_key_up    = false;
+    bool is_key_down  = false;
+    bool is_key_left  = false;
+    bool is_key_right = false;
+
+    //temp
+    sf::VertexArray visibleScreen;
 };
 
 #endif // STATE_TILEMAPEDITOR_H

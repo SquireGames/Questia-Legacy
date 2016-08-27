@@ -87,7 +87,7 @@ void TileEngineNew::loadMap(std::string _mapName)
         {
             for(unsigned int it_layer = 0; it_layer != mapLayers; it_layer++)
             {
-                //top left of chunk on the x axis
+                //chunk tile number
                 int chunkOrigin_x = 8 * it_chunk_x;
                 int chunkOrigin_y = 8 * it_chunk_y;
 
@@ -311,6 +311,11 @@ void TileEngineNew::drawTiles()
             }
         }
     }
+}
+void TileEngineNew::setViewportSize(float width, float height)
+{
+    tileFit_x = (width  / 64.f) + 2; // +2 for transitioning tiles
+    tileFit_y = (height / 64.f) + 2; // +2 for transitioning tiles
 }
 
 void TileEngineNew::setPosition(int x, int y)
