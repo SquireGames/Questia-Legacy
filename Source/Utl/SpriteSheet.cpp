@@ -3,51 +3,70 @@
 SpriteSheet::SpriteSheet(ResourceManager& _resourceManager, std::string imageLocation, unsigned int slides_x, unsigned int slides_y):
     res(_resourceManager)
     , spriteMap()
-    , size_x(0)
-    , size_y(0)
 {
-    sf::Texture animationSheet;
+    //spriteSheet texture
+    sf::Texture* texture = nullptr;
 
-    if (!animationSheet.loadFromFile(imageLocation))
+    //see if sheet already exists
+    if(res.isTexture(imageLocation))
     {
-        return;
+        texture = &res.getTexture(imageLocation);
+
+        const sf::Vector2<unsigned int>& textureSize = texture->getSize();
+
+        size_x = (textureSize.x - (slides_x - 1)) / slides_x;
+        size_y = (textureSize.y - (slides_y - 1)) / slides_y;
+    }
+    else
+    {
+        //loading texture
+        texture = &res.getTexture(imageLocation);
+
+        //get sheet dimensions
+        const sf::Vector2<unsigned int>& textureSize = texture->getSize();
+        size_x = (textureSize.x - (slides_x - 1)) / slides_x;
+        size_y = (textureSize.y - (slides_y - 1)) / slides_y;
+
+        //only image can modify pixels
+        sf::Image tempImage = texture->copyToImage();
+
+        //get rid of vertical lines
+        for(unsigned int it_x = 0; it_x != (slides_x - 1); it_x++)
+        {
+            for(unsigned int it_y = 0; it_y != textureSize.y; it_y++)
+            {
+                tempImage.setPixel(it_x * (size_x + 1) + size_x, it_y, sf::Color(0,0,0,0));
+            }
+        }
+        //get rid of horizontal lines
+        for(unsigned int it_y = 0; it_y != (slides_y - 1); it_y++)
+        {
+            for(unsigned int it_x = 0; it_x != textureSize.x; it_x++)
+            {
+                tempImage.setPixel(it_x , it_y * (size_y + 1) + size_y, sf::Color(0,0,0,0));
+            }
+        }
+        //convert back to texture
+        texture->update(tempImage);
     }
 
-    sf::Vector2<unsigned int> imageSize = animationSheet.getSize();
-
-    //regular size
-    size_x = (imageSize.x - (slides_x - 1)) / slides_x;
-    size_y = (imageSize.y - (slides_y - 1)) / slides_y;
-
+    //getting the sprites
     for(unsigned int it_1 = 0; it_1 < slides_x; it_1++)
     {
         for(unsigned int it_2 = 0; it_2 < slides_y; it_2++)
         {
             sf::Sprite sheet;
             sheet.setTexture(res.getTexture(imageLocation));
-            sheet.setTextureRect(sf::IntRect((it_1 * size_x) + it_1 + 1,// +1 to avoid the boundary clipping
-                                             (it_2 * size_y) + it_2 + 1,
-                                             size_x - 2, //-2 to avoid the boundary clipping
-                                             size_y - 2));
+            sheet.setTextureRect(sf::IntRect((it_1 * size_x) + it_1,
+                                             (it_2 * size_y) + it_2,
+                                             size_x,
+                                             size_y));
             spriteMap[it_1] [it_2] = sheet;
-
-            sf::IntRect tempRect = sheet.getTextureRect();
-            /*
-            std::cout << "---------------------" << std::endl;
-            std::cout << "x: " << tempRect.left << std::endl;
-            std::cout << "y: " << tempRect.top << std::endl;
-            std::cout << "width: " << tempRect.width << std::endl;
-            std::cout << "height: " << tempRect.height << std::endl;
-            std::cout << "---------------------" << std::endl;
-            */
         }
     }
-    //account for boundary clipping
-    size_x -= 2;
-    size_y -= 2;
 }
 
-void SpriteSheet::setSize(int width, int height)
+void SpriteSheet::setSize(float width, float height)
 {
     for(auto& it1 : spriteMap)
     {

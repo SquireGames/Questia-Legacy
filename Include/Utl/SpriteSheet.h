@@ -18,34 +18,18 @@ public:
     unsigned int getSheetWidth();
     unsigned int getSheetHeight();
 
-    void setSize(int width, int height);
+    void setSize(float width, float height);
     void setOrigin(float x, float y);
 
 private:
+    //default
     ResourceManager &res;
+
+    //saves sprites
     std::map<int, std::map<int, sf::Sprite> > spriteMap;
-    unsigned int size_x;
-    unsigned int size_y;
-};
 
-class SpriteSheetNew
-{
-public:
-    SpriteSheetNew();
-
-    sf::Sprite& getSprite(unsigned int map_x, unsigned int map_y);
-
-    unsigned int getSheetWidth();
-    unsigned int getSheetHeight();
-
-    void setSize(int width, int height);
-    void setOrigin(float x, float y);
-
-private:
-    sf::Texture* texture = nullptr;
-    //std::map<int, std::map<int, sf::Sprite> > spriteMap;
-    unsigned int size_x;
-    unsigned int size_y;
+    //size of individual sheet
+    unsigned int size_x = 0, size_y = 0;
 };
 
 #endif // STRUCT_ANIMATION_H

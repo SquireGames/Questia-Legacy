@@ -67,3 +67,15 @@ void ResourceManager::kill(std::string filename)
         textureMap.erase(filename);
     }
 }
+
+bool ResourceManager::isTexture(std::string textureName)
+{
+    for(auto it = textureMap.begin(); it != textureMap.end(); it++)
+    {
+        if(textureName == it->first)
+        {
+            return true;
+        }
+    }
+    return false;
+}

@@ -6,7 +6,6 @@
 #define PLAYER_WIDTH 43*2
 #define PLAYER_HEIGHT 68*2
 
-
 extern bool isInDebugMode;
 
 Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager, LightManager& _lightManager,
@@ -66,6 +65,16 @@ Entity_Player::Entity_Player(ResourceManager &res, EntityManager &entityManager,
 
     colRect.setFillColor(sf::Color(0,0,255,100));
     colRect.setSize(sf::Vector2f(sideRadius.x *2, sideRadius.y*2));
+
+    if(sf::Shader::isAvailable())
+    {
+        testShader.loadFromFile("Media/Image/Shader/edge.frag", sf::Shader::Type::Fragment);
+        //testShader.loadFromFile("Media/Image/Shader/color.frag", sf::Shader::Type::Fragment);
+        testShader.setUniform("texture", sf::Shader::CurrentTexture);
+        //testShader.setUniform("color", sf::Glsl::Vec4(sf::Color::Blue));
+        testShader.setUniform(std::string ("edgeSize"), 0.003f);
+        testShader.setUniform(std::string ("newColor"), sf::Glsl::Vec4(sf::Color::Blue));
+    }
 }
 
 Entity_Player::~Entity_Player()
@@ -79,6 +88,7 @@ void Entity_Player::drawEntity(sf::RenderWindow &window)
     //std::cout << coordinates.x << ", " << coordinates.y << std::endl;
 
     window.draw(animation.getSprite(animationDirection-1, animationStep-1));
+    window.draw(animation.getSprite(animationDirection-1, animationStep-1), &testShader);
 
     if(isInDebugMode)
     {

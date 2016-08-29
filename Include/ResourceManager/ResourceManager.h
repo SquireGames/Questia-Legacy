@@ -12,6 +12,7 @@ public:
     ~ResourceManager();
     sf::Texture& getTexture(std::string filename);
     sf::Texture& getBlankTexture(std::string textureName);
+    bool isTexture(std::string textureName);
     void kill(std::string filename);
 
 private:

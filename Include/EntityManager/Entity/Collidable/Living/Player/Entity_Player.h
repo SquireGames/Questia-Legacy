@@ -135,6 +135,9 @@ private:
 
     ///collision visual
     sf::RectangleShape colRect;
+
+    ///shader
+    sf::Shader testShader;
 };
 
 #endif // ENTITY_PLAYER_H

@@ -17,8 +17,7 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &mWindow):
     //map view
     mapView.setSize(1920,1080);
     mapView.setCenter(0,0);
-    //temp
-    mapView.zoom(1);
+
     //gui view
     overlayView.setSize(1920,1080);
     overlayView.setCenter(1920/2,1080/2);
@@ -27,15 +26,6 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &mWindow):
     //tileEngineEditor.createMap("TEST",500,500,4);
     tileEngineEditor.loadMap("TEST");
     tileEngineEditor.setPosition(0,0);
-
-    //temp
-    visibleScreen.setPrimitiveType(sf::PrimitiveType::LinesStrip);
-    visibleScreen.resize(5);
-    visibleScreen.append(sf::Vertex(sf::Vector2f(0,0), sf::Color::Black));
-    visibleScreen.append(sf::Vertex(sf::Vector2f(1920,0), sf::Color::Black));
-    visibleScreen.append(sf::Vertex(sf::Vector2f(1920,1080), sf::Color::Black));
-    visibleScreen.append(sf::Vertex(sf::Vector2f(0,1080), sf::Color::Black));
-    visibleScreen.append(sf::Vertex(sf::Vector2f(0,0), sf::Color::Black));
 }
 
 State_TileMapEditor::~State_TileMapEditor()
@@ -111,7 +101,6 @@ void State_TileMapEditor::update(sf::Time)
         mapView.zoom(1.05);
         tileEngineEditor.setViewportSize(mapView.getSize().x, mapView.getSize().y);
     }
-    std::cout << "Map Size: (" << mapView.getSize().x << ", " << mapView.getSize().y << ")" << std::endl;
 
     //debug
     guiManager.setButtonAtr("fpsText", "text", gui::ButtonAtrCharacteristic::text, utl::asString(Data_Desktop::getInstance().get_FPS()));
@@ -126,13 +115,4 @@ void State_TileMapEditor::displayTextures()
     //gui
     window.setView(overlayView);
     guiManager.drawButtons();
-
-    //temp\
-    sf::View zoomOut;\
-    zoomOut.setSize(1920,1080);\
-    zoomOut.setCenter(1920/2, 1080/2);\
-    zoomOut.zoom(1.75);\
-    window.setView(zoomOut);\
-    window.draw(visibleScreen);
 }
-
