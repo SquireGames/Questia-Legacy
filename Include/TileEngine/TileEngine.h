@@ -33,6 +33,9 @@ public:
     //set tiles drawn from player position
     void setPosition(int x, int y);
 
+    //collision detection
+    //utl::Direction
+
 protected:
     ///map
     //stores tiles

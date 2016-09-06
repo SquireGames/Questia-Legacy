@@ -9,10 +9,8 @@
 
 #include "Utl/Utl.h"
 
-const sf::Time Application::timePerFrame = sf::seconds(1.f/128.f);
-
 Application::Application():
-    mStatisticsUpdateTime()
+    mStatisticsUpdateTime(sf::Time::Zero)
     , mStatisticsFramesCount(0)
     , saveFile()
 {
@@ -22,13 +20,13 @@ Application::Application():
     switch (saveFile.getWindowMode())
     {
     case 0:
-        mWindow.create(sf::VideoMode(1920, 1080),"Questia",sf::Style::Fullscreen);
+        window_main.create(sf::VideoMode(1920, 1080),"Questia",sf::Style::Fullscreen);
         break;
     case 1:
-        mWindow.create(sf::VideoMode(1280, 720),"Questia",sf::Style::Default);
+        window_main.create(sf::VideoMode(1280, 720),"Questia",sf::Style::Default);
         break;
     default:
-        mWindow.create(sf::VideoMode(1920, 1080),"Questia",sf::Style::Default);
+        window_main.create(sf::VideoMode(1920, 1080),"Questia",sf::Style::Default);
         break;
     }
 
@@ -39,34 +37,34 @@ Application::Application():
 
 void Application::run()
 {
-    Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(mWindow.getSize().x,mWindow.getSize().y),mWindow.getPosition());
+    Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(window_main.getSize().x,window_main.getSize().y),window_main.getPosition());
 
     if(saveFile.getFps() == 0)
     {
-        mWindow.setVerticalSyncEnabled(true);
+        window_main.setVerticalSyncEnabled(true);
     }
     else if (saveFile.getFps() == -1)
     {
-        mWindow.setFramerateLimit(100000);
-        mWindow.setVerticalSyncEnabled(false);
+        window_main.setFramerateLimit(100000);
+        window_main.setVerticalSyncEnabled(false);
     }
     else
     {
-        mWindow.setFramerateLimit(saveFile.getFps());
-        mWindow.setVerticalSyncEnabled(false);
+        window_main.setFramerateLimit(saveFile.getFps());
+        window_main.setVerticalSyncEnabled(false);
     }
 
     sf::View beginningView;
     beginningView.setSize(1920,1080);
     beginningView.setCenter(960,540);
-    mWindow.setView(beginningView);
+    window_main.setView(beginningView);
 
-    StateManager::getInstance().createState(new State_Transition(mWindow, 1));
+    StateManager::getInstance().createState(new State_Transition(window_main, 1));
 
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
-    while(mWindow.isOpen())
+    while(window_main.isOpen())
     {
         sf::Time elapsedTime = clock.restart();
         timeSinceLastUpdate += elapsedTime;
@@ -86,108 +84,33 @@ void Application::processEvents()
 {
     sf::Event event;
 
-    while(mWindow.pollEvent(event))
+    while(window_main.pollEvent(event))
     {
-        if(sf::Event::TextEntered == event.type)
-        {
-            if(event.text.unicode < 128 && event.text.unicode  != 8)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(event.text.unicode);
-            }
-            if(event.text.unicode == 67)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(10);
-            }
-            else if(event.text.unicode == 83)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(11);
-            }
-            else if(event.text.unicode == 65)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(12);
-            }
-            else if(event.text.unicode == 84)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(17);
-            }
-            else if(event.text.unicode == 66)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(14);
-            }
-            else if(event.text.unicode == 95)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(15);
-            }
-            else if(event.text.unicode == 69)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(16);
-            }
-            else if(event.text.unicode == 13)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(' ');
-            }
-            else if(event.text.unicode == 27)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(' ');
-            }
-            else if(event.text.unicode == 32)
-            {
-                Data_Desktop::getInstance().setMostRecentChar('B');
-            }
-
-            //std::cout << "input: " << event.text.unicode << std::endl;
-        }
-
         switch(event.type)
         {
+        case sf::Event::TextEntered:
+        {
+            //regular character range, for text input
+            if(event.text.unicode <= 126 && event.text.unicode >= 33)
+            {
+                Data_Desktop::getInstance().setMostRecentChar(static_cast <char> (event.text.unicode));
+            }
+        }
+        break;
         case sf::Event::KeyPressed:
-            if(event.key.code == sf::Keyboard::LControl)
-            {
-                Data_Desktop::getInstance().setMostRecentChar('C');
-            }
-            else if(event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift)
-            {
-                Data_Desktop::getInstance().setMostRecentChar('S');
-            }
-            else if(event.key.code == sf::Keyboard::LAlt || event.key.code == sf::Keyboard::RAlt)
-            {
-                Data_Desktop::getInstance().setMostRecentChar('A');
-            }
-            else if(event.key.code == sf::Keyboard::Tab)
-            {
-                Data_Desktop::getInstance().setMostRecentChar('T');
-            }
-            else if(event.key.code == sf::Keyboard::BackSpace)
-            {
-                Data_Desktop::getInstance().setMostRecentChar('_');
-            }
-            else if(event.key.code == sf::Keyboard::Up)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(29);
-            }
-            else if(event.key.code == sf::Keyboard::Down)
-            {
-                Data_Desktop::getInstance().setMostRecentChar(30);
-            }
-
-            handlePlayerInput (event.key.code,true);
+            handlePlayerInput (event.key.code, true);
             break;
         case sf::Event::KeyReleased:
-            if(event.key.code == sf::Keyboard::Return)
-            {
-                Data_Desktop::getInstance().setMostRecentChar('E');
-            }
-            handlePlayerInput (event.key.code,false);
+            handlePlayerInput (event.key.code, false);
             break;
         case sf::Event::MouseWheelMoved:
             Data_Desktop::getInstance().setMouseWheelDelta(event.mouseWheel.delta);
-            // mWindow.close();
             break;
         case sf::Event::Closed:
-            mWindow.close();
+            window_main.close();
             break;
         case sf::Event::Resized:
-            Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(mWindow.getSize().x,mWindow.getSize().y),mWindow.getPosition());
+            Data_Desktop::getInstance().setDesktopResolution(sf::Vector2i(window_main.getSize().x,window_main.getSize().y),window_main.getPosition());
             break;
         case sf::Event::MouseButtonReleased:
             Data_Desktop::getInstance().setMouseReleased(true);
@@ -228,9 +151,9 @@ void Application::updateStatistics(sf::Time elapsedTime)
 
 void Application::render()
 {
-    mWindow.clear(sf::Color::Black);
+    window_main.clear();
     StateManager::getInstance().displayTexturesState();
-    mWindow.display();
+    window_main.display();
 }
 
 Application::~Application()

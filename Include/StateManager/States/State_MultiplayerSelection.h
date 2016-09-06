@@ -12,7 +12,7 @@
 class State_MultiplayerSelection : public State
 {
 public:
-    State_MultiplayerSelection(sf::RenderWindow &mWindow);
+    State_MultiplayerSelection(sf::RenderWindow &window);
     ~State_MultiplayerSelection();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

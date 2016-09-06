@@ -12,7 +12,7 @@
 class State_MapSelector : public State
 {
 public:
-    State_MapSelector(sf::RenderWindow &mWindow);
+    State_MapSelector(sf::RenderWindow &window);
     ~State_MapSelector();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

@@ -29,7 +29,7 @@
 class State_OptionsMenu : public State
 {
 public:
-    State_OptionsMenu(sf::RenderWindow &mWindow);
+    State_OptionsMenu(sf::RenderWindow &window);
     ~State_OptionsMenu();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

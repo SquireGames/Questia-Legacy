@@ -22,7 +22,7 @@ public:
     enum ManagerType {singleplayer, multiplayer, server};
     enum EntityType  {player, entity};
 
-    EntityManager(ManagerType _type, sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager);
+    EntityManager(ManagerType _type, sf::RenderWindow &window, ResourceManager &res, LightManager& _lightManager);
     ~EntityManager();
 
     void handleInput(int actionType,bool isPressed,int player);

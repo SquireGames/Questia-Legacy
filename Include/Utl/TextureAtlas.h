@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include "ResourceManager.h"
-#include "Utl.h"
+#include "Rect.h"
 
 struct TextureAtlasData
 {

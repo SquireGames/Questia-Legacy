@@ -11,7 +11,7 @@ public:
     Hostile_Goblin(ResourceManager &res,EntityManager &entityManager, sf::Vector2f coordinates, int ID, std::string _entityType);
 
     ///default
-    void drawEntity(sf::RenderWindow &mWindow);
+    void drawEntity(sf::RenderWindow &window);
     void update(int effect, int (&returnCollision)[4]);
 
     void saveEntity() {};

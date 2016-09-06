@@ -10,11 +10,11 @@
 
 #define OPTION_SPACING 90
 
-State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &mWindow):
-    window(mWindow)
+State_CharacterSelection::State_CharacterSelection(sf::RenderWindow &window):
+    window(window)
     , resourceManager()
-    , guiManager(mWindow, resourceManager, false)
-    , guiManager_options(mWindow, resourceManager, false)
+    , guiManager(window, resourceManager, false)
+    , guiManager_options(window, resourceManager, false)
     , classManager(false)
     , characterCount(0)
     , keyboard_up(false)

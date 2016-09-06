@@ -1,17 +1,7 @@
 #include "Utl/Utl.h"
 
-#include <stdlib.h>//std::atoi
-#include <vector>
-
-float utl::asFloat(const std::string& _string)
-{
-    return atoi(_string.c_str());
-}
-
-int utl::asInt(const std::string& _string)
-{
-    return atoi(_string.c_str());
-}
+///types
+//comparison
 
 bool utl::isNumber(const std::string& _string)
 {
@@ -23,7 +13,36 @@ bool utl::isWithAnyCharacter(const std::string& _string, const std::string& char
     return (_string.find_first_of(characters) != std::string::npos);
 }
 
-std::vector <std::string> utl::separateString (std::string saveString, char delimiter)
+//conversion
+
+int utl::asInt(const std::string& _string)
+{
+    return atoi(_string.c_str());
+}
+
+float utl::asFloat(const std::string& _string)
+{
+    return atoi(_string.c_str());
+}
+
+template std::string utl::asString <bool>           (const bool& _item);
+template std::string utl::asString <char>           (const char& _item);
+template std::string utl::asString <int>            (const int& _item);
+template std::string utl::asString <unsigned short> (const unsigned short& _item);
+template std::string utl::asString <float>          (const float& _item);
+template std::string utl::asString <std::string>    (const std::string& _item);
+template <class T>
+std::string utl::asString (const T& _item)
+{
+    std::stringstream ss;
+    ss << _item;
+    std::string item = ss.str();
+    return item;
+}
+
+//combination
+
+std::vector <std::string> utl::separateString (const std::string& saveString, const char& delimiter)
 {
     std::stringstream sStream;
     std::vector <std::string> returnVector;
@@ -36,14 +55,15 @@ std::vector <std::string> utl::separateString (std::string saveString, char deli
     }
     return returnVector;
 }
-std::vector <std::string> utl::separateString (std::string saveString, std::string delimiters)
+
+std::vector <std::string> utl::separateString (const std::string& saveString, const std::string& delimiters)
 {
     std::vector<std::string> parts;
     boost::split(parts, saveString, boost::is_any_of(delimiters));
     return parts;
 }
 
-std::string utl::conjoinString (std::vector <std::string> stringParts, char delimiter)
+std::string utl::conjoinString (const std::vector <std::string>& stringParts, const char& delimiter)
 {
     std::stringstream sStream;
     for(unsigned int it = 0; it != stringParts.size(); it++)
@@ -58,7 +78,7 @@ std::string utl::conjoinString (std::vector <std::string> stringParts, char deli
     return conjoinedString;
 }
 
-std::string utl::conjoinString (std::vector <std::string> stringParts)
+std::string utl::conjoinString (const std::vector <std::string>& stringParts)
 {
     std::stringstream sStream;
     for(unsigned int it = 0; it != stringParts.size(); it++)

@@ -13,8 +13,8 @@
 #include "StateManager/States/State_MultiplayerSelection.h"
 
 
-State_Transition::State_Transition(sf::RenderWindow &mWindow, int stateID):
-    window(mWindow)
+State_Transition::State_Transition(sf::RenderWindow &window, int stateID):
+    window(window)
     , stateID(stateID)
 {
     std::cout<<"DEBUG: Transition Initialized"<<std::endl;
@@ -26,7 +26,7 @@ State_Transition::State_Transition(sf::RenderWindow &mWindow, int stateID):
     sf::View normalView;
     normalView.setSize(1920,1080);
     normalView.setCenter(960,540);
-    mWindow.setView(normalView);
+    window.setView(normalView);
 }
 
 State_Transition::~State_Transition()

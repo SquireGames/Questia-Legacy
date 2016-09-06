@@ -99,3 +99,11 @@ void Tile::setFlip(char direction)
         break;
     }
 }
+void Tile::setCollisionRect(int x, int y, int width, int height)
+{
+    collisionRect = utl::IntRect(x, y, width, height);
+}
+utl::IntRect& Tile::getCollisionRect()
+{
+    return collisionRect;
+}

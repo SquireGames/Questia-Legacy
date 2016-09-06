@@ -13,20 +13,20 @@
 ///Global variables
 extern bool isInDebugMode;// = false;
 
-State_Game::State_Game(sf::RenderWindow &mWindow):
-    window(mWindow)
+State_Game::State_Game(sf::RenderWindow &window):
+    window(window)
     //managers
     , resourceManager()
     , timeManager(0,0)
-    , lightManager(mWindow, timeManager, resourceManager)
-    , tileEngine (mWindow, resourceManager)
-    , guiManager(mWindow, resourceManager)
+    , lightManager(window, timeManager, resourceManager)
+    , tileEngine (window, resourceManager)
+    , guiManager(window, resourceManager)
     , guiLoader()
-    , entityManager (EntityManager::ManagerType::singleplayer, mWindow, resourceManager, lightManager)
+    , entityManager (EntityManager::ManagerType::singleplayer, window, resourceManager, lightManager)
     , spawnManager (true, entityManager)
-    , characterManager(mWindow, entityManager, guiManager)
-    , itemManager(mWindow, resourceManager)
-    , commandsManager(mWindow, entityManager, timeManager)
+    , characterManager(window, entityManager, guiManager)
+    , itemManager(window, resourceManager)
+    , commandsManager(window, entityManager, timeManager)
 
     , tileEngineNew(window, resourceManager)
 
@@ -117,7 +117,7 @@ State_Game::State_Game(sf::RenderWindow &mWindow):
     ///views
     gameView.setSize(1920,1080);
     gameView.setCenter(960,540);
-    gameView.zoom(1);
+    gameView.zoom(1.f);
 
     overlayView.setSize(1920,1080);
     overlayView.setCenter(960,540);
@@ -225,25 +225,6 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
     }
     else
     {
-        int currentKey;
-        for(unsigned char x = 0; x < keybindVector.size(); x++)
-        {
-            if(keybindVector[x].keyType == 0)
-            {
-                if(key == keybindVector[x].keyInput)
-                {
-                    keybindVector[x].activated = isPressed;
-                    currentKey = keybindVector[x].keyNumber;
-                    x = keybindVector.size();
-                }
-            }
-        }
-
-        if(commandsManager.handleImput(currentKey, isPressed, 0))
-        {
-            entityManager.handleInput(currentKey, isPressed, 0); // player input
-        }
-
         if(key == sf::Keyboard::Tilde && !isPressed)
         {
             //guiManager.toggleOverlay();
@@ -293,6 +274,35 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 
 void State_Game::update(sf::Time elapsedTime)
 {
+    ///keyboard input
+    int currentKey;
+    for(unsigned char x = 0; x < keybindVector.size(); x++)
+    {
+        if(keybindVector[x].keyType == 0)
+        {
+            if(sf::Keyboard::isKeyPressed(keybindVector[x].keyInput))
+            {
+                keybindVector[x].activated = true;
+                currentKey = keybindVector[x].keyNumber;
+
+                if(commandsManager.handleImput(currentKey, true, 0))
+                {
+                    entityManager.handleInput(currentKey, true, 0); // player input
+                }
+            }
+            else
+            {
+                keybindVector[x].activated = false;
+                currentKey = keybindVector[x].keyNumber;
+
+                if(commandsManager.handleImput(currentKey, false, 0))
+                {
+                    entityManager.handleInput(currentKey, false, 0); // player input
+                }
+            }
+        }
+    }
+
     ///update mouse
     guiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
 
@@ -348,8 +358,8 @@ void State_Game::update(sf::Time elapsedTime)
     entityManager.update(player_MapCoordinates, Data_Desktop::getInstance().getScaledMousePosition(window), playerAngle);
     spawnManager.checkSpawns();
 
-    gameView.setCenter(entityManager.getPlayerCoordinates());
     lightManager.setLightOverlay_Coords(entityManager.getPlayerCoordinates());
+    gameView.setCenter(entityManager.getPlayerCoordinates());
 
     tileEngineNew.setPosition(entityManager.getPlayerCoordinates().x, entityManager.getPlayerCoordinates().y);
 
@@ -386,14 +396,14 @@ void State_Game::update(sf::Time elapsedTime)
 void State_Game::displayTextures()
 {
     window.setView(gameView);
-    //tileEngine.drawMap(player_MapCoordinates);
-    tileEngineNew.drawMap();
-    //tileEngineNew.drawTiles();
 
-    //lightManager.drawLighting_1();
+    tileEngineNew.drawMap();
+    tileEngineNew.drawTiles();
+
+
     itemManager.drawItems();
     entityManager.drawEntity();
-    //lightManager.drawLighting_2();
+
     window.draw(alignment2);
 
     window.setView(overlayView);

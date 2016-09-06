@@ -20,7 +20,7 @@ public:
 
 public:
     int returnID();
-    void drawEntity(sf::RenderWindow &mWindow);
+    void drawEntity(sf::RenderWindow &window);
     void update(int effect, int (&returnCollision)[4]);
 private:
     sf::Vector2f coordinates;
@@ -90,7 +90,7 @@ private:
     ResourceManager& res;
     EntityManager& entityManager;
 
-    void drawLayer2(sf::RenderWindow& mWindow);
+    void drawLayer2(sf::RenderWindow& window);
 };
 
 #endif // ATTACK_ARROW_H

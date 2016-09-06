@@ -12,7 +12,7 @@
 class LightManager
 {
 public:
-    LightManager(sf::RenderWindow &mWindow, TimeManager& _timeManager, ResourceManager& _resourceManager);
+    LightManager(sf::RenderWindow &window, TimeManager& _timeManager, ResourceManager& _resourceManager);
     ~LightManager();
 
     void setLightOverlay_Coords(sf::Vector2f coords)      {lightingOverlaySprite.setPosition(coords); playerCoordinates = coords;}

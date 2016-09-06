@@ -23,8 +23,8 @@
 
 #include "Utl/Utl.h"
 
-EntityManager::EntityManager(ManagerType _type, sf::RenderWindow &mWindow, ResourceManager &res, LightManager& _lightManager):
-    window (mWindow)
+EntityManager::EntityManager(ManagerType _type, sf::RenderWindow &window, ResourceManager &res, LightManager& _lightManager):
+    window (window)
     , spawnTick(0)
     , entityNumber(0)
     , timer1(25)

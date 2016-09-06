@@ -44,7 +44,7 @@ Interact_Door::~Interact_Door()
 
 }
 
-void Interact_Door::drawEntity(sf::RenderWindow &mWindow)
+void Interact_Door::drawEntity(sf::RenderWindow &window)
 {
 
 }
@@ -102,14 +102,14 @@ void Interact_Door::checkInteraction(int x, int y,int sideRadius_x, int sideRadi
     }
 }
 
-void Interact_Door::drawLayer3(sf::RenderWindow &mWindow)
+void Interact_Door::drawLayer3(sf::RenderWindow &window)
 {
     if(!interaction)
     {
-        mWindow.draw(entitySprite);
+        window.draw(entitySprite);
     }
     else
     {
-        mWindow.draw(entitySprite2);
+        window.draw(entitySprite2);
     }
 }

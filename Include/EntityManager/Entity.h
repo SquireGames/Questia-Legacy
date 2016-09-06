@@ -10,7 +10,7 @@ public:
     Entity();
     ~Entity();
 
-    virtual void drawEntity(sf::RenderWindow &mWindow) = 0;
+    virtual void drawEntity(sf::RenderWindow &window) = 0;
     virtual void update(int effect, int (&returnCollision)[4]) = 0;
     virtual sf::Vector2f getCoordinates() = 0;
 

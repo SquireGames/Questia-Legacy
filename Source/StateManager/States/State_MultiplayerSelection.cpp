@@ -1,9 +1,9 @@
 #include "State_MultiplayerSelection.h"
 
-State_MultiplayerSelection::State_MultiplayerSelection(sf::RenderWindow &mWindow):
-    window(mWindow)
+State_MultiplayerSelection::State_MultiplayerSelection(sf::RenderWindow &window):
+    window(window)
     , resourceManager()
-    , guiManager(mWindow, resourceManager)
+    , guiManager(window, resourceManager)
 {
     ///background
     aMenuImage.setTexture(resourceManager.getTexture("Media/Image/Gui/Menu/aMenu.png"));

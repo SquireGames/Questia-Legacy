@@ -14,21 +14,21 @@
 //Global variables
 extern bool isInDebugMode;
 
-State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &mWindow):
-    window(mWindow)
+State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &window):
+    window(window)
     //managers
     , resourceManager()
     , timeManager(4,0)
-    , lightManager(mWindow, timeManager, resourceManager)
-   // , tileEngine (mWindow, resourceManager)
-    , guiManager(mWindow, resourceManager, true)
-    , newGuiManager(mWindow, resourceManager)
-    , entityManager (EntityManager::ManagerType::multiplayer, mWindow, resourceManager, lightManager)
+    , lightManager(window, timeManager, resourceManager)
+   // , tileEngine (window, resourceManager)
+    , guiManager(window, resourceManager, true)
+    , newGuiManager(window, resourceManager)
+    , entityManager (EntityManager::ManagerType::multiplayer, window, resourceManager, lightManager)
     , spawnManager (true, entityManager)
-    , characterManager(mWindow, entityManager, newGuiManager)
-    , itemManager(mWindow, resourceManager)
+    , characterManager(window, entityManager, newGuiManager)
+    , itemManager(window, resourceManager)
     , multiplayerManager("Temporary server name")
-    , commandsManager(mWindow, entityManager, &multiplayerManager, timeManager)
+    , commandsManager(window, entityManager, &multiplayerManager, timeManager)
 
 
     //character info

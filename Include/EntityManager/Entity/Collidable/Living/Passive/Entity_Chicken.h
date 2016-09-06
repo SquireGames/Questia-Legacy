@@ -15,7 +15,7 @@ public:
     sf::Vector2f getCoordinates();
     sf::Vector2i getMapCoordinates();
 
-    void drawEntity(sf::RenderWindow &mWindow);
+    void drawEntity(sf::RenderWindow &window);
     void update(int effect, int (&returnCollision)[4]);
     int returnID();
 

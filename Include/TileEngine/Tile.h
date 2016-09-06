@@ -3,7 +3,8 @@
 
 #include <SFML/Window.hpp>
 
-#include "Utl.h"
+#include "Rect.h"
+#include "Vector2.h"
 #include "ResourceManager.h"
 
 ///not stored in actual map but moved and drawn to screen or used to find texture coords
@@ -30,6 +31,12 @@ public:
     void setRotate(int _degrees);
     void setFlip(char direction);
 
+    //set Collision rect
+    void setCollisionRect(int x, int y, int width, int height);
+    //check collision
+    utl::IntRect& getCollisionRect();
+
+
     //for 0,0 tiles
     utl::IntRect texturePosition = utl::IntRect(0,0,0,0);
     //(-1, -1) means sprite size
@@ -43,6 +50,9 @@ private:
     //not always used
     sf::Sprite tileSprite;
     utl::Vector2f tileOriginOffset = utl::Vector2f(0,0);
+
+    //collision
+    utl::IntRect collisionRect = utl::IntRect(0,0,-1,-1);
 
     //default
     sf::RenderWindow& window;

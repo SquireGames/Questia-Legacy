@@ -27,7 +27,7 @@
 class State_Game : public State
 {
 public:
-    State_Game(sf::RenderWindow &mWindow);
+    State_Game(sf::RenderWindow &window);
     ~State_Game();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

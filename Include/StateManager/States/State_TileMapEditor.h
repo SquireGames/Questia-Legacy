@@ -20,7 +20,7 @@
 class State_TileMapEditor : public State
 {
 public:
-    State_TileMapEditor(sf::RenderWindow &mWindow);
+    State_TileMapEditor(sf::RenderWindow &window);
     ~State_TileMapEditor();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

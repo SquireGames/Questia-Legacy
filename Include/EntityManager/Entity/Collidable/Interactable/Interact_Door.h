@@ -13,7 +13,7 @@ public:
     ~Interact_Door();
 
     //Default
-    void drawEntity(sf::RenderWindow &mWindow);
+    void drawEntity(sf::RenderWindow &window);
     void update(int effect, int (&returnCollision)[4]);
     sf::Vector2f getCoordinates();
     void setCoordinates(sf::Vector2f coords);
@@ -27,7 +27,7 @@ public:
     //Interaction
     void checkInteraction(int x, int y,int sideRadius_x, int sideRadius_y);
 
-    void drawLayer3(sf::RenderWindow &mWindow);
+    void drawLayer3(sf::RenderWindow &window);
 
 private:
     ResourceManager &resource;

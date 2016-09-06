@@ -1,7 +1,7 @@
 #include "State_OptionsMenu.h"
 
-State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &mWindow):
-    window(mWindow)
+State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
+    window(window)
     , resourceManager()
     , guiManager(window, resourceManager)
     , optionManager(&guiManager)

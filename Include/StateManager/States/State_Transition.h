@@ -8,7 +8,7 @@
 class State_Transition : public State
 {
 public:
-    State_Transition(sf::RenderWindow &mWindow, int stateID);
+    State_Transition(sf::RenderWindow &window, int stateID);
     ~State_Transition();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

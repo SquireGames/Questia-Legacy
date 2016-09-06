@@ -1,9 +1,9 @@
 #include "StateManager/States/State_MainMenu.h"
 
-State_MainMenu::State_MainMenu(sf::RenderWindow &mWindow):
-    window(mWindow)
+State_MainMenu::State_MainMenu(sf::RenderWindow &window):
+    window(window)
     , resourceManager()
-    , guiManager(mWindow, resourceManager)
+    , guiManager(window, resourceManager)
     , saveFile()
 {
     ///gui

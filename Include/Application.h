@@ -15,17 +15,16 @@ public:
     void run();
 
 private:
-    void handlePlayerInput(sf::Keyboard::Key key,bool isPressed);
+    void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
     void processEvents();
     void update(sf::Time elapsedTime);
     void updateStatistics(sf::Time elapsedTime);
     void render();
 
-    sf::RenderWindow mWindow;
-
+    sf::RenderWindow window_main;
     SaveFile_Options saveFile;
+    const sf::Time timePerFrame = sf::seconds(1.f/128.f);
 
-    static const sf::Time timePerFrame;
     sf::Time mStatisticsUpdateTime;
     int mStatisticsFramesCount;
 };

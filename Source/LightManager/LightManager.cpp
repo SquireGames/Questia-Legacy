@@ -2,8 +2,8 @@
 
 #include "LightManager.h"
 
-LightManager::LightManager(sf::RenderWindow &mWindow,TimeManager& _timeManager, ResourceManager& _resourceManager):
-    window(mWindow)
+LightManager::LightManager(sf::RenderWindow &window,TimeManager& _timeManager, ResourceManager& _resourceManager):
+    window(window)
     , timeManager(_timeManager)
     , resourceManager(_resourceManager)
 {

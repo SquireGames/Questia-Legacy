@@ -24,7 +24,7 @@
 class State_MultiplayerGame : public State
 {
 public:
-    State_MultiplayerGame(sf::RenderWindow &mWindow);
+    State_MultiplayerGame(sf::RenderWindow &window);
     ~State_MultiplayerGame();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

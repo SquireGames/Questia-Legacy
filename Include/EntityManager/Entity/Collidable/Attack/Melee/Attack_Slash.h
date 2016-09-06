@@ -17,7 +17,7 @@ public:
 
 public:
     int returnID();
-    void drawEntity(sf::RenderWindow &mWindow);
+    void drawEntity(sf::RenderWindow &window);
     void update(int effect, int (&returnCollision)[4]);
 private:
     sf::Vector2f coordinates;
@@ -80,7 +80,7 @@ private:
     sf::Vector2f rectBox2[4];
     ResourceManager &res;
 
-    void drawLayer2(sf::RenderWindow &mWindow);
+    void drawLayer2(sf::RenderWindow &window);
 };
 
 #endif // ATTACK_SLASH_H

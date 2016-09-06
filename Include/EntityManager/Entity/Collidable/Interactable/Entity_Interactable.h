@@ -12,7 +12,7 @@ public:
     ~Entity_Interactable();
 
     virtual void checkInteraction(int x, int y,int sideRadius_x, int sideRadius_y) = 0;
-    virtual void drawLayer3(sf::RenderWindow &mWindow) = 0;
+    virtual void drawLayer3(sf::RenderWindow &window) = 0;
 
 protected:
 private:

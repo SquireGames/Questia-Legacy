@@ -432,7 +432,7 @@ std::string GuiManagerNew::createListEntry()
 // OLD GUI MANAGER
 //
 //
-//
+//{
 
 GuiManager::GuiManager(sf::RenderWindow &_window,  ResourceManager &res, bool gameOverlay):
     statLayers(0)
@@ -746,4 +746,4 @@ void GuiManager::deleteButton(int button)
     buttonMap.erase(button);
 }
 
-
+//}

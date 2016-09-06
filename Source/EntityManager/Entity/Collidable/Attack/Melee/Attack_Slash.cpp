@@ -54,14 +54,14 @@ bool Attack_Slash::checkCollision(sf::Vector2f entityCoordinates, sf::Vector2f s
     return check_Collision_SAT(hitbox_Attack, hitbox_Target);
 }
 
-void Attack_Slash::drawEntity(sf::RenderWindow &mWindow)
+void Attack_Slash::drawEntity(sf::RenderWindow &window)
 {
 
 }
-void Attack_Slash::drawLayer2(sf::RenderWindow &mWindow)
+void Attack_Slash::drawLayer2(sf::RenderWindow &window)
 {
     entitySprite.setPosition(coordinates);
-    mWindow.draw(entitySprite);
+    window.draw(entitySprite);
 }
 
 

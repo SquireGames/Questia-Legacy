@@ -12,10 +12,10 @@
 
 #define OPTION_SPACING 90
 
-State_MapSelector::State_MapSelector(sf::RenderWindow &mWindow):
-    window(mWindow)
+State_MapSelector::State_MapSelector(sf::RenderWindow &window):
+    window(window)
     , resourceManager()
-    , guiManager(mWindow, resourceManager, false)
+    , guiManager(window, resourceManager, false)
     , mapCount(0)
     , keyboard_up(false)
     , keyboard_down(false)

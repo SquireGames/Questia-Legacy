@@ -43,7 +43,7 @@ Interact_Roof::~Interact_Roof()
 
 }
 
-void Interact_Roof::drawEntity(sf::RenderWindow &mWindow)
+void Interact_Roof::drawEntity(sf::RenderWindow &window)
 {
 
 }
@@ -101,10 +101,10 @@ void Interact_Roof::checkInteraction(int x, int y,int sideRadius_x, int sideRadi
     }
 }
 
-void Interact_Roof::drawLayer3(sf::RenderWindow &mWindow)
+void Interact_Roof::drawLayer3(sf::RenderWindow &window)
 {
     if(!interaction)
     {
-         mWindow.draw(entitySprite);
+         window.draw(entitySprite);
     }
 }

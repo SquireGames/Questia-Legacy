@@ -21,7 +21,7 @@ public:
     ~Entity_Player();
 
     ///default
-    void drawEntity(sf::RenderWindow &mWindow);
+    void drawEntity(sf::RenderWindow &window);
     void handleImput(int actionType, bool isPressed);
     void update(int effect, int (&returnCollision)[4]);
 

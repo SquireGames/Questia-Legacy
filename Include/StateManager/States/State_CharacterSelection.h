@@ -13,7 +13,7 @@
 class State_CharacterSelection : public State
 {
 public:
-    State_CharacterSelection(sf::RenderWindow &mWindow);
+    State_CharacterSelection(sf::RenderWindow &window);
     ~State_CharacterSelection();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

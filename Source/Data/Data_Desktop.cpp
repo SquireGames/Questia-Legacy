@@ -155,11 +155,13 @@ void Data_Desktop::changeFont(std::string fontName)
     }
 }
 
-
+// primarily used for saving keys binds
+// should only be used in init and non-realtime
 sf::Keyboard::Key Data_Desktop::getConvertedKey(char key)
 {
     switch (key)
     {
+    //letters
     case 'a' :
         return sf::Keyboard::A;
     case 'b' :
@@ -212,6 +214,8 @@ sf::Keyboard::Key Data_Desktop::getConvertedKey(char key)
         return sf::Keyboard::Y;
     case 'z':
         return sf::Keyboard::Z;
+
+    //numbers
     case '0':
         return sf::Keyboard::Num0;
     case '1':
@@ -232,41 +236,91 @@ sf::Keyboard::Key Data_Desktop::getConvertedKey(char key)
         return sf::Keyboard::Num8;
     case '9':
         return sf::Keyboard::Num9;
-    case ',':
-        return sf::Keyboard::Comma;
-    case '.':
-        return sf::Keyboard::Period;
-    case '/':
-        return sf::Keyboard::Slash;
-    case ';':
-        return sf::Keyboard::SemiColon;
+
+    /*
+    -char 32-127 are the default ascii codes
+    -char 1-31 will be used for 'extra' keys consisting of
+    keys like rAlt with no real ascii code
+    */
+
+    //extra
+    //row 1
+    case '`':
+        return sf::Keyboard::Tilde;
+    case '-':
+        return sf::Keyboard::Dash;
+    case '+':
+        return sf::Keyboard::Add;
+    case 1:
+            return sf::Keyboard::BackSpace;
+
+    //row 2
+    case 2:
+            return sf::Keyboard::Tab;
     case '[':
         return sf::Keyboard::LBracket;
     case ']':
         return sf::Keyboard::RBracket;
     case '\\':
         return sf::Keyboard::BackSlash;
-    case '-':
-        return sf::Keyboard::Dash;
-    case '+':
-        return sf::Keyboard::Add;
-    case '`':
-        return sf::Keyboard::Tilde;
 
-    case 'C':
-        return sf::Keyboard::LControl;
-    case 'S':
-        return sf::Keyboard::LShift;
-    case 'A':
-        return sf::Keyboard::LAlt;
-    case 'T':
-        return sf::Keyboard::Tab;
-    case 'B':
+    //row 3
+    case ';':
+        return sf::Keyboard::SemiColon;
+    case '\'':
+        return sf::Keyboard::Quote;
+    case 3:
+            return sf::Keyboard::Return;
+
+    //row 4
+    case 4:
+            return sf::Keyboard::LShift;
+    case ',':
+        return sf::Keyboard::Comma;
+    case '.':
+        return sf::Keyboard::Period;
+    case '/':
+        return sf::Keyboard::Slash;
+    case 5:
+            return sf::Keyboard::RShift;
+
+    //row 5
+    case 6:
+            return sf::Keyboard::LControl;
+    case 7:
+            return sf::Keyboard::LAlt;
+    case ' ':
         return sf::Keyboard::Space;
-    case '_':
-        return sf::Keyboard::BackSpace;
-    case 'E':
-        return sf::Keyboard::Return;
+    case 8:
+            return sf::Keyboard::RAlt;
+    case 9:
+            return sf::Keyboard::RControl;
+
+    //arrow keys
+    case 10:
+            return sf::Keyboard::Up;
+    case 11:
+            return sf::Keyboard::Down;
+    case 12:
+            return sf::Keyboard::Left;
+    case 13:
+            return sf::Keyboard::Right;
+
+    //extra key set
+    case 14:
+            return sf::Keyboard::Insert;
+    case 15:
+            return sf::Keyboard::Home;
+    case 16:
+            return sf::Keyboard::Delete;
+    case 17:
+            return sf::Keyboard::End;
+    case 18:
+            return sf::Keyboard::PageUp;
+    case 19:
+            return sf::Keyboard::PageDown;
+
+    //not used key
     default:
         return sf::Keyboard::Unknown;
     }

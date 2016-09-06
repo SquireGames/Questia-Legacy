@@ -1,7 +1,7 @@
 #include "State_TileMapEditor.h"
 
-State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &mWindow):
-    window(mWindow)
+State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &window):
+    window(window)
     , resourceManager()
     , tileEngineEditor(window, resourceManager)
     , guiManager(window, resourceManager)
