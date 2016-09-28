@@ -23,6 +23,7 @@ enum class ButtonCharacteristic {coords,
                                  scroll_x, scroll_y,
                                  addToScroll_x, addToScroll_y,
                                  isVisible,
+                                 isActive,
                                  isTemplate,
                                  coords_group
                                 };
@@ -109,6 +110,7 @@ struct Button
     int scrollAmount_y;
     bool isVisible;
     bool isTemplate;
+    bool isActive;
 
     //used by editor
     int layer = 1;

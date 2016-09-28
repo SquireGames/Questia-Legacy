@@ -3,9 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <sstream>
-#include <List>
-#include <memory>
 
 #include "Data_Desktop.h"
 

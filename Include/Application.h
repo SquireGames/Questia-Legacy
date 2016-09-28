@@ -2,10 +2,14 @@
 #define APPLICATION_H
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 #include "Data_Desktop.h"
+
 #include "SaveFile_Options.h"
 
+#include "StateManager/StateManager.h"
+#include "StateManager/States/State_Transition.h"
 
 class Application
 {

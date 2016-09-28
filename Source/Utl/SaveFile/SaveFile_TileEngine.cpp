@@ -113,15 +113,6 @@ MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& wind
             }
         }
     }
-
-    //fill with correct tiles
-    //mapData.tileMap[getTile(0,0,0, mapData.width, mapData.height)] = {1,1};
-    //mapData.tileMap[getTile(1,0,0, mapData.width, mapData.height)] = {1,1};
-    //mapData.tileMap[getTile(2,0,0, mapData.width, mapData.height)] = {4,21};
-    //mapData.tileMap[getTile(0,1,0, mapData.width, mapData.height)] = {4,21};
-    //mapData.tileMap[getTile(0,1,1, mapData.width, mapData.height)] = {75,1};
-    //mapData.tileMap[getTile(0,0,1, mapData.width, mapData.height)] = {75,1};
-
     return mapData;
 }
 

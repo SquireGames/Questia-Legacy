@@ -13,6 +13,7 @@ Button::Button(sf::RenderWindow& _window, ResourceManager &_resourceManager, sf:
     , isVisible(true)
     , isTemplate(_isTemplate)
     , buttonID(_buttonID)
+    , isActive(true)
 {}
 
 // copy constructor
@@ -29,12 +30,14 @@ Button::Button(const Button& oldButton, int _buttonID): // const to make sure th
     , isTemplate(false)
     , buttonID(_buttonID)
     , layer(oldButton.layer)
+    , isActive(true)
 {
     copyToThisButton(*this, oldButton);
 
     if(oldButton.isTemplate)
     {
         isVisible = true;
+        isActive = true;
     }
 }
 
@@ -108,7 +111,7 @@ void Button::setButton(gui::ButtonCharacteristic buttonChar, std::string value)
     {
         if(heldSprites.count(value))
         {
-            buttonBounds = std::make_pair(heldSprites[value]->normalSprite.getLocalBounds().width, heldSprites[value]->normalSprite.getLocalBounds().height);
+            buttonBounds = std::make_pair(heldSprites[value]->normalSprite.getGlobalBounds().width, heldSprites[value]->normalSprite.getGlobalBounds().height);
         }
     }
     break;
@@ -125,7 +128,7 @@ void Button::setButton(gui::ButtonCharacteristic buttonChar, const char* value)
     {
         if(heldSprites.count(value))
         {
-            buttonBounds = std::make_pair(heldSprites[value]->normalSprite.getLocalBounds().width, heldSprites[value]->normalSprite.getLocalBounds().height);
+            buttonBounds = std::make_pair(heldSprites[value]->normalSprite.getGlobalBounds().width, heldSprites[value]->normalSprite.getGlobalBounds().height);
         }
     }
     break;
@@ -139,6 +142,9 @@ void Button::setButton(gui::ButtonCharacteristic buttonChar, bool value)
     {
     case gui::ButtonCharacteristic::isVisible:
         isVisible = value;
+        break;
+    case gui::ButtonCharacteristic::isActive:
+        isActive = value;
         break;
     case gui::ButtonCharacteristic::isTemplate:
         isTemplate = value;
@@ -255,9 +261,8 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
             break;
         case gui::ButtonAtrCharacteristic::size:
             heldSprites[atrName]->normalSprite.setScale(
-                sf::Vector2f((float)value.first/heldSprites[atrName]->normalSprite.getLocalBounds().width,
-                             (float)value.second/heldSprites[atrName]->normalSprite.getLocalBounds().height));
-            break;
+                sf::Vector2f(value.first/heldSprites[atrName]->normalSprite.getLocalBounds().width,
+                             value.second/heldSprites[atrName]->normalSprite.getLocalBounds().height));
         default:
             break;
         }
@@ -763,6 +768,7 @@ void Button::drawButton()
                 it->second->text.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
                                              buttonPosition.second + it->second->position.second + scrollAmount_y);
                 it->second->isChanged = false;
+
                 window.draw(it->second->text);
             }
             else
@@ -770,23 +776,26 @@ void Button::drawButton()
                 window.draw(it->second->text);
             }
         }
-        for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
+        if(isActive)
         {
-            if(it->second->isChanged || isCoordsChanged)
+            for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
             {
-                if(it->second->isHoveredOver)
+                if(it->second->isChanged || isCoordsChanged)
                 {
-                    it->second->rectOverlay.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
-                                                        buttonPosition.second + it->second->position.second + scrollAmount_y);
-                    it->second->isChanged = false;
-                    window.draw(it->second->rectOverlay);
+                    if(it->second->isHoveredOver)
+                    {
+                        it->second->rectOverlay.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
+                                                            buttonPosition.second + it->second->position.second + scrollAmount_y);
+                        it->second->isChanged = false;
+                        window.draw(it->second->rectOverlay);
+                    }
                 }
-            }
-            else
-            {
-                if(it->second->isHoveredOver)
+                else
                 {
-                    window.draw(it->second->rectOverlay);
+                    if(it->second->isHoveredOver)
+                    {
+                        window.draw(it->second->rectOverlay);
+                    }
                 }
             }
         }

@@ -3,9 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <map>
-#include <tuple>
-
-#include <iostream>
 
 #include "ResourceManager.h"
 #include "Rect.h"

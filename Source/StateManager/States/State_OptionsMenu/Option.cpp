@@ -7,26 +7,44 @@ Option<T>::Option()
 }
 
 template <class T>
+void Option<T>::setType(OptionType _optionType)
+{
+    optionType = _optionType;
+}
+
+template <class T>
 void Option<T>::init(T value)
 {
     oldOption = value;
     newOption = value;
 
-    for (auto it = choiceList.begin(); it != choiceList.end(); it++)
+    switch (optionType)
     {
-        if(it->second == value)
+    case OptionType::choice:
+    {
+        for (auto it = choiceList.begin(); it != choiceList.end(); it++)
         {
-            choiceIterator = it;
-            visibleOption = it->first;
-            break;
+            if(it->second == value)
+            {
+                choiceIterator = it;
+                visibleOption = it->first;
+                break;
+            }
         }
+    }
+    break;
+    case OptionType::functional:
+        break;
+    case OptionType::input:
+        visibleOption = utl::asString(value);
+        break;
     }
 }
 
 template <class T>
 bool Option<T>::isChanged()
 {
-    return (oldOption == newOption) ? false : true;
+    return (oldOption != newOption);
 }
 
 template <class T>
@@ -84,6 +102,12 @@ std::string* Option<T>::getDisplayString()
 }
 
 template <class T>
+OptionType Option<T>::getType()
+{
+    return optionType;
+}
+
+template <class T>
 void Option<T>::iterateForward()
 {
     if(choiceIterator != --choiceList.end())
@@ -136,6 +160,12 @@ template <class T>
 void Option<T>::callFunction()
 {
     //not implemented
+}
+
+template <class T>
+void Option<T>::setInput(char key)
+{
+    visibleOption = ctr::getKeyName(key);
 }
 
 template class Option<bool>;

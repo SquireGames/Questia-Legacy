@@ -39,11 +39,14 @@ public:
     void saveOptions(SaveFile_Options& saveFile);
 
     bool handleGui();
+    void handleInput(char input);
 
 private:
     GuiManagerNew* guiManager;
 
+    void initSprites();
     void updateArrows();
+    std::string assignInput = "nil";
 
     std::vector <std::pair <Option_Base*, OptionData> > optionVector;
 };

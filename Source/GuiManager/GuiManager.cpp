@@ -261,7 +261,7 @@ bool GuiManagerNew::isClicked(std::string buttonName)
 {
     if(buttonMap.count(buttonName))
     {
-        if(buttonMap[buttonName]->isVisible)
+        if(buttonMap[buttonName]->isVisible && buttonMap[buttonName]->isActive)
         {
             std::pair <int, int> buttonCoords = buttonMap[buttonName]->buttonPosition;
             std::pair <int, int> buttonBounds = buttonMap[buttonName]->buttonBounds;

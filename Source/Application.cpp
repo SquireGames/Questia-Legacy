@@ -1,13 +1,4 @@
-#include <iostream>
-
 #include "Application.h"
-
-#include "StateManager/StateManager.h"
-#include "StateManager/States/State_Transition.h"
-
-#include "Data_Desktop.h"
-
-#include "Utl/Utl.h"
 
 Application::Application():
     mStatisticsUpdateTime(sf::Time::Zero)
@@ -123,7 +114,6 @@ void Application::processEvents()
         }
     }
 }
-
 
 void Application::handlePlayerInput(sf::Keyboard::Key key,bool isPressed)
 {

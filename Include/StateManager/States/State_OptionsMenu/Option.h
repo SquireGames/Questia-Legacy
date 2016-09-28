@@ -7,8 +7,8 @@
 #include <iterator>
 
 #include "Option_Base.h"
-
 #include "Utl.h"
+#include "Keyboard.h"
 
 template <class T>
 class Option : public Option_Base
@@ -16,30 +16,34 @@ class Option : public Option_Base
 public:
     Option();
 
-    void init(T value);
+    //generic
+    void setType(OptionType _optionType);
+    void setOptionName (std::string _optionName);
+    void setList(std::string _listName);
 
     T getValue();
+    std::string getList();
+    std::string getOptionName ();
     std::string getValueString();
+    std::string* getDisplayString();
+    OptionType getType();
 
+    void init(T value);
     bool isChanged();
 
+    //choice
+    void addChoice (std::pair <std::string, T> option);
+    void setChoices (std::list <std::pair <std::string, T> > _choiceList);
     void iterateForward();
     void iterateBackward();
-    void callFunction();
-
     bool isEnd();
     bool isBegin();
 
-    void setList(std::string _listName);
-    std::string getList();
+    //functional
+    void callFunction();
 
-    void setOptionName (std::string _optionName);
-    std::string getOptionName ();
-    void addChoice (std::pair <std::string, T> option);
-    void setChoices (std::list <std::pair <std::string, T> > _choiceList);
-
-    std::string* getDisplayString();
-
+    //input
+    void setInput(char key);
 
 private:
     //options
@@ -47,6 +51,8 @@ private:
     T newOption;
     std::string visibleOption = "NONE";
     std::string optionName = "NONE";
+
+    OptionType optionType = OptionType::choice;
 
     //list
     std::string listName = "nil";

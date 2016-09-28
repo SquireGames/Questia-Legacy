@@ -3,6 +3,8 @@
 
 #include <string>
 
+enum class OptionType {choice, functional, input};
+
 //for container iteration through options
 
 class Option_Base
@@ -12,6 +14,9 @@ public:
     virtual ~Option_Base();
 
     virtual std::string getValueString() = 0;
+
+    virtual OptionType getType() = 0;
+    virtual void setInput(char key) = 0;
 
     virtual bool isChanged() = 0;
 

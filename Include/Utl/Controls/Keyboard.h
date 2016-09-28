@@ -12,6 +12,7 @@ namespace ctr
 //should not be used in text input
 sf::Keyboard::Key getKey(const char& key);
 char getCharacter(const sf::Keyboard::Key& key);
+std::string getKeyName(const char& key);
 //key bind pairs
 static std::map <char, sf::Keyboard::Key> KeyboardBinds =
 {

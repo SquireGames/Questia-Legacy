@@ -20,11 +20,13 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     ///options
     ///display
     //windowMode
+    option_windowMode.setType(OptionType::choice);
     option_windowMode.setList("displayList");
     option_windowMode.setOptionName(saveFile.getWindowModeName());
     option_windowMode.addChoice(std::make_pair("Fullscreen", 0));
     option_windowMode.addChoice(std::make_pair("Windowed",   1));
     //fps
+    option_fps.setType(OptionType::choice);
     option_fps.setList("displayList");
     option_fps.setOptionName(saveFile.getFpsName());
     option_fps.addChoice(std::make_pair ("V-Sync", 0));
@@ -34,6 +36,7 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     option_fps.addChoice(std::make_pair ("256 Fps", 256));
     option_fps.addChoice(std::make_pair ("Unlimited", -1));
     //font
+    option_font.setType(OptionType::choice);
     option_font.setList("displayList");
     option_font.setOptionName(saveFile.getFontName());
     option_font.addChoice(std::make_pair ("Lato Regular", "Lato-Regular.ttf"));
@@ -41,6 +44,7 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     option_font.addChoice(std::make_pair ("Open Sans Regular", "OpenSans-Regular.ttf"));
     option_font.addChoice(std::make_pair ("acidstructure", "acidstructure.ttf"));
     //guiPack
+    option_guiPack.setType(OptionType::choice);
     option_guiPack.setList("displayList");
     option_guiPack.setOptionName(saveFile.getGuiPackName());
     for(const auto& it : utl::getFiles("Data_2/Gui Pack", false))
@@ -48,26 +52,37 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
         option_guiPack.addChoice(std::make_pair (it, it));
     }
 
-
     ///audio
     //music volume
+    option_musicVolume.setType(OptionType::choice);
     option_musicVolume.setList("audioList");
     option_musicVolume.setOptionName(saveFile.getMusicName());
     option_musicVolume.setChoices({std::make_pair("Muted", 0), std::make_pair("10%", 10), std::make_pair("20%", 20), std::make_pair("30%", 30), std::make_pair("40%", 40), std::make_pair("50%", 50),
                                    std::make_pair("60%", 60), std::make_pair("70%", 70), std::make_pair("80%", 80), std::make_pair("90%", 90), std::make_pair("100%", 100)
                                   });
+
+    ///input
+    //move up key
+    option_key_moveUp.setType(OptionType::input);
+    option_key_moveUp.setList("inputList");
+    option_key_moveUp.setOptionName(saveFile.getMoveUpName());
+    //option_key_moveUp.setChoices()
+
+
     //starting values
     option_windowMode.init(saveFile.getWindowMode());
     option_fps.init(saveFile.getFps());
     option_font.init(saveFile.getFont());
     option_musicVolume.init(saveFile.getMusicVolume());
     option_guiPack.init(saveFile.getGuiPack());
+    option_key_moveUp.init('w');
     //storing
     optionManager.addOption(&option_windowMode);
     optionManager.addOption(&option_fps);
     optionManager.addOption(&option_font);
     optionManager.addOption(&option_musicVolume);
     optionManager.addOption(&option_guiPack);
+    optionManager.addOption(&option_key_moveUp);
     //initialization
     optionManager.initLists();
 
@@ -92,6 +107,10 @@ void State_OptionsMenu::processImput(sf::Keyboard::Key key,bool isPressed)
     else if(key == sf::Keyboard::Down)
     {
         key_down_isPressed = isPressed;
+    }
+    if(isPressed)
+    {
+        optionManager.handleInput(ctr::getCharacter(key));
     }
 }
 
@@ -124,7 +143,7 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
     {
         if(optionManager.handleGui()) {}
         //switches
-        else if(guiManager.isClicked("displaySwitch"))
+        if(guiManager.isClicked("displaySwitch"))
         {
             activeSelector = "displayList";
             guiManager.setListAtr("displayList", gui::ButtonCharacteristic::isVisible, true);
