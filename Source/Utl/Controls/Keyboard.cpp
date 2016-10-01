@@ -11,22 +11,33 @@ sf::Keyboard::Key ctr::getKey(const char& key)
 
 char ctr::getCharacter(const sf::Keyboard::Key& key)
 {
-    for(auto& it : ctr::KeyboardBinds)
+    // if the keys are not mouse buttons
+    if(key != sf::Keyboard::F13 &&
+            key != sf::Keyboard::F14 &&
+            key != sf::Keyboard::F15 &&
+            key != sf::Keyboard::LSystem &&
+            key != sf::Keyboard::RSystem)
     {
-        if(it.second == key)
+        for(auto& it : ctr::KeyboardBinds)
         {
-            return it.first;
+            if(it.second == key)
+            {
+                return it.first;
+            }
         }
     }
-    return 0;
+    return '?';
 }
 
 std::string ctr::getKeyName(const char& key)
 {
-    if(key < 31)
+    if(key <= 31 || key  == ' ')
     {
         switch (key)
         {
+        case ' ':
+            return "Spacebar";
+            break;
         case 1:
             return "Backspace";
             break;
@@ -83,6 +94,22 @@ std::string ctr::getKeyName(const char& key)
             break;
         case 19:
             return "PageDown";
+            break;
+
+        case 30:
+            return "L mouse";
+            break;
+        case 31:
+            return "R mouse";
+            break;
+        case 29:
+            return "M mouse";
+            break;
+        case 27:
+            return "Macro 1";
+            break;
+        case 28:
+            return "Macro 2";
             break;
         }
     }

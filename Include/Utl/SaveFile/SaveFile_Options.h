@@ -22,29 +22,64 @@ public:
     std::string getFont();
     int getMusicVolume();
     std::string getGuiPack();
+    char getKey_MoveUp();
+    char getKey_MoveDown();
+    char getKey_MoveLeft();
+    char getKey_MoveRight();
+    char getKey_skill_1();
+    char getKey_skill_2();
+    char getKey_skill_3();
+    char getKey_skill_4();
+    char getKey_skill_5();
+    char getKey_skill_6();
 
     std::string getWindowModeName();
     std::string getFpsName();
     std::string getFontName();
     std::string getMusicName();
     std::string getGuiPackName();
-
-    std::string getMoveUpName()
-    {
-        return key_MoveUp_name;
-    }
+    std::string getKey_MoveUp_name();
+    std::string getKey_MoveDown_name();
+    std::string getKey_MoveLeft_name();
+    std::string getKey_MoveRight_name();
+    std::string getKey_skill_1_name();
+    std::string getKey_skill_2_name();
+    std::string getKey_skill_3_name();
+    std::string getKey_skill_4_name();
+    std::string getKey_skill_5_name();
+    std::string getKey_skill_6_name();
 
 private:
 
     //save
     SaveFile saveFile;
 
-    //options
-    int windowMode;
-    int fps;
-    std::string font;
-    int musicVolume;
-    std::string guiPack;
+    ///options
+    //windowMode: 0 = full-screen, 1 = 720p windowed, 2+ = 1080p windowed
+    int windowMode = 0;
+    //fps: -1 = Unlimited, 0 = V-Sync, 1+ = x fps
+    int fps = 0;
+    //font: x = font file name
+    std::string font = "Lato-Regular.ttf";
+    //guiPack: x = guiPack folder name
+    std::string guiPack = "Default";
+
+    //musicVolume: x = volume out of 100
+    int musicVolume = 0;
+
+    //key_x: x = key saved as char
+    char key_MoveUp    = 'w';
+    char key_MoveDown  = 's';
+    char key_MoveLeft  = 'a';
+    char key_MoveRight = 'd';
+    char key_skill_1 = 30;
+    char key_skill_2 = 31;
+    char key_skill_3 = 4;
+    char key_skill_4 = ' ';
+    char key_skill_5 = 'q';
+    char key_skill_6 = 'e';
+
+    ///option names
     const std::string windowModeName  = "Window Setting";
     const std::string fpsName         = "Frames Per Second";
     const std::string fontName        = "Font";

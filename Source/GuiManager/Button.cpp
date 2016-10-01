@@ -729,8 +729,8 @@ void Button::update(std::pair <int, int> mouseCoords)
 {
     for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
     {
-        if(mouseCoords.first >  buttonPosition.first  && mouseCoords.first  < buttonPosition.first  + buttonBounds.first &&
-                mouseCoords.second > buttonPosition.second && mouseCoords.second < buttonPosition.second + buttonBounds.second)
+        if(mouseCoords.first >  buttonPosition.first + scrollAmount_x && mouseCoords.first  < buttonPosition.first + scrollAmount_x  + buttonBounds.first &&
+           mouseCoords.second > buttonPosition.second + scrollAmount_y && mouseCoords.second < buttonPosition.second + scrollAmount_y + buttonBounds.second)
         {
             it->second->isChanged = true;
             it->second->isHoveredOver = true;
@@ -776,29 +776,31 @@ void Button::drawButton()
                 window.draw(it->second->text);
             }
         }
-        if(isActive)
+
+        for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
         {
-            for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
+            if(it->second->isChanged || isCoordsChanged)
             {
-                if(it->second->isChanged || isCoordsChanged)
+                it->second->rectOverlay.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
+                                                    buttonPosition.second + it->second->position.second + scrollAmount_y);
+                it->second->isChanged = false;
+                if(it->second->isHoveredOver)
                 {
-                    if(it->second->isHoveredOver)
-                    {
-                        it->second->rectOverlay.setPosition(buttonPosition.first  + it->second->position.first  + scrollAmount_x,
-                                                            buttonPosition.second + it->second->position.second + scrollAmount_y);
-                        it->second->isChanged = false;
-                        window.draw(it->second->rectOverlay);
-                    }
-                }
-                else
-                {
-                    if(it->second->isHoveredOver)
+                    if(isActive)
                     {
                         window.draw(it->second->rectOverlay);
                     }
                 }
             }
+            else
+            {
+                if(it->second->isHoveredOver && isActive)
+                {
+                    window.draw(it->second->rectOverlay);
+                }
+            }
         }
+
         for(std::map<std::string, PercentSprite*>::iterator it = heldPercentSprites.begin(); it != heldPercentSprites.end(); it++)
         {
             if(it->second->isChanged || isCoordsChanged)

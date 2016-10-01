@@ -65,17 +65,61 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     //move up key
     option_key_moveUp.setType(OptionType::input);
     option_key_moveUp.setList("inputList");
-    option_key_moveUp.setOptionName(saveFile.getMoveUpName());
-    //option_key_moveUp.setChoices()
-
+    option_key_moveUp.setOptionName(saveFile.getKey_MoveUp_name());
+    //move down key
+    option_key_moveDown.setType(OptionType::input);
+    option_key_moveDown.setList("inputList");
+    option_key_moveDown.setOptionName(saveFile.getKey_MoveDown_name());
+    //move left key
+    option_key_moveLeft.setType(OptionType::input);
+    option_key_moveLeft.setList("inputList");
+    option_key_moveLeft.setOptionName(saveFile.getKey_MoveLeft_name());
+    //move right key
+    option_key_moveRight.setType(OptionType::input);
+    option_key_moveRight.setList("inputList");
+    option_key_moveRight.setOptionName(saveFile.getKey_MoveRight_name());
+    //skill 1 key
+    option_key_skill_1.setType(OptionType::input);
+    option_key_skill_1.setList("inputList");
+    option_key_skill_1.setOptionName(saveFile.getKey_skill_1_name());
+    //skill 2 key
+    option_key_skill_2.setType(OptionType::input);
+    option_key_skill_2.setList("inputList");
+    option_key_skill_2.setOptionName(saveFile.getKey_skill_2_name());
+    //skill 3 key
+    option_key_skill_3.setType(OptionType::input);
+    option_key_skill_3.setList("inputList");
+    option_key_skill_3.setOptionName(saveFile.getKey_skill_3_name());
+    //skill 4 key
+    option_key_skill_4.setType(OptionType::input);
+    option_key_skill_4.setList("inputList");
+    option_key_skill_4.setOptionName(saveFile.getKey_skill_4_name());
+    //skill 5 key
+    option_key_skill_5.setType(OptionType::input);
+    option_key_skill_5.setList("inputList");
+    option_key_skill_5.setOptionName(saveFile.getKey_skill_5_name());
+    //skill 6 key
+    option_key_skill_6.setType(OptionType::input);
+    option_key_skill_6.setList("inputList");
+    option_key_skill_6.setOptionName(saveFile.getKey_skill_6_name());
 
     //starting values
-    option_windowMode.init(saveFile.getWindowMode());
-    option_fps.init(saveFile.getFps());
-    option_font.init(saveFile.getFont());
+    option_windowMode.init (saveFile.getWindowMode());
+    option_fps.init        (saveFile.getFps());
+    option_font.init       (saveFile.getFont());
     option_musicVolume.init(saveFile.getMusicVolume());
-    option_guiPack.init(saveFile.getGuiPack());
-    option_key_moveUp.init('w');
+    option_guiPack.init    (saveFile.getGuiPack());
+    option_key_moveUp.init   (saveFile.getKey_MoveUp());
+    option_key_moveDown.init (saveFile.getKey_MoveDown());
+    option_key_moveLeft.init (saveFile.getKey_MoveLeft());
+    option_key_moveRight.init(saveFile.getKey_MoveRight());
+    option_key_skill_1.init(saveFile.getKey_skill_1());
+    option_key_skill_2.init(saveFile.getKey_skill_2());
+    option_key_skill_3.init(saveFile.getKey_skill_3());
+    option_key_skill_4.init(saveFile.getKey_skill_4());
+    option_key_skill_5.init(saveFile.getKey_skill_5());
+    option_key_skill_6.init(saveFile.getKey_skill_6());
+
     //storing
     optionManager.addOption(&option_windowMode);
     optionManager.addOption(&option_fps);
@@ -83,6 +127,16 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     optionManager.addOption(&option_musicVolume);
     optionManager.addOption(&option_guiPack);
     optionManager.addOption(&option_key_moveUp);
+    optionManager.addOption(&option_key_moveDown);
+    optionManager.addOption(&option_key_moveLeft);
+    optionManager.addOption(&option_key_moveRight);
+    optionManager.addOption(&option_key_skill_1);
+    optionManager.addOption(&option_key_skill_2);
+    optionManager.addOption(&option_key_skill_3);
+    optionManager.addOption(&option_key_skill_4);
+    optionManager.addOption(&option_key_skill_5);
+    optionManager.addOption(&option_key_skill_6);
+
     //initialization
     optionManager.initLists();
 
@@ -98,7 +152,7 @@ State_OptionsMenu::~State_OptionsMenu()
     std::cout << "Options Menu Destroyed" << std::endl;
 }
 
-void State_OptionsMenu::processImput(sf::Keyboard::Key key,bool isPressed)
+void State_OptionsMenu::processImput(sf::Keyboard::Key key, bool isPressed)
 {
     if(key == sf::Keyboard::Up)
     {
@@ -120,60 +174,71 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
     guiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
 
     ///scroll input
-    if(key_up_isPressed)
+    if(!optionManager.isMouseOverAssignedInput())
     {
-        guiManager.setListAtr(activeSelector, gui::ButtonCharacteristic::addToScroll_y, -15);
-    }
-    if(key_down_isPressed)
-    {
-        guiManager.setListAtr(activeSelector, gui::ButtonCharacteristic::addToScroll_y, 15);
+        if(key_up_isPressed)
+        {
+            guiManager.setListAtr(activeSelector, gui::ButtonCharacteristic::addToScroll_y, 15);
+        }
+        if(key_down_isPressed)
+        {
+            guiManager.setListAtr(activeSelector, gui::ButtonCharacteristic::addToScroll_y, -15);
+        }
     }
     const int mouseScroll = Data_Desktop::getInstance().getMouseWheelDelta();
     if(mouseScroll == 1)
     {
-        guiManager.setListAtr(activeSelector, gui::ButtonCharacteristic::addToScroll_y, -40);
+        guiManager.setListAtr(activeSelector, gui::ButtonCharacteristic::addToScroll_y, 40);
     }
     else if(mouseScroll == -1)
     {
-        guiManager.setListAtr(activeSelector, gui::ButtonCharacteristic::addToScroll_y, 40);
+        guiManager.setListAtr(activeSelector, gui::ButtonCharacteristic::addToScroll_y, -40);
+    }
+
+    //mouse input for key binding
+    optionManager.checkMouseInput();
+    if(Data_Desktop::getInstance().isMouseReleased())
+    {
+        optionManager.setMouseReleased();
     }
 
     ///gui check
     if(Data_Desktop::getInstance().isMousePressed())
     {
         if(optionManager.handleGui()) {}
+
         //switches
         if(guiManager.isClicked("displaySwitch"))
         {
             activeSelector = "displayList";
             guiManager.setListAtr("displayList", gui::ButtonCharacteristic::isVisible, true);
-            guiManager.setListAtr("audioList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("gameList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("inputList", gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("audioList",   gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("gameList",    gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("inputList",   gui::ButtonCharacteristic::isVisible, false);
         }
         else if(guiManager.isClicked("audioSwitch"))
         {
             activeSelector = "audioList";
             guiManager.setListAtr("displayList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("audioList", gui::ButtonCharacteristic::isVisible, true);
-            guiManager.setListAtr("gameList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("inputList", gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("audioList",   gui::ButtonCharacteristic::isVisible, true);
+            guiManager.setListAtr("gameList",    gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("inputList",   gui::ButtonCharacteristic::isVisible, false);
         }
         else if(guiManager.isClicked("gameSwitch"))
         {
             activeSelector = "gameList";
             guiManager.setListAtr("displayList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("audioList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("gameList", gui::ButtonCharacteristic::isVisible, true);
-            guiManager.setListAtr("inputList", gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("audioList",   gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("gameList",    gui::ButtonCharacteristic::isVisible, true);
+            guiManager.setListAtr("inputList",   gui::ButtonCharacteristic::isVisible, false);
         }
         else if(guiManager.isClicked("inputSwitch"))
         {
             activeSelector = "inputList";
             guiManager.setListAtr("displayList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("audioList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("gameList", gui::ButtonCharacteristic::isVisible, false);
-            guiManager.setListAtr("inputList", gui::ButtonCharacteristic::isVisible, true);
+            guiManager.setListAtr("audioList",   gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("gameList",    gui::ButtonCharacteristic::isVisible, false);
+            guiManager.setListAtr("inputList",   gui::ButtonCharacteristic::isVisible, true);
         }
         //regular
         else if(guiManager.isClicked("mainMenu"))

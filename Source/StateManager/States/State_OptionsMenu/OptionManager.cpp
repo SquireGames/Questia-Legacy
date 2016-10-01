@@ -173,11 +173,79 @@ void OptionManager::handleInput(char input)
     {
         for(auto& option : optionVector)
         {
-            if((option.second.textButtonName == assignInput) && (option.first->getType() == OptionType::input))
+            if((option.second.textButtonName == assignInput) &&
+                    option.first->getType() == OptionType::input &&
+                    guiManager->isClicked(option.second.functionButton.buttonName))
             {
                 option.first->setInput(input);
                 guiManager->setButtonAtr(option.second.textButtonName, "text", gui::ButtonAtrCharacteristic::text, *option.second.displayString);
+                return;
             }
         }
+        assignInput = "nil";
+    }
+}
+
+bool OptionManager::isMouseOverAssignedInput()
+{
+    if(assignInput != "nil")
+    {
+        for(const auto& option : optionVector)
+        {
+            if(option.second.functionButton.isActive)
+            {
+                if(assignInput == option.second.textButtonName)
+                {
+                    if(guiManager->isClicked(option.second.functionButton.buttonName))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+void OptionManager::setMouseReleased()
+{
+    if(isMouseOverAssignedInput())
+    {
+        mouseReleases++;
+        return;
+    }
+    mouseReleases = 0;
+}
+
+void OptionManager::checkMouseInput()
+{
+    if(mouseReleases >= 1 && (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)||
+                              sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)||
+                              sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle)||
+                              sf::Mouse::isButtonPressed(sf::Mouse::Button::XButton1)||
+                              sf::Mouse::isButtonPressed(sf::Mouse::Button::XButton2)))
+    {
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+        {
+            handleInput(30);
+        }
+        else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+        {
+            handleInput(31);
+        }
+        else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle))
+        {
+            handleInput(29);
+        }
+        else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::XButton1))
+        {
+            handleInput(27);
+        }
+        else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::XButton2))
+        {
+            handleInput(28);
+        }
+
+        mouseReleases = 0;
     }
 }

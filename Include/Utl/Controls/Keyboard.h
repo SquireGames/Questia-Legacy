@@ -57,8 +57,9 @@ static std::map <char, sf::Keyboard::Key> KeyboardBinds =
     {'9', sf::Keyboard::Num9},
     /*
     -char 32-127 are the default ascii codes
-    -char 1-31 will be used for 'extra' keys consisting of
+    -char 1-26 will be used for 'extra' keys consisting of
     keys like rAlt with no real ascii code
+    -char 26-31 are mouse buttons
     */
     //row 1
     {'`', sf::Keyboard::Tilde},
@@ -97,7 +98,14 @@ static std::map <char, sf::Keyboard::Key> KeyboardBinds =
     {16, sf::Keyboard::Delete},
     {17, sf::Keyboard::End},
     {18, sf::Keyboard::PageUp},
-    {19, sf::Keyboard::PageDown}
+    {19, sf::Keyboard::PageDown},
+    //mouse 1, 2 and middle (LSystem and RSystem will not be used anyways)
+    {30, sf::Keyboard::LSystem}, // l mouse
+    {31, sf::Keyboard::RSystem}, // r mouse
+    {29, sf::Keyboard::F13},     // m mouse
+    //mouse macro 1 and 2 (F14 and F15 wont be used anyways)
+    {27, sf::Keyboard::F14}, // macro 1
+    {28, sf::Keyboard::F15}  // macro 2
 };
 }
 #endif // KEYBOARD_H

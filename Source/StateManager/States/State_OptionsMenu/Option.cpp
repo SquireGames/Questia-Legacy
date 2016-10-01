@@ -36,7 +36,35 @@ void Option<T>::init(T value)
     case OptionType::functional:
         break;
     case OptionType::input:
-        visibleOption = utl::asString(value);
+        visibleOption = ctr::getKeyName(static_cast <char> (value));
+        break;
+    }
+}
+template <>
+void Option<std::string>::init(std::string value)
+{
+    oldOption = value;
+    newOption = value;
+
+    switch (optionType)
+    {
+    case OptionType::choice:
+    {
+        for (auto it = choiceList.begin(); it != choiceList.end(); it++)
+        {
+            if(it->second == value)
+            {
+                choiceIterator = it;
+                visibleOption = it->first;
+                break;
+            }
+        }
+    }
+    break;
+    case OptionType::functional:
+        break;
+    case OptionType::input:
+        visibleOption = value;
         break;
     }
 }
@@ -166,6 +194,7 @@ template <class T>
 void Option<T>::setInput(char key)
 {
     visibleOption = ctr::getKeyName(key);
+    newOption = key;
 }
 
 template class Option<bool>;

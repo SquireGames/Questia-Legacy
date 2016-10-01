@@ -41,6 +41,11 @@ public:
     bool handleGui();
     void handleInput(char input);
 
+    void setMouseReleased();
+    void checkMouseInput();
+
+    bool isMouseOverAssignedInput();
+
 private:
     GuiManagerNew* guiManager;
 
@@ -49,6 +54,8 @@ private:
     std::string assignInput = "nil";
 
     std::vector <std::pair <Option_Base*, OptionData> > optionVector;
+
+    bool mouseReleases = 0;
 };
 
 #endif // OPTIONMANAGER_H
