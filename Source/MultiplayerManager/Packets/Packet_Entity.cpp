@@ -2,6 +2,6 @@
 
 Packet_Entity::~Packet_Entity()
 {
-    //dtor
+
 }
 

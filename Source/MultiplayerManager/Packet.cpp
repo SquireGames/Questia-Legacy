@@ -2,10 +2,10 @@
 
 Packet::Packet()
 {
-    //ctor
+
 }
 
 Packet::~Packet()
 {
-    //dtor
+
 }

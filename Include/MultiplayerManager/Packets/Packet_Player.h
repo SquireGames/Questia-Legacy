@@ -6,7 +6,6 @@
 
 #include "Packet.h"
 
-//{ Packet_Player
 struct Packet_Player : public Packet
 {
     Packet_Player(int _packetNumber, int _playerID, std::pair <float, float> coordinates):
@@ -60,10 +59,6 @@ static sf::Packet& operator >> (sf::Packet& packet, Packet_Player& player)
 
     return packet;
 }
-//}
-
-
-//{PacketContainer_Player
 
 struct PacketContainer_Player : public Packet
 {
@@ -131,7 +126,5 @@ static sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& pack
     }
     return packet;
 }
-//}
-
 
 #endif // PACKET_PLAYER_H

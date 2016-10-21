@@ -4,18 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include "StateManager/StateManager.h"
 #include "StateManager/State.h"
+#include "StateManager/States/State_Transition.h"
 
-#include "TimeManager/TimeManager.h"
-#include "LightManager/LightManager.h"
 #include "TileEngine/TileEngine.h"
 #include "EntityManager/EntityManager.h"
 #include "GuiManager/GuiManager.h"
 #include "ResourceManager/ResourceManager.h"
-#include "EntityManager/SpawnManager.h"
-#include "CharacterManager/CharacterManager.h"
-#include "ItemManager/ItemManager.h"
-#include "Data/CommandsManager.h"
 #include "MultiplayerManager/MultiplayerManager.h"
 
 #include "GuiLoader.h"
@@ -35,15 +31,7 @@ public:
     void displayTextures();
 
 private:
-    bool pause;
-    unsigned char tick;
-
-    //perm
     SaveFile_Options saveFile;
-
-    sf::Vector2f player_Velocity;
-    sf::Vector2f player_Coordinates;
-    sf::Vector2f player_MapCoordinates;
 
     sf::View gameView;
     sf::View overlayView;
@@ -51,27 +39,15 @@ private:
     sf::RenderWindow& window;
 
     ResourceManager resourceManager;
-    TileEngine tileEngine;
-    EntityManager entityManager;
     GuiManagerNew guiManager;
     GuiLoader guiLoader;
-    SpawnManager spawnManager;
-    CharacterManager characterManager;
-    ItemManager itemManager;
-    CommandsManager commandsManager;
-    LightManager lightManager;
-    TimeManager timeManager;
 
+    EntityManager entityManager;
     TileEngineNew tileEngineNew;
 
-    int tempCoords_x, tempCoords_y;
     float playerAngle;
+    bool paused = false;
 
-    ///Saves
-    SaveFile save_location;
-    SaveFile save_character;
-    SaveFile save_entities;
-    SaveFile save_spawn;
 
     ///Key binds
 

@@ -1,16 +1,5 @@
-#include <iostream>
-
-#include "StateManager/StateManager.h"
 #include "StateManager/States/State_Transition.h"
 
-#include "StateManager/States/State_MainMenu.h"
-#include "StateManager/States/State_Game.h"
-#include "StateManager/States/State_OptionsMenu/State_OptionsMenu.h"
-#include "StateManager/States/State_CharacterSelection.h"
-#include "StateManager/States/State_TileMapEditor.h"
-#include "StateManager/States/State_MapSelector.h"
-#include "StateManager/States/State_MultiplayerGame.h"
-#include "StateManager/States/State_MultiplayerSelection.h"
 
 
 State_Transition::State_Transition(sf::RenderWindow &window, int stateID):
@@ -46,6 +35,7 @@ void State_Transition::update(sf::Time elapsedTime)
 
 }
 
+// TODO int -> enum
 void State_Transition::displayTextures()
 {
     window.draw(aLoadingImage);

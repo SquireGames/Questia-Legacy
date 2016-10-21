@@ -2,5 +2,5 @@
 
 Packet_Player::~Packet_Player()
 {
-    //dtor
+
 }

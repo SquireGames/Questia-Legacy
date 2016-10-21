@@ -13,13 +13,8 @@
 #include "Packet_Init.h"
 #include "Packet_Entity.h"
 
-#include "TimeManager/TimeManager.h"
-#include "LightManager/LightManager.h"
 #include "TileEngine/TileEngine.h"
 #include "EntityManager/EntityManager.h"
-#include "EntityManager/SpawnManager.h"
-#include "CharacterManager/CharacterManager.h"
-#include "ItemManager/ItemManager.h"
 
 #include "ResourceManager.h"
 
@@ -56,24 +51,14 @@ struct Map
     Map():
         resourceManager()
         , window()
-        , timeManager(0,0)
-        , lightManager(window, timeManager, resourceManager)
-        , tileEngine(window, resourceManager)
-        , entityManager(EntityManager::ManagerType::server, window, resourceManager, lightManager)
-        , spawnManager(false, entityManager)
-        , itemManager(window, resourceManager)
+        , entityManager()
     {}
 
     //inactive
     ResourceManager resourceManager;
     sf::RenderWindow window;
 
-    TimeManager timeManager;
-    LightManager lightManager;
-    TileEngine tileEngine;
     EntityManager entityManager;
-    SpawnManager spawnManager;
-    ItemManager itemManager;
 };
 
 class Server

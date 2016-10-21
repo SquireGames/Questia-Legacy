@@ -2,10 +2,10 @@
 
 Packet_Init::Packet_Init()
 {
-    //ctor
+
 }
 
 Packet_Init::~Packet_Init()
 {
-    //dtor
+
 }

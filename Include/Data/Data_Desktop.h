@@ -2,43 +2,27 @@
 #define DATA_DESKTOP_H
 
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics.hpp>
-#include <map>
-#include <iostream>
-#include <sstream>
 
-#include "SaveFile.h"
+#include <iostream>
+
 #include "Utl.h"
 
 class Data_Desktop
 {
 public:
+    static Data_Desktop &getInstance();
     Data_Desktop();
     ~Data_Desktop();
 
-    static Data_Desktop &getInstance();
-
+    void setDesktopResolution(sf::Vector2i newRes, sf::Vector2i Position);
     sf::Vector2f getScaledMousePosition(sf::RenderWindow& window);
+
     int get_FPS();
     void set_FPS(int f);
 
-    void setDesktopResolution(sf::Vector2i newRes, sf::Vector2i Position);
-
-    // Options
-    void loadOptions();
-
-    void writeOptions(int windowMode, int soundVolume, int font, int fps,
-                      char moveUpKey, char moveDownKey, char moveLeftKey, char moveRightKey,
-                      char skill4Key, char skill5Key, char skill6Key);
-
-    std::vector<std::string> getFiles(std::string directory, bool isWithDirectory);
-
     void changeFont(std::string fontName);
     sf::Font font1;
-
-    sf::Keyboard::Key getKey(int keyNumber);
 
     void setMostRecentChar(char c){mostRecentChar = c;}
     char getMostRecentChar(){char temp = mostRecentChar; mostRecentChar = ' ';return temp;}
@@ -46,12 +30,7 @@ public:
     void setMouseWheelDelta(int delta){mouseWheelDelta = delta;}
     int  getMouseWheelDelta(){int tempMouseWheelDelta = mouseWheelDelta; mouseWheelDelta = 0; return tempMouseWheelDelta;}
 
-    SaveFile& getSaveOptions(){return save_options;}
-
-    void setMouseReleased(bool isReleased)
-    {
-        m_isMouseReleased = isReleased;
-    }
+    void setMouseReleased(bool isReleased){m_isMouseReleased = isReleased;}
     bool isMouseReleased()
     {
         bool temp = m_isMouseReleased;
@@ -59,10 +38,7 @@ public:
         return temp;
     }
 
-    void setMousePressed(bool isPressed)
-    {
-        m_isMousePressed = isPressed;
-    }
+    void setMousePressed(bool isPressed){m_isMousePressed = isPressed;}
     bool isMousePressed()
     {
         bool temp = m_isMousePressed;
@@ -71,53 +47,16 @@ public:
     }
 
 private:
-    SaveFile save_options;
-
     sf::Vector2i desktopResolution;
     sf::Vector2f scaleFactor;
 
-    //Unimplemented
-    int normalVolume;
-
     int FPS;
-
-    //key binds
-    std::map <int, sf::Keyboard::Key> keyMap;
-    sf::Keyboard::Key getConvertedKey(char key);
 
     char mostRecentChar;
     int mouseWheelDelta;
 
     bool m_isMouseReleased = false;
     bool m_isMousePressed = false;
-
-
-
-    // map selection
-public:
-    std::string getMapSelection(){return mapSelection;}
-    void setMapSelection(std::string newMap){mapSelection = newMap;}
-private:
-    std::string mapSelection;
-
-    // character info
-public:
-    void writeGameOptions(sf::Vector2f coordinates);
-
-    std::string getCharacterSelection(){return characterSelection;}
-    void setCharacterSelection(std::string newCharacter){characterSelection = newCharacter;}
-
-    std::string getSaved_coordinates_x(){return saved_coordinates_x;}
-    void setSaved_coordinates_x(std::string _saved_coordinates_x){saved_coordinates_x = _saved_coordinates_x;}
-
-    std::string getSaved_coordinates_y(){return saved_coordinates_y;}
-    void setSaved_coordinates_y(std::string _saved_coordinates_y){saved_coordinates_y = _saved_coordinates_y;}
-
-private:
-    std::string characterSelection;
-    std::string saved_coordinates_x;
-    std::string saved_coordinates_y;
-    int saved_hp, saved_mp, saved_st;
 };
 
 #endif // DATA_DESKTOP_H

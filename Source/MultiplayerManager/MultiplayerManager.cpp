@@ -142,14 +142,14 @@ void MultiplayerManager::sendData(EntityManager& entityManager)
     if(isRunningClient)
     {
         entityManagerMutex.lock();
-        float coords_x = entityManager.getPlayerCoordinates().x;
-        float coords_y = entityManager.getPlayerCoordinates().y;
+//        float coords_x = entityManager.getPlayerCoordinates().x;
+ //       float coords_y = entityManager.getPlayerCoordinates().y;
         entityManagerMutex.unlock();
 
         client_tempTick++;
-        Packet_Player packetObj(client_tempTick, -1, std::make_pair(coords_x, coords_y));
+ //       Packet_Player packetObj(client_tempTick, -1, std::make_pair(coords_x, coords_y));
         sf::Packet testPacket;
-        testPacket << packetObj;
+//        testPacket << packetObj;
 
         client_udpSocket_send.send(testPacket, sf::IpAddress::getLocalAddress(), 8001);
     }
@@ -175,7 +175,7 @@ void MultiplayerManager::receiveData(EntityManager& entityManager)
         {
             //std::cout << "Packet: " << playerData_queue.front().packetNumber << ", Coords: (" << playerData_queue.front().coords_x << ", " << playerData_queue.front().coords_y << ")" << std::endl;
             entityManagerMutex.lock();
-            entityManager.setPlayerCoordinates2(sf::Vector2f(playerData_queue.front().coords_x, playerData_queue.front().coords_y));
+//            entityManager.setPlayerCoordinates2(sf::Vector2f(playerData_queue.front().coords_x, playerData_queue.front().coords_y));
             entityManagerMutex.unlock();
             playerData_queue.pop();
         }

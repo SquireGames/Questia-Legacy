@@ -1,13 +1,10 @@
 #ifndef STATE_CHARACTERSELECTION_H
 #define STATE_CHARACTERSELECTION_H
 
-#include <SFML/Graphics.hpp>
 #include <StateManager/State.h>
 
 #include "ResourceManager.h"
 #include "GuiManager.h"
-#include "ClassManager.h"
-#include "Namespace_Character.h"
 #include "Utl/SaveFile/SaveFile.h"
 
 class State_CharacterSelection : public State
@@ -22,46 +19,6 @@ public:
 
 private:
     sf::RenderWindow& window;
-
-    sf::Sprite background;
-
-    std::vector<std::string> characterFiles;
-    unsigned int characterCount;
-    int scrollAmount;
-    sf::Sprite mapBox;
-    sf::RectangleShape selectedCharacterOverlay;
-    int selectedCharacter;
-
-    sf::Text userImput;
-    sf::Sprite newCharacterTile;
-    bool isMakingNewCharacter;
-    std::map <int, std::string> options;
-    std::map <int, std::string> questions;
-    sf::Text optionText;
-    std::string answerString;
-    unsigned char optionsIterator;
-    bool local_createCharacter();
-    bool local_deleteCharacter();
-    bool local_loadCharacter();
-    int deleteProgress;
-
-    bool keyboard_up;
-    bool keyboard_down;
-
-    ResourceManager resourceManager;
-    GuiManager guiManager;
-    GuiManager guiManager_options;
-
-    ClassManager classManager;
-
-    Character::ClassType selectedClassType;
-
-    std::vector <std::string> hairTypes;
-    std::vector <std::string> eyeTypes;
-    std::vector <std::string> skinTypes;
-
-    SaveFile save_location;
-    SaveFile save_character;
 };
 
 #endif // STATE_CHARACTERSELECTION_H

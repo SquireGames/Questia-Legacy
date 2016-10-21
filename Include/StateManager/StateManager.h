@@ -1,9 +1,11 @@
 #ifndef STATEMANAGER_H
 #define STATEMANAGER_H
 
+#include <iostream>
 #include <stack>
 
 #include "State.h"
+
 
 class StateManager
 {

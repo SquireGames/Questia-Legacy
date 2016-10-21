@@ -16,7 +16,7 @@ State_MainMenu::State_MainMenu(sf::RenderWindow &window):
     ///music
     if(!musicBuffer.loadFromFile("Media/Sound/Music/gameMenu.ogg")) {}
     musicSound.setBuffer(musicBuffer);
-    musicSound.setVolume(utl::asInt(Data_Desktop::getInstance().getSaveOptions().getItem("music volume")));
+    musicSound.setVolume(saveFile.getMusicVolume());
     musicSound.play();
 }
 

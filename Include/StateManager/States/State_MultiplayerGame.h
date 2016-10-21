@@ -5,17 +5,13 @@
 #include <SFML/Window/Event.hpp>
 
 #include "StateManager/State.h"
+#include "State_Transition.h"
+#include "StateManager/StateManager.h"
 
-#include "TimeManager/TimeManager.h"
-#include "LightManager/LightManager.h"
 #include "TileEngine/TileEngine.h"
 #include "EntityManager/EntityManager.h"
 #include "GuiManager/GuiManager.h"
 #include "ResourceManager/ResourceManager.h"
-#include "EntityManager/SpawnManager.h"
-#include "CharacterManager/CharacterManager.h"
-#include "ItemManager/ItemManager.h"
-#include "Data/CommandsManager.h"
 #include "MultiplayerManager/MultiplayerManager.h"
 
 #include "Utl/SaveFile/SaveFile.h"
@@ -34,11 +30,6 @@ public:
 private:
 
     bool pause;
-    unsigned char tick;
-
-    sf::Vector2f player_Velocity;
-    sf::Vector2f player_Coordinates;
-    sf::Vector2f player_MapCoordinates;
 
     sf::View gameView;
     sf::View overlayView;
@@ -46,29 +37,13 @@ private:
     sf::RenderWindow& window;
 
     ResourceManager resourceManager;
-    //TileEngine tileEngine;
     EntityManager entityManager;
-    GuiManager guiManager;
     GuiManagerNew newGuiManager;
-    SpawnManager spawnManager;
-    CharacterManager characterManager;
-    ItemManager itemManager;
-    CommandsManager commandsManager;
-    LightManager lightManager;
     MultiplayerManager multiplayerManager;
-    TimeManager timeManager;
 
-    int tempCoords_x, tempCoords_y;
     float playerAngle;
 
-    ///Saves
-    SaveFile save_location;
-    SaveFile save_character;
-    SaveFile save_entities;
-    SaveFile save_spawn;
-
     ///Key binds
-
     enum keyEnum {mouse, keyboard, joystick};
 
     struct mappedKey
