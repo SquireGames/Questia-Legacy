@@ -20,25 +20,25 @@ SaveFile_Options::~SaveFile_Options()
 void SaveFile_Options::reloadOptions()
 {
     saveFile.readFile();
-    if(utl::isNumber(saveFile.getItem(windowModeName)))
+    if(utl::isNumber(saveFile.getItem(windowMode_name)))
     {
-        windowMode = utl::asInt(saveFile.getItem(windowModeName));
+        windowMode = utl::asInt(saveFile.getItem(windowMode_name));
     }
-    if(utl::isNumber(saveFile.getItem(fpsName)))
+    if(utl::isNumber(saveFile.getItem(fps_name)))
     {
-        fps = utl::asInt(saveFile.getItem(fpsName));
+        fps = utl::asInt(saveFile.getItem(fps_name));
     }
-    if(saveFile.getItem(fontName) != "nil")
+    if(saveFile.getItem(font_name) != "nil")
     {
-        font = saveFile.getItem(fontName);
+        font = saveFile.getItem(font_name);
     }
-    if(utl::isNumber(saveFile.getItem(musicVolumeName)))
+    if(utl::isNumber(saveFile.getItem(musicVolume_name)))
     {
-        musicVolume = utl::asInt(saveFile.getItem(musicVolumeName));
+        musicVolume = utl::asInt(saveFile.getItem(musicVolume_name));
     }
-    if(saveFile.getItem(guiPackName) != "nil")
+    if(saveFile.getItem(guiPack_name) != "nil")
     {
-        guiPack = saveFile.getItem(guiPackName);
+        guiPack = saveFile.getItem(guiPack_name);
     }
     if(utl::isNumber(saveFile.getItem(key_MoveUp_name)))
     {
@@ -84,32 +84,32 @@ void SaveFile_Options::reloadOptions()
 
 void SaveFile_Options::saveOption(Option_Base* option, std::string optionName)
 {
-    if(optionName == windowModeName)
+    if(optionName == windowMode_name)
     {
         if(utl::isNumber(option->getValueString()))
         {
             windowMode = utl::asInt(option->getValueString());
         }
     }
-    else if(optionName == fpsName)
+    else if(optionName == fps_name)
     {
         if(utl::isNumber(option->getValueString()))
         {
             fps = utl::asInt(option->getValueString());
         }
     }
-    else if(optionName == fontName)
+    else if(optionName == font_name)
     {
         font = option->getValueString();
     }
-    else if(optionName == musicVolumeName)
+    else if(optionName == musicVolume_name)
     {
         if(utl::isNumber(option->getValueString()))
         {
             musicVolume = utl::asInt(option->getValueString());
         }
     }
-    else if(optionName == guiPackName)
+    else if(optionName == guiPack_name)
     {
         guiPack = option->getValueString();
     }
@@ -160,12 +160,12 @@ void SaveFile_Options::writeOptions()
 {
     saveFile.clearSave();
 
-    saveFile.saveItem(windowModeName, windowMode);
-    saveFile.saveItem(fpsName, fps);
-    saveFile.saveItem(fontName, font);
-    saveFile.saveItem(guiPackName, guiPack);
+    saveFile.saveItem(windowMode_name, windowMode);
+    saveFile.saveItem(fps_name, fps);
+    saveFile.saveItem(font_name, font);
+    saveFile.saveItem(guiPack_name, guiPack);
 
-    saveFile.saveItem(musicVolumeName, musicVolume);
+    saveFile.saveItem(musicVolume_name, musicVolume);
 
     saveFile.saveItem(key_MoveUp_name, static_cast <int>    (key_MoveUp));
     saveFile.saveItem(key_MoveDown_name, static_cast <int>  (key_MoveDown));
@@ -201,25 +201,25 @@ std::string SaveFile_Options::getGuiPack()
 {
     return guiPack;
 }
-std::string SaveFile_Options::getWindowModeName()
+std::string SaveFile_Options::getWindowMode_name()
 {
-    return windowModeName;
+    return windowMode_name;
 }
-std::string SaveFile_Options::getFpsName()
+std::string SaveFile_Options::getFps_name()
 {
-    return fpsName;
+    return fps_name;
 }
-std::string SaveFile_Options::getFontName()
+std::string SaveFile_Options::getFont_name()
 {
-    return fontName;
+    return font_name;
 }
-std::string SaveFile_Options::getMusicName()
+std::string SaveFile_Options::getMusicVolume_name()
 {
-    return musicVolumeName;
+    return musicVolume_name;
 }
-std::string SaveFile_Options::getGuiPackName()
+std::string SaveFile_Options::getGuiPack_name()
 {
-    return guiPackName;
+    return guiPack_name;
 }
 char SaveFile_Options::getKey_MoveUp()
 {

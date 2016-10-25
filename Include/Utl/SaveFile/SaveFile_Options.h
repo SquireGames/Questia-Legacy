@@ -33,11 +33,11 @@ public:
     char getKey_skill_5();
     char getKey_skill_6();
 
-    std::string getWindowModeName();
-    std::string getFpsName();
-    std::string getFontName();
-    std::string getMusicName();
-    std::string getGuiPackName();
+    std::string getWindowMode_name();
+    std::string getFps_name();
+    std::string getFont_name();
+    std::string getMusicVolume_name();
+    std::string getGuiPack_name();
     std::string getKey_MoveUp_name();
     std::string getKey_MoveDown_name();
     std::string getKey_MoveLeft_name();
@@ -50,8 +50,7 @@ public:
     std::string getKey_skill_6_name();
 
 private:
-
-    //save
+    ///save
     SaveFile saveFile;
 
     ///options
@@ -80,11 +79,11 @@ private:
     char key_skill_6 = 'e';
 
     ///option names
-    const std::string windowModeName  = "Window Setting";
-    const std::string fpsName         = "Frames Per Second";
-    const std::string fontName        = "Font";
-    const std::string musicVolumeName = "Music Volume";
-    const std::string guiPackName     = "Gui Pack";
+    const std::string windowMode_name  = "Window Setting";
+    const std::string fps_name         = "Frames Per Second";
+    const std::string font_name        = "Font";
+    const std::string guiPack_name     = "Gui Pack";
+    const std::string musicVolume_name = "Music Volume";
 
     //key bindings
     const std::string key_MoveUp_name    = "Move Up";

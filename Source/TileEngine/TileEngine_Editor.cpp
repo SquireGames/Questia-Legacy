@@ -2,7 +2,7 @@
 
 //ctor
 TileEngine_Editor::TileEngine_Editor(sf::RenderWindow& _window, ResourceManager& _resourceManager):
-    TileEngineNew(_window, _resourceManager)
+    TileEngine(_window, _resourceManager)
     , gridLines()
     , saveFile(_resourceManager)
 {
@@ -16,7 +16,7 @@ void TileEngine_Editor::createMap(std::string mapName, unsigned int width, unsig
 
 void TileEngine_Editor::loadMap(std::string _mapName)
 {
-    TileEngineNew::loadMap(_mapName);
+    TileEngine::loadMap(_mapName);
     //2 vertices
     gridLines.resize((mapWidth + 1) * 2 + ((mapHeight + 1) * 2));
     //vertex count
@@ -48,7 +48,7 @@ void TileEngine_Editor::loadMap(std::string _mapName)
 
 void TileEngine_Editor::drawMap()
 {
-    TileEngineNew::drawMap();
+    TileEngine::drawMap();
     drawGridLines();
 }
 

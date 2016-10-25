@@ -12,7 +12,7 @@
 
 #include "SaveFile_TileEngine.h"
 
-class TileEngine_Editor : public TileEngineNew
+class TileEngine_Editor : public TileEngine
 {
 public:
     //ctor + dtor

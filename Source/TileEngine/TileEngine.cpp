@@ -1,6 +1,6 @@
 #include "TileEngine/TileEngine.h"
 
-TileEngineNew::TileEngineNew(sf::RenderWindow& _window, ResourceManager& _resourceManager):
+TileEngine::TileEngine(sf::RenderWindow& _window, ResourceManager& _resourceManager):
     resourceManager(_resourceManager)
     , window(_window)
     , saveFile(_resourceManager)
@@ -8,12 +8,12 @@ TileEngineNew::TileEngineNew(sf::RenderWindow& _window, ResourceManager& _resour
 
 }
 
-TileEngineNew::~TileEngineNew()
+TileEngine::~TileEngine()
 {
 
 }
 
-void TileEngineNew::loadMap(std::string _mapName)
+void TileEngine::loadMap(std::string _mapName)
 {
     //get the texture atlas
     resourceManager.getTexture("TILESTORAGE");
@@ -212,7 +212,7 @@ void TileEngineNew::loadMap(std::string _mapName)
     mapName = _mapName;
 }
 
-void TileEngineNew::drawMap()
+void TileEngine::drawMap()
 {
     //find boundaries
     int drawMin_x = (cameraPosition.x / 64.f) - (0.5 * tileFit_x) - (maxTileSize_x - 1);
@@ -253,7 +253,7 @@ void TileEngineNew::drawMap()
         }
     }
 }
-void TileEngineNew::drawTiles()
+void TileEngine::drawTiles()
 {
     //find boundaries
     int drawMin_x = (cameraPosition.x / 64.f) - (0.5 * tileFit_x) - (maxTileSize_x - 1);
@@ -303,24 +303,24 @@ void TileEngineNew::drawTiles()
         }
     }
 }
-void TileEngineNew::setViewportSize(float width, float height)
+void TileEngine::setViewportSize(float width, float height)
 {
     tileFit_x = (width  / 64.f) + 2; // +2 for transitioning tiles
     tileFit_y = (height / 64.f) + 2; // +2 for transitioning tiles
 }
 
-void TileEngineNew::setPosition(int x, int y)
+void TileEngine::setPosition(int x, int y)
 {
     cameraPosition.x = x;
     cameraPosition.y = y;
 }
 
 //helper
-int TileEngineNew::getTile(unsigned int x, unsigned int y, unsigned int layer)
+int TileEngine::getTile(unsigned int x, unsigned int y, unsigned int layer)
 {
     return x + (mapWidth * y) + (layer * mapWidth * mapHeight);
 }
-int TileEngineNew::getChunk(unsigned int x, unsigned int y)
+int TileEngine::getChunk(unsigned int x, unsigned int y)
 {
     return x + (chunks_x * y);
 }

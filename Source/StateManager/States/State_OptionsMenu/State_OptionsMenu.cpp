@@ -22,13 +22,13 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     //windowMode
     option_windowMode.setType(OptionType::choice);
     option_windowMode.setList("displayList");
-    option_windowMode.setOptionName(saveFile.getWindowModeName());
+    option_windowMode.setOptionName(saveFile.getWindowMode_name());
     option_windowMode.addChoice(std::make_pair("Fullscreen", 0));
     option_windowMode.addChoice(std::make_pair("Windowed",   1));
     //fps
     option_fps.setType(OptionType::choice);
     option_fps.setList("displayList");
-    option_fps.setOptionName(saveFile.getFpsName());
+    option_fps.setOptionName(saveFile.getFps_name());
     option_fps.addChoice(std::make_pair ("V-Sync", 0));
     option_fps.addChoice(std::make_pair ("60  Fps", 60));
     option_fps.addChoice(std::make_pair ("128 Fps", 128));
@@ -38,7 +38,7 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     //font
     option_font.setType(OptionType::choice);
     option_font.setList("displayList");
-    option_font.setOptionName(saveFile.getFontName());
+    option_font.setOptionName(saveFile.getFont_name());
     option_font.addChoice(std::make_pair ("Lato Regular", "Lato-Regular.ttf"));
     option_font.addChoice(std::make_pair ("Lato Medium", "Lato-Medium.ttf"));
     option_font.addChoice(std::make_pair ("Open Sans Regular", "OpenSans-Regular.ttf"));
@@ -46,7 +46,7 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     //guiPack
     option_guiPack.setType(OptionType::choice);
     option_guiPack.setList("displayList");
-    option_guiPack.setOptionName(saveFile.getGuiPackName());
+    option_guiPack.setOptionName(saveFile.getGuiPack_name());
     for(const auto& it : utl::getFiles("Data_2/Gui Pack", false))
     {
         option_guiPack.addChoice(std::make_pair (it, it));
@@ -56,7 +56,7 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     //music volume
     option_musicVolume.setType(OptionType::choice);
     option_musicVolume.setList("audioList");
-    option_musicVolume.setOptionName(saveFile.getMusicName());
+    option_musicVolume.setOptionName(saveFile.getMusicVolume_name());
     option_musicVolume.setChoices({std::make_pair("Muted", 0), std::make_pair("10%", 10), std::make_pair("20%", 20), std::make_pair("30%", 30), std::make_pair("40%", 40), std::make_pair("50%", 50),
                                    std::make_pair("60%", 60), std::make_pair("70%", 70), std::make_pair("80%", 80), std::make_pair("90%", 90), std::make_pair("100%", 100)
                                   });

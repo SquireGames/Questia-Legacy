@@ -5,7 +5,6 @@ Application::Application():
     , mStatisticsFramesCount(0)
     , saveFile()
 {
-    //temp
     Data_Desktop::getInstance().changeFont(saveFile.getFont());
 
     switch (saveFile.getWindowMode())

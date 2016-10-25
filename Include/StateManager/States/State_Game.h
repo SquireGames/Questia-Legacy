@@ -20,6 +20,8 @@
 #include "SaveFile_Options.h"
 #include "Data/Data_Desktop.h"
 
+#include "Utl/Threads/AsyncTasks.h"
+
 class State_Game : public State
 {
 public:
@@ -42,46 +44,20 @@ private:
     GuiManagerNew guiManager;
     GuiLoader guiLoader;
 
+    TileEngine tileEngine;
     EntityManager entityManager;
-    TileEngineNew tileEngineNew;
 
     float playerAngle;
     bool paused = false;
 
+    AsyncTasks asyncTasks;
 
-    ///Key binds
-
-    enum keyEnum {mouse, keyboard, joystick};
-
-    struct mappedKey
-    {
-        mappedKey(int key_):
-            keyType()
-            , keyNumber(key_)
-            , activated(false) {}
-
-        int keyType; // 0-keyBoard, 2-Mouse, 3-Joystick
-        int keyNumber;
-        sf::Keyboard::Key keyInput;
-        sf::Mouse::Button mouseInput;
-        bool activated;
-    };
-
-    mappedKey moveKey0;
-    mappedKey moveKey1;
-    mappedKey moveKey2;
-    mappedKey moveKey3;
-
-    mappedKey skillKey4;
-    mappedKey skillKey5;
-    mappedKey skillKey6;
-
-    //UNIMPLENTED
-    mappedKey toggleTalkKey;
-    mappedKey talkKey;
-
-    std::vector <struct mappedKey> keybindVector;
-
+    //tasks
+    void gameLogic();
+    void task_lighting();
+    void task_ai();
+    void task_particles();
+    void task_gui();
 
     //TEMP
     sf::Sprite alignment;

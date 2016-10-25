@@ -48,9 +48,9 @@ void Data_Desktop::setDesktopResolution(sf::Vector2i newRes, sf::Vector2i Positi
 
 
 
-void Data_Desktop::changeFont(std::string fontName)
+void Data_Desktop::changeFont(std::string font_name)
 {
-    if(!font1.loadFromFile(utl::conjoinString({"Media/Fonts/", fontName})))
+    if(!font1.loadFromFile(utl::conjoinString({"Media/Fonts/", font_name})))
     {
         font1.loadFromFile("Media/Fonts/acidstructure.ttf");
     }

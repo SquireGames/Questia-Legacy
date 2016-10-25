@@ -21,18 +21,20 @@
 
 #include "Tile.h"
 
-class TileEngineNew
+class TileEngine
 {
 public:
     //ctor and dtor
-    TileEngineNew(sf::RenderWindow& _window, ResourceManager& _resourceManager);
-    ~TileEngineNew();
+    TileEngine(sf::RenderWindow& _window, ResourceManager& _resourceManager);
+    ~TileEngine();
 
     void loadMap(std::string _mapName);
+
     //draws chunks
     void drawMap();
     //draws separate tiles
     void drawTiles();
+
     void setViewportSize(float width, float height);
 
     //set tiles drawn from player position
@@ -72,7 +74,6 @@ protected:
     ResourceManager& resourceManager;
 
     ///chunk renderer
-    //TODO make sure to resize for cache precision
     //chunk size is 8x8 tiles
     std::vector <sf::VertexArray> chunkVector;
     //chunks

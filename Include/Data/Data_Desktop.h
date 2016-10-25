@@ -21,7 +21,7 @@ public:
     int get_FPS();
     void set_FPS(int f);
 
-    void changeFont(std::string fontName);
+    void changeFont(std::string font_name);
     sf::Font font1;
 
     void setMostRecentChar(char c){mostRecentChar = c;}
