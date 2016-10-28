@@ -9,6 +9,8 @@ State_Game::State_Game(sf::RenderWindow &window):
     , entityManager()
     , tileEngine(window, resourceManager)
 
+    , threadPool()
+
     , saveFile()
 
     , asyncTasks()
@@ -54,6 +56,11 @@ State_Game::State_Game(sf::RenderWindow &window):
     asyncTasks.addTask(std::bind(&State_Game::task_lighting, this));
     asyncTasks.addTask(std::bind(&State_Game::task_ai, this));
     asyncTasks.addTask(std::bind(&State_Game::task_particles, this));
+
+    threadPool.addTask(std::bind(&State_Game::task_gui, this));
+    threadPool.addTask(std::bind(&State_Game::task_lighting, this));
+    threadPool.addTask(std::bind(&State_Game::task_ai, this));
+    threadPool.addTask(std::bind(&State_Game::task_particles, this));
 }
 
 State_Game::~State_Game()
@@ -97,7 +104,22 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 void State_Game::update(sf::Time elapsedTime)
 {
     gameLogic();
-    asyncTasks.runTasks();
+    //asyncTasks.runTasks();
+    threadPool.runTasks();
+
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if(guiManager.isClicked("mainMenu"))
+        {
+            threadPool.kill();
+            StateManager::getInstance().changeState(new State_Transition(window, 1));
+        }
+        else if(guiManager.isClicked("exitGame"))
+        {
+            threadPool.kill();
+            window.close();
+        }
+    }
 }
 
 void State_Game::gameLogic()
@@ -129,22 +151,22 @@ void State_Game::gameLogic()
 
 void State_Game::task_lighting()
 {
-   std::cout << "TASK - LIGHTING" << std::endl;
+ //  std::cout << "TASK - LIGHTING" << std::endl;
 }
 
 void State_Game::task_ai()
 {
-    std::cout << "TASK - AI" << std::endl;
+//    std::cout << "TASK - AI" << std::endl;
 }
 
 void State_Game::task_particles()
 {
-    std::cout << "TASK - PARTICLES" << std::endl;
+  //  std::cout << "TASK - PARTICLES" << std::endl;
 }
 
 void State_Game::task_gui()
 {
-    std::cout << "TASK - GUI" << std::endl;
+    //std::cout << "TASK - GUI" << std::endl;
 
     //game
     guiManager.setButtonAtr("hpBar", "percent", gui::ButtonAtrCharacteristic::percentage, 100);
@@ -152,18 +174,6 @@ void State_Game::task_gui()
     guiManager.setButtonAtr("stBar", "percent", gui::ButtonAtrCharacteristic::percentage, 100);
     //debug
     guiManager.setButtonAtr("fpsText", "text", gui::ButtonAtrCharacteristic::text, utl::asString(Data_Desktop::getInstance().get_FPS()));
-
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        if(guiManager.isClicked("mainMenu"))
-        {
-            StateManager::getInstance().changeState(new State_Transition(window, 1));
-        }
-        else if(guiManager.isClicked("exitGame"))
-        {
-            window.close();
-        }
-    }
 }
 
 void State_Game::displayTextures()

@@ -21,6 +21,7 @@
 #include "Data/Data_Desktop.h"
 
 #include "Utl/Threads/AsyncTasks.h"
+#include "Utl/Threads/ThreadPool_Fixed.h"
 
 class State_Game : public State
 {
@@ -51,6 +52,7 @@ private:
     bool paused = false;
 
     AsyncTasks asyncTasks;
+    ThreadPool_Fixed threadPool;
 
     //tasks
     void gameLogic();
