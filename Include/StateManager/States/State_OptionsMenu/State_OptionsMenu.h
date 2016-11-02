@@ -41,7 +41,7 @@ private:
     bool key_down_isPressed;
 
     ResourceManager resourceManager;
-    GuiManagerNew guiManager;
+    GuiManager guiManager;
     OptionManager optionManager;
 
     SaveFile_Options saveFile;

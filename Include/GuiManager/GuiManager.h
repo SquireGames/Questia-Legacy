@@ -20,11 +20,11 @@
 #include "GuiManager/Button.h"
 
 
-class GuiManagerNew
+class GuiManager
 {
 public:
-    GuiManagerNew(sf::RenderWindow &_window, ResourceManager &_resourceManager);
-    ~GuiManagerNew();
+    GuiManager(sf::RenderWindow &_window, ResourceManager &_resourceManager);
+    ~GuiManager();
 
     void createButton(std::string buttonName);
     void createButton(std::string buttonName, int layer);

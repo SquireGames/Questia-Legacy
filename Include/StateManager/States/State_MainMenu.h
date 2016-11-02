@@ -42,7 +42,7 @@ private:
     sf::Sound musicSound;
 
     ResourceManager resourceManager;
-    GuiManagerNew guiManager;
+    GuiManager guiManager;
 };
 
 #endif // STATE_MAINMENU_H

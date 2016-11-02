@@ -6,14 +6,12 @@ State_Game::State_Game(sf::RenderWindow &window):
     , resourceManager()
     , guiManager(window, resourceManager)
     , guiLoader()
-    , entityManager()
+    , entityManager(resourceManager)
     , tileEngine(window, resourceManager)
 
     , threadPool()
 
     , saveFile()
-
-    , asyncTasks()
 {
     ///gui
     //font
@@ -52,11 +50,6 @@ State_Game::State_Game(sf::RenderWindow &window):
     visibleScreen.append(sf::Vertex(sf::Vector2f(0,0), sf::Color::Black));
 
     ///Asynchronous tasks
-    asyncTasks.addTask(std::bind(&State_Game::task_gui, this));
-    asyncTasks.addTask(std::bind(&State_Game::task_lighting, this));
-    asyncTasks.addTask(std::bind(&State_Game::task_ai, this));
-    asyncTasks.addTask(std::bind(&State_Game::task_particles, this));
-
     threadPool.addTask(std::bind(&State_Game::task_gui, this));
     threadPool.addTask(std::bind(&State_Game::task_lighting, this));
     threadPool.addTask(std::bind(&State_Game::task_ai, this));
@@ -84,15 +77,6 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
         {
             //guiManager.toggleOverlay();
         }
-        else if(key == sf::Keyboard::T)
-        {
-            //isInDebugMode = true;
-        }
-        else if(key == sf::Keyboard::Y)
-        {
-            //isInDebugMode = false;
-        }
-
         else if(key == sf::Keyboard::Escape && isPressed == false)
         {
             guiManager.setGroupAtr("pauseMenu", gui::ButtonCharacteristic::isVisible, true);
@@ -104,7 +88,6 @@ void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 void State_Game::update(sf::Time elapsedTime)
 {
     gameLogic();
-    //asyncTasks.runTasks();
     threadPool.runTasks();
 
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -124,9 +107,6 @@ void State_Game::update(sf::Time elapsedTime)
 
 void State_Game::gameLogic()
 {
-    ///update mouse
-    guiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
-
     if(!paused)
     {
         //Angle
@@ -147,26 +127,29 @@ void State_Game::gameLogic()
     gameView.setCenter(sf::Vector2f (1920/2, 1080/2));
 
     tileEngine.setPosition(1920/2, 1080/2);
+
+    entityManager.update();
 }
 
 void State_Game::task_lighting()
 {
- //  std::cout << "TASK - LIGHTING" << std::endl;
+
 }
 
 void State_Game::task_ai()
 {
-//    std::cout << "TASK - AI" << std::endl;
+
 }
 
 void State_Game::task_particles()
 {
-  //  std::cout << "TASK - PARTICLES" << std::endl;
+
 }
 
 void State_Game::task_gui()
 {
-    //std::cout << "TASK - GUI" << std::endl;
+    //update mouse
+    guiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
 
     //game
     guiManager.setButtonAtr("hpBar", "percent", gui::ButtonAtrCharacteristic::percentage, 100);
@@ -182,6 +165,8 @@ void State_Game::displayTextures()
 
     tileEngine.drawMap();
     //tileEngine.drawTiles();
+
+    entityManager.draw(window, DrawLayer::Entity_Regular);
 
     window.draw(alignment2);
 

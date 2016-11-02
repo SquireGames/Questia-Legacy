@@ -13,7 +13,7 @@ public:
     GuiLoader();
     ~GuiLoader();
 
-    void loadGui(GuiManagerNew& guiManager, std::string gui);
+    void loadGui(GuiManager& guiManager, std::string gui);
     void setGuiPack(std::string guiPack);
 
 private:

@@ -25,7 +25,7 @@ private:
     sf::Sprite aMenuImage;
 
     ResourceManager resourceManager;
-    GuiManagerNew guiManager;
+    GuiManager guiManager;
 };
 
 #endif // STATE_MULTIPLAYERSELECTION_H

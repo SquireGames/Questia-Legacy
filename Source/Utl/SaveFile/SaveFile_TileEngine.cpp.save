@@ -89,8 +89,8 @@ MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& wind
     //open map file
     SaveFile saveFile_map;
     saveFile_map.setFilePath(utl::conjoinString({"Maps/", mapName, "/map.txt"}));
+    td::cout << "C1" << std::endl;
     saveFile_map.readFile();
-
     //get tiles
     std::vector <std::string> tileVector = saveFile_map.getItemList();
     unsigned int tileNumberIterator = 0;
@@ -113,6 +113,7 @@ MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& wind
         }
     }
 
+    std::cout << "C3" << std::endl;
     return mapData;
 }
 

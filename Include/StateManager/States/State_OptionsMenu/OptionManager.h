@@ -30,7 +30,7 @@ class OptionManager
 {
 public:
     //ctor and dtor
-    OptionManager(GuiManagerNew* _guiManager);
+    OptionManager(GuiManager* _guiManager);
     ~OptionManager();
 
     void addOption(Option_Base* option);
@@ -47,7 +47,7 @@ public:
     bool isMouseOverAssignedInput();
 
 private:
-    GuiManagerNew* guiManager;
+    GuiManager* guiManager;
 
     void initSprites();
     void updateArrows();

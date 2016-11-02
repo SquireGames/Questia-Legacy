@@ -15,7 +15,7 @@ void GuiLoader::setGuiPack(std::string guiPack)
     primaryPack = guiPack;
 }
 
-void GuiLoader::loadGui(GuiManagerNew& guiManager, std::string gui)
+void GuiLoader::loadGui(GuiManager& guiManager, std::string gui)
 {
     std::string filePath = utl::conjoinString({"Data_2/Gui Pack/", primaryPack, "/",  gui, ".txt"});
     if(!utl::doesExist(filePath))

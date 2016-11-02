@@ -1,7 +1,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-///TODO M/ Add Debugger
+///TODO Add Debugger
 class Debug
 {
     public:

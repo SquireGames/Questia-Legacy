@@ -1,6 +1,6 @@
 #include "GuiManager.h"
 
-GuiManagerNew::GuiManagerNew(sf::RenderWindow &_window, ResourceManager &_resourceManager):
+GuiManager::GuiManager(sf::RenderWindow &_window, ResourceManager &_resourceManager):
     window(_window)
     , resourceManager(_resourceManager)
     , currentButtonEdit ("NOBUTTON")
@@ -12,7 +12,7 @@ GuiManagerNew::GuiManagerNew(sf::RenderWindow &_window, ResourceManager &_resour
 
 }
 
-GuiManagerNew::~GuiManagerNew()
+GuiManager::~GuiManager()
 {
     for(std::map<std::string, Button*>::iterator it = buttonMap.begin(); it != buttonMap.end(); ++it)
     {
@@ -20,7 +20,7 @@ GuiManagerNew::~GuiManagerNew()
     }
 }
 
-void GuiManagerNew::createButtonTemplate(std::string buttonName)
+void GuiManager::createButtonTemplate(std::string buttonName)
 {
     if(!buttonMap.count(buttonName))
     {
@@ -33,7 +33,7 @@ void GuiManagerNew::createButtonTemplate(std::string buttonName)
     }
 }
 
-void GuiManagerNew::createButtonTemplate(std::string buttonName, int layer)
+void GuiManager::createButtonTemplate(std::string buttonName, int layer)
 {
     if(!buttonMap.count(buttonName))
     {
@@ -48,7 +48,7 @@ void GuiManagerNew::createButtonTemplate(std::string buttonName, int layer)
     }
 }
 
-void GuiManagerNew::createButtonTemplate(std::string copyName, std::string originalName)
+void GuiManager::createButtonTemplate(std::string copyName, std::string originalName)
 {
     if(!buttonMap.count(copyName))
     {
@@ -66,7 +66,7 @@ void GuiManagerNew::createButtonTemplate(std::string copyName, std::string origi
 }
 
 
-void GuiManagerNew::createButton(std::string buttonName)
+void GuiManager::createButton(std::string buttonName)
 {
     if(!buttonMap.count(buttonName))
     {
@@ -81,7 +81,7 @@ void GuiManagerNew::createButton(std::string buttonName)
     }
 }
 
-void GuiManagerNew::createButton(std::string buttonName, int layer)
+void GuiManager::createButton(std::string buttonName, int layer)
 {
     if(!buttonMap.count(buttonName))
     {
@@ -97,7 +97,7 @@ void GuiManagerNew::createButton(std::string buttonName, int layer)
     }
 }
 
-void GuiManagerNew::createButton(std::string copyName, std::string originalName)
+void GuiManager::createButton(std::string copyName, std::string originalName)
 {
     if(buttonMap.count(originalName))
     {
@@ -115,7 +115,7 @@ void GuiManagerNew::createButton(std::string copyName, std::string originalName)
     }
 }
 
-void GuiManagerNew::placeInDrawList(Button* button)
+void GuiManager::placeInDrawList(Button* button)
 {
     //check if it exists
     for(auto it = buttonDrawList.begin(); it != buttonDrawList.end(); it++)
@@ -148,7 +148,7 @@ void GuiManagerNew::placeInDrawList(Button* button)
     }
 }
 
-void GuiManagerNew::createButtonAtr(std::string buttonName, std::string atrName, gui::ButtonAtr buttonAtr)
+void GuiManager::createButtonAtr(std::string buttonName, std::string atrName, gui::ButtonAtr buttonAtr)
 {
     if(buttonMap.count(buttonName))
     {
@@ -158,25 +158,25 @@ void GuiManagerNew::createButtonAtr(std::string buttonName, std::string atrName,
     }
 }
 
-void GuiManagerNew::createButtonAtr(std::string atrName, gui::ButtonAtr buttonAtr)
+void GuiManager::createButtonAtr(std::string atrName, gui::ButtonAtr buttonAtr)
 {
     buttonMap[currentButtonEdit]->addButtonAtr(atrName, buttonAtr);
     currentButtonAtrEdit = atrName;
 }
 
-void GuiManagerNew::createGroup(std::string groupName)
+void GuiManager::createGroup(std::string groupName)
 {
     groupMap[groupName];
     currentGroupEdit = groupName;
 }
 
-void GuiManagerNew::createGroupTemplate(std::string groupName)
+void GuiManager::createGroupTemplate(std::string groupName)
 {
     groupTemplateMap[groupName];
     currentGroupEdit = groupName;
 }
 
-void GuiManagerNew::createGroupFromTemplate(std::string groupName, std::string templateName)
+void GuiManager::createGroupFromTemplate(std::string groupName, std::string templateName)
 {
     if(groupTemplateMap.count(templateName))
     {
@@ -199,7 +199,7 @@ void GuiManagerNew::createGroupFromTemplate(std::string groupName, std::string t
     }
 }
 
-std::string GuiManagerNew::getGroupEntry(std::string groupName, std::string buttonName)
+std::string GuiManager::getGroupEntry(std::string groupName, std::string buttonName)
 {
     if(groupMap.count(groupName))
     {
@@ -214,7 +214,7 @@ std::string GuiManagerNew::getGroupEntry(std::string groupName, std::string butt
     return "nil";
 }
 
-void GuiManagerNew::addToGroup(std::string groupName, std::string entryName)
+void GuiManager::addToGroup(std::string groupName, std::string entryName)
 {
     if(groupMap.count(groupName))
     {
@@ -234,7 +234,7 @@ void GuiManagerNew::addToGroup(std::string groupName, std::string entryName)
         }
     }
 }
-void GuiManagerNew::addToGroup(std::string entryName)
+void GuiManager::addToGroup(std::string entryName)
 {
     if(groupMap.count(currentGroupEdit))
     {
@@ -257,7 +257,7 @@ void GuiManagerNew::addToGroup(std::string entryName)
 
 
 
-bool GuiManagerNew::isClicked(std::string buttonName)
+bool GuiManager::isClicked(std::string buttonName)
 {
     if(buttonMap.count(buttonName))
     {
@@ -278,7 +278,7 @@ bool GuiManagerNew::isClicked(std::string buttonName)
     return false;
 }
 
-void GuiManagerNew::drawButtons()
+void GuiManager::drawButtons()
 {
     for(auto it = buttonDrawList.begin(); it != buttonDrawList.end(); it++)
     {
@@ -286,7 +286,7 @@ void GuiManagerNew::drawButtons()
     }
 }
 
-void GuiManagerNew::setButtonLayer(std::string buttonName, int layer)
+void GuiManager::setButtonLayer(std::string buttonName, int layer)
 {
     if(buttonMap.count(buttonName))
     {
@@ -298,7 +298,7 @@ void GuiManagerNew::setButtonLayer(std::string buttonName, int layer)
         }
     }
 }
-void GuiManagerNew::setButtonLayer(int layer)
+void GuiManager::setButtonLayer(int layer)
 {
     Button* button = buttonMap[currentButtonEdit];
     button->layer = layer;
@@ -308,13 +308,13 @@ void GuiManagerNew::setButtonLayer(int layer)
     }
 }
 
-void GuiManagerNew::deleteButton(std::string buttonName)
+void GuiManager::deleteButton(std::string buttonName)
 {
     delete buttonMap[buttonName];
     buttonMap.erase(buttonName);
 }
 
-void GuiManagerNew::setMousePosition(std::pair <float, float> _mouseCoords)
+void GuiManager::setMousePosition(std::pair <float, float> _mouseCoords)
 {
     mouseCoords = _mouseCoords;
 
@@ -324,7 +324,7 @@ void GuiManagerNew::setMousePosition(std::pair <float, float> _mouseCoords)
     }
 }
 
-void GuiManagerNew::setFont(sf::Font _buttonFont)
+void GuiManager::setFont(sf::Font _buttonFont)
 {
     buttonFont = _buttonFont;
 }
@@ -335,24 +335,24 @@ void GuiManagerNew::setFont(sf::Font _buttonFont)
 
 
 
-void GuiManagerNew::createList(std::string listName)
+void GuiManager::createList(std::string listName)
 {
     listMap[listName] = std::make_pair(std::make_pair("NOTEMPLATE", std::make_pair( std::make_pair(0,0), 0)), std::vector<std::string>());
     currentListEdit = listName;
 }
 
-void GuiManagerNew::setListSpacing(std::string listName, int spacing)
+void GuiManager::setListSpacing(std::string listName, int spacing)
 {
     if(listMap.count(listName))
     {
         listMap[listName].first.second.second = spacing;
     }
 }
-void GuiManagerNew::setListSpacing(int spacing)
+void GuiManager::setListSpacing(int spacing)
 {
     listMap[currentListEdit].first.second.second = spacing;
 }
-void GuiManagerNew::setListTemplate(std::string listName, std::string groupTemplate)
+void GuiManager::setListTemplate(std::string listName, std::string groupTemplate)
 {
     if(listMap.count(listName))
     {
@@ -362,7 +362,7 @@ void GuiManagerNew::setListTemplate(std::string listName, std::string groupTempl
         }
     }
 }
-void GuiManagerNew::setListTemplate(std::string groupTemplate)
+void GuiManager::setListTemplate(std::string groupTemplate)
 {
     if(groupTemplateMap.count(groupTemplate))
     {
@@ -370,19 +370,19 @@ void GuiManagerNew::setListTemplate(std::string groupTemplate)
     }
 }
 
-void GuiManagerNew::setListPosition(std::string listName, std::pair<int, int> position)
+void GuiManager::setListPosition(std::string listName, std::pair<int, int> position)
 {
     if(listMap.count(listName))
     {
         listMap[listName].first.second.first = position;
     }
 }
-void GuiManagerNew::setListPosition(std::pair<int, int> position)
+void GuiManager::setListPosition(std::pair<int, int> position)
 {
     listMap[currentListEdit].first.second.first = position;
 }
 
-std::string GuiManagerNew::createListEntry(std::string listName)
+std::string GuiManager::createListEntry(std::string listName)
 {
     if(listMap[listName].first.first != "NOTEMPLATE")
     {
@@ -400,7 +400,7 @@ std::string GuiManagerNew::createListEntry(std::string listName)
     }
     return "nil";
 }
-std::string GuiManagerNew::createListEntry()
+std::string GuiManager::createListEntry()
 {
     if(listMap[currentListEdit].first.first != "NOTEMPLATE")
     {

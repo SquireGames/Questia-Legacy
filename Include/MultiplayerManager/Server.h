@@ -51,7 +51,7 @@ struct Map
     Map():
         resourceManager()
         , window()
-        , entityManager()
+        , entityManager(resourceManager)
     {}
 
     //inactive

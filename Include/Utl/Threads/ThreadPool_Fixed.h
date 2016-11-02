@@ -18,7 +18,7 @@ public:
     ThreadPool_Fixed();
     ~ThreadPool_Fixed();
 
-    void addTask(std::function<void ()> task);
+    void addTask(std::function<void()> task);
 
     void runTasks();
 

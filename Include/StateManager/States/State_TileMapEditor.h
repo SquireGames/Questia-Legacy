@@ -33,7 +33,7 @@ private:
     ResourceManager resourceManager;
     TileEngine_Editor tileEngineEditor;
 
-    GuiManagerNew guiManager;
+    GuiManager guiManager;
     GuiLoader guiLoader;
 
     SaveFile_Options saveFile_options;

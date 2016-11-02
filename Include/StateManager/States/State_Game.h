@@ -20,8 +20,9 @@
 #include "SaveFile_Options.h"
 #include "Data/Data_Desktop.h"
 
-#include "Utl/Threads/AsyncTasks.h"
 #include "Utl/Threads/ThreadPool_Fixed.h"
+
+#include "DrawLayer.h"
 
 class State_Game : public State
 {
@@ -42,7 +43,7 @@ private:
     sf::RenderWindow& window;
 
     ResourceManager resourceManager;
-    GuiManagerNew guiManager;
+    GuiManager guiManager;
     GuiLoader guiLoader;
 
     TileEngine tileEngine;
@@ -51,7 +52,6 @@ private:
     float playerAngle;
     bool paused = false;
 
-    AsyncTasks asyncTasks;
     ThreadPool_Fixed threadPool;
 
     //tasks
@@ -65,6 +65,7 @@ private:
     sf::Sprite alignment;
     sf::Sprite alignment2;
     sf::VertexArray visibleScreen;
+
 };
 
 #endif // STATE_GAME_H

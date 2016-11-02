@@ -5,7 +5,7 @@ State_MultiplayerGame::State_MultiplayerGame(sf::RenderWindow &window):
     //managers
     , resourceManager()
     , newGuiManager(window, resourceManager)
-    , entityManager ()
+    , entityManager (resourceManager)
     , multiplayerManager("Temporary server name")
 
     , playerAngle(0)

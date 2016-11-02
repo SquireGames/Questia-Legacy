@@ -38,7 +38,7 @@ private:
 
     ResourceManager resourceManager;
     EntityManager entityManager;
-    GuiManagerNew newGuiManager;
+    GuiManager newGuiManager;
     MultiplayerManager multiplayerManager;
 
     float playerAngle;

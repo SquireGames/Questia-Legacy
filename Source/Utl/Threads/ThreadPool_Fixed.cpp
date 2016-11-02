@@ -36,14 +36,12 @@ void ThreadPool_Fixed::threadFunc()
     while(true)
     {
         //wait until signal to start something
-        std::cout << "Waiting for wakeUp or kill" << std::endl;
         while(!wakeUp && !killAll && finished)
         {
             std::this_thread::yield();
         }
 
         // make sure all threads started
-        std::cout << "Starting tasks" << std::endl;
         taskBarrier.wait();
         wakeUp = false;
 
@@ -58,7 +56,6 @@ void ThreadPool_Fixed::threadFunc()
             {
                 taskObj.runTask = false;
                 taskObj.taskMutex->unlock();
-                std::cout << "Running task" << std::endl;
                 taskObj.task();
             }
             else
@@ -69,7 +66,6 @@ void ThreadPool_Fixed::threadFunc()
 
         //make sure all threads finish
         taskBarrier.wait();
-        std::cout << "Tasks finished!" << std::endl;
         finished = true;
     }
 }
@@ -93,8 +89,6 @@ void ThreadPool_Fixed::runTasks()
     {
         std::this_thread::yield();
     }
-
-    std::cout << "~All tasks finished! " << std::endl;
 }
 
 void ThreadPool_Fixed::kill()

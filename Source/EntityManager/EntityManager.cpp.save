@@ -1,0 +1,17 @@
+#include "EntityManager/EntityManager.h"
+
+// declaration of  Entities
+#include "Entity.h"
+#include "Entity_
+
+EntityManager::EntityManager()
+{
+    std::cout<<"DEBUG: Entity Manager Initialized"<<std::endl;
+    entityVector.emplace_back(Entity_Obj(1, *this));
+}
+
+EntityManager::~EntityManager()
+{
+    std::cout<<"DEBUG: Destroyed Entity Manager"<<std::endl;
+}
+
