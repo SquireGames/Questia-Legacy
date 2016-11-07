@@ -47,7 +47,7 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     option_guiPack.setType(OptionType::choice);
     option_guiPack.setList("displayList");
     option_guiPack.setOptionName(saveFile.getGuiPack_name());
-    for(const auto& it : utl::getFiles("Data_2/Gui Pack", false))
+    for(const auto& it : utl::getFiles("Data/Gui Pack", false))
     {
         option_guiPack.addChoice(std::make_pair (it, it));
     }
@@ -65,19 +65,19 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     //move up key
     option_key_moveUp.setType(OptionType::input);
     option_key_moveUp.setList("inputList");
-    option_key_moveUp.setOptionName(saveFile.getKey_MoveUp_name());
+    option_key_moveUp.setOptionName(saveFile.getKey_moveUp_name());
     //move down key
     option_key_moveDown.setType(OptionType::input);
     option_key_moveDown.setList("inputList");
-    option_key_moveDown.setOptionName(saveFile.getKey_MoveDown_name());
+    option_key_moveDown.setOptionName(saveFile.getKey_moveDown_name());
     //move left key
     option_key_moveLeft.setType(OptionType::input);
     option_key_moveLeft.setList("inputList");
-    option_key_moveLeft.setOptionName(saveFile.getKey_MoveLeft_name());
+    option_key_moveLeft.setOptionName(saveFile.getKey_moveLeft_name());
     //move right key
     option_key_moveRight.setType(OptionType::input);
     option_key_moveRight.setList("inputList");
-    option_key_moveRight.setOptionName(saveFile.getKey_MoveRight_name());
+    option_key_moveRight.setOptionName(saveFile.getKey_moveRight_name());
     //skill 1 key
     option_key_skill_1.setType(OptionType::input);
     option_key_skill_1.setList("inputList");
@@ -109,16 +109,16 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
     option_font.init       (saveFile.getFont());
     option_musicVolume.init(saveFile.getMusicVolume());
     option_guiPack.init    (saveFile.getGuiPack());
-    option_key_moveUp.init   (saveFile.getKey_MoveUp());
-    option_key_moveDown.init (saveFile.getKey_MoveDown());
-    option_key_moveLeft.init (saveFile.getKey_MoveLeft());
-    option_key_moveRight.init(saveFile.getKey_MoveRight());
-    option_key_skill_1.init(saveFile.getKey_skill_1());
-    option_key_skill_2.init(saveFile.getKey_skill_2());
-    option_key_skill_3.init(saveFile.getKey_skill_3());
-    option_key_skill_4.init(saveFile.getKey_skill_4());
-    option_key_skill_5.init(saveFile.getKey_skill_5());
-    option_key_skill_6.init(saveFile.getKey_skill_6());
+    option_key_moveUp.init   (static_cast<ctr::Input>(saveFile.getKey_moveUp()));
+    option_key_moveDown.init (static_cast<ctr::Input>(saveFile.getKey_moveDown()));
+    option_key_moveLeft.init (static_cast<ctr::Input>(saveFile.getKey_moveLeft()));
+    option_key_moveRight.init(static_cast<ctr::Input>(saveFile.getKey_moveRight()));
+    option_key_skill_1.init  (static_cast<ctr::Input>(saveFile.getKey_skill_1()));
+    option_key_skill_2.init  (static_cast<ctr::Input>(saveFile.getKey_skill_2()));
+    option_key_skill_3.init  (static_cast<ctr::Input>(saveFile.getKey_skill_3()));
+    option_key_skill_4.init  (static_cast<ctr::Input>(saveFile.getKey_skill_4()));
+    option_key_skill_5.init  (static_cast<ctr::Input>(saveFile.getKey_skill_5()));
+    option_key_skill_6.init  (static_cast<ctr::Input>(saveFile.getKey_skill_6()));
 
     //storing
     optionManager.addOption(&option_windowMode);
@@ -142,9 +142,9 @@ State_OptionsMenu::State_OptionsMenu(sf::RenderWindow &window):
 
     ///hiding of unneeded lists
     guiManager.setListAtr("displayList", gui::ButtonCharacteristic::isVisible, true);
-    guiManager.setListAtr("audioList", gui::ButtonCharacteristic::isVisible, false);
-    guiManager.setListAtr("gameList", gui::ButtonCharacteristic::isVisible, false);
-    guiManager.setListAtr("inputList", gui::ButtonCharacteristic::isVisible, false);
+    guiManager.setListAtr("audioList"  , gui::ButtonCharacteristic::isVisible, false);
+    guiManager.setListAtr("gameList"   , gui::ButtonCharacteristic::isVisible, false);
+    guiManager.setListAtr("inputList"  , gui::ButtonCharacteristic::isVisible, false);
 }
 
 State_OptionsMenu::~State_OptionsMenu()
@@ -164,7 +164,7 @@ void State_OptionsMenu::processImput(sf::Keyboard::Key key, bool isPressed)
     }
     if(isPressed)
     {
-        optionManager.handleInput(ctr::getCharacter(key));
+        optionManager.handleInput(static_cast<ctr::Input>(key));
     }
 }
 

@@ -40,45 +40,45 @@ void SaveFile_Options::reloadOptions()
     {
         guiPack = saveFile.getItem(guiPack_name);
     }
-    if(utl::isNumber(saveFile.getItem(key_MoveUp_name)))
+    if(utl::isNumber(saveFile.getItem(key_moveUp_name)))
     {
-        key_MoveUp = utl::asInt(saveFile.getItem(key_MoveUp_name));
+        key_moveUp = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_moveUp_name)));
     }
-    if(utl::isNumber(saveFile.getItem(key_MoveDown_name)))
+    if(utl::isNumber(saveFile.getItem(key_moveDown_name)))
     {
-        key_MoveDown = utl::asInt(saveFile.getItem(key_MoveDown_name));
+        key_moveDown = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_moveDown_name)));
     }
-    if(utl::isNumber(saveFile.getItem(key_MoveLeft_name)))
+    if(utl::isNumber(saveFile.getItem(key_moveLeft_name)))
     {
-        key_MoveLeft = utl::asInt(saveFile.getItem(key_MoveLeft_name));
+        key_moveLeft = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_moveLeft_name)));
     }
-    if(utl::isNumber(saveFile.getItem(key_MoveRight_name)))
+    if(utl::isNumber(saveFile.getItem(key_moveRight_name)))
     {
-        key_MoveRight = utl::asInt(saveFile.getItem(key_MoveRight_name));
+        key_moveRight = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_moveRight_name)));
     }
     if(utl::isNumber(saveFile.getItem(key_skill_1_name)))
     {
-        key_skill_1 = utl::asInt(saveFile.getItem(key_skill_1_name));
+        key_skill_1 = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_skill_1_name)));
     }
     if(utl::isNumber(saveFile.getItem(key_skill_2_name)))
     {
-        key_skill_2 = utl::asInt(saveFile.getItem(key_skill_2_name));
+        key_skill_2 = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_skill_2_name)));
     }
     if(utl::isNumber(saveFile.getItem(key_skill_3_name)))
     {
-        key_skill_3 = utl::asInt(saveFile.getItem(key_skill_3_name));
+        key_skill_3 = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_skill_3_name)));
     }
     if(utl::isNumber(saveFile.getItem(key_skill_4_name)))
     {
-        key_skill_4 = utl::asInt(saveFile.getItem(key_skill_4_name));
+        key_skill_4 = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_skill_4_name)));
     }
     if(utl::isNumber(saveFile.getItem(key_skill_5_name)))
     {
-        key_skill_5 = utl::asInt(saveFile.getItem(key_skill_5_name));
+        key_skill_5 = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_skill_5_name)));
     }
     if(utl::isNumber(saveFile.getItem(key_skill_6_name)))
     {
-        key_skill_6 = utl::asInt(saveFile.getItem(key_skill_6_name));
+        key_skill_6 = static_cast<ctr::Input>(utl::asInt(saveFile.getItem(key_skill_6_name)));
     }
 }
 
@@ -113,45 +113,45 @@ void SaveFile_Options::saveOption(Option_Base* option, std::string optionName)
     {
         guiPack = option->getValueString();
     }
-    else if(optionName == key_MoveUp_name)
+    else if(optionName == key_moveUp_name)
     {
-        key_MoveUp = static_cast <char> (option->getValueString().at(0));
+        key_moveUp = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
-    else if(optionName == key_MoveDown_name)
+    else if(optionName == key_moveDown_name)
     {
-        key_MoveDown = static_cast <char> (option->getValueString().at(0));
+        key_moveDown = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
-    else if(optionName == key_MoveLeft_name)
+    else if(optionName == key_moveLeft_name)
     {
-        key_MoveLeft = static_cast <char> (option->getValueString().at(0));
+        key_moveLeft = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
-    else if(optionName == key_MoveRight_name)
+    else if(optionName == key_moveRight_name)
     {
-        key_MoveRight = static_cast <char> (option->getValueString().at(0));
+        key_moveRight = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
     else if(optionName == key_skill_1_name)
     {
-        key_skill_1 = static_cast <char> (option->getValueString().at(0));
+        key_skill_1 = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
     else if(optionName == key_skill_2_name)
     {
-        key_skill_2 = static_cast <char> (option->getValueString().at(0));
+        key_skill_2 = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
     else if(optionName == key_skill_3_name)
     {
-        key_skill_3 = static_cast <char> (option->getValueString().at(0));
+        key_skill_3 = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
     else if(optionName == key_skill_4_name)
     {
-        key_skill_4 = static_cast <char> (option->getValueString().at(0));
+        key_skill_4 = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
     else if(optionName == key_skill_5_name)
     {
-        key_skill_5 = static_cast <char> (option->getValueString().at(0));
+        key_skill_5 = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
     else if(optionName == key_skill_6_name)
     {
-        key_skill_6 = static_cast <char> (option->getValueString().at(0));
+        key_skill_6 = static_cast<ctr::Input>(utl::asInt(option->getValueString()));
     }
 }
 
@@ -167,10 +167,10 @@ void SaveFile_Options::writeOptions()
 
     saveFile.saveItem(musicVolume_name, musicVolume);
 
-    saveFile.saveItem(key_MoveUp_name, static_cast <int>    (key_MoveUp));
-    saveFile.saveItem(key_MoveDown_name, static_cast <int>  (key_MoveDown));
-    saveFile.saveItem(key_MoveLeft_name, static_cast <int>  (key_MoveLeft));
-    saveFile.saveItem(key_MoveRight_name, static_cast <int> (key_MoveRight));
+    saveFile.saveItem(key_moveUp_name,    static_cast <int> (key_moveUp));
+    saveFile.saveItem(key_moveDown_name,  static_cast <int> (key_moveDown));
+    saveFile.saveItem(key_moveLeft_name,  static_cast <int> (key_moveLeft));
+    saveFile.saveItem(key_moveRight_name, static_cast <int> (key_moveRight));
     saveFile.saveItem(key_skill_1_name, static_cast <int> (key_skill_1));
     saveFile.saveItem(key_skill_2_name, static_cast <int> (key_skill_2));
     saveFile.saveItem(key_skill_3_name, static_cast <int> (key_skill_3));
@@ -221,62 +221,62 @@ std::string SaveFile_Options::getGuiPack_name()
 {
     return guiPack_name;
 }
-char SaveFile_Options::getKey_MoveUp()
+ctr::Input SaveFile_Options::getKey_moveUp()
 {
-    return key_MoveUp;
+    return key_moveUp;
 }
-char SaveFile_Options::getKey_MoveDown()
+ctr::Input SaveFile_Options::getKey_moveDown()
 {
-    return key_MoveDown;
+    return key_moveDown;
 }
-char SaveFile_Options::getKey_MoveLeft()
+ctr::Input SaveFile_Options::getKey_moveLeft()
 {
-    return key_MoveLeft;
+    return key_moveLeft;
 }
-char SaveFile_Options::getKey_MoveRight()
+ctr::Input SaveFile_Options::getKey_moveRight()
 {
-    return key_MoveRight;
+    return key_moveRight;
 }
-char SaveFile_Options::getKey_skill_1()
+ctr::Input SaveFile_Options::getKey_skill_1()
 {
     return key_skill_1;
 }
-char SaveFile_Options::getKey_skill_2()
+ctr::Input SaveFile_Options::getKey_skill_2()
 {
     return key_skill_2;
 }
-char SaveFile_Options::getKey_skill_3()
+ctr::Input SaveFile_Options::getKey_skill_3()
 {
     return key_skill_3;
 }
-char SaveFile_Options::getKey_skill_4()
+ctr::Input SaveFile_Options::getKey_skill_4()
 {
     return key_skill_4;
 }
-char SaveFile_Options::getKey_skill_5()
+ctr::Input SaveFile_Options::getKey_skill_5()
 {
     return key_skill_5;
 }
-char SaveFile_Options::getKey_skill_6()
+ctr::Input SaveFile_Options::getKey_skill_6()
 {
     return key_skill_6;
 }
 
-std::string SaveFile_Options::getKey_MoveUp_name()
+std::string SaveFile_Options::getKey_moveUp_name()
 {
-    return key_MoveUp_name;
+    return key_moveUp_name;
 }
-std::string SaveFile_Options::getKey_MoveDown_name()
+std::string SaveFile_Options::getKey_moveDown_name()
 {
-    return key_MoveDown_name;
+    return key_moveDown_name;
 }
-std::string SaveFile_Options::getKey_MoveLeft_name()
+std::string SaveFile_Options::getKey_moveLeft_name()
 {
-    return key_MoveLeft_name;
+    return key_moveLeft_name;
 }
-std::string SaveFile_Options::getKey_MoveRight_name()
+std::string SaveFile_Options::getKey_moveRight_name()
 {
-    return key_MoveRight_name;
+    return key_moveRight_name;
 }
 std::string SaveFile_Options::getKey_skill_1_name()
 {

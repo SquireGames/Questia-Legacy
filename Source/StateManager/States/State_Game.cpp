@@ -20,6 +20,18 @@ State_Game::State_Game(sf::RenderWindow &window):
     guiLoader.setGuiPack(saveFile.getGuiPack());
     guiLoader.loadGui(guiManager, "game");
 
+    ///controls
+    ctr_moveUp    = saveFile.getKey_moveUp();
+    ctr_moveDown  = saveFile.getKey_moveDown();
+    ctr_moveLeft  = saveFile.getKey_moveLeft();
+    ctr_moveRight = saveFile.getKey_moveRight();
+    ctr_skill_1   = saveFile.getKey_skill_1();
+    ctr_skill_2   = saveFile.getKey_skill_2();
+    ctr_skill_3   = saveFile.getKey_skill_3();
+    ctr_skill_4   = saveFile.getKey_skill_4();
+    ctr_skill_5   = saveFile.getKey_skill_5();
+    ctr_skill_6   = saveFile.getKey_skill_6();
+
     ///views
     gameView.setSize(1920,1080);
     gameView.setCenter(960,540);
@@ -107,6 +119,15 @@ void State_Game::update(sf::Time elapsedTime)
 
 void State_Game::gameLogic()
 {
+    //process real-time input
+    Entity_Player& player = entityManager.getPlayer(2);
+    player.processInput(ctr::KeyAction::MoveUp,    ctr::checkInput(ctr_moveUp));
+    player.processInput(ctr::KeyAction::MoveDown,  ctr::checkInput(ctr_moveDown));
+    player.processInput(ctr::KeyAction::MoveLeft,  ctr::checkInput(ctr_moveLeft));
+    player.processInput(ctr::KeyAction::MoveRight, ctr::checkInput(ctr_moveRight));
+
+    gameView.setCenter(960+player.coords.x,540+player.coords.y);
+
     if(!paused)
     {
         //Angle
@@ -124,9 +145,8 @@ void State_Game::gameLogic()
         playerAngle = angle;
     }
 
-    gameView.setCenter(sf::Vector2f (1920/2, 1080/2));
 
-    tileEngine.setPosition(1920/2, 1080/2);
+    tileEngine.setPosition(960+player.coords.x,540+player.coords.y);
 
     entityManager.update();
 }

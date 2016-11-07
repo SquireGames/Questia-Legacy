@@ -21,6 +21,8 @@
 #include "Option_Base.h"
 #include "OptionManager.h"
 
+#include "Keyboard.h"
+
 #include "SaveFile_Options.h"
 
 class State_OptionsMenu : public State
@@ -56,18 +58,18 @@ private:
     //audio
     Option<int> option_musicVolume      {Option<int>()};
     //input
-    Option<char> option_key_moveUp      {Option<char>()};
-    Option<char> option_key_moveDown    {Option<char>()};
-    Option<char> option_key_moveLeft    {Option<char>()};
-    Option<char> option_key_moveRight   {Option<char>()};
-    Option<char> option_key_skill_1     {Option<char>()};
-    Option<char> option_key_skill_2     {Option<char>()};
-    Option<char> option_key_skill_3     {Option<char>()};
-    Option<char> option_key_skill_4     {Option<char>()};
-    Option<char> option_key_skill_5     {Option<char>()};
-    Option<char> option_key_skill_6     {Option<char>()};
+    Option<ctr::Input> option_key_moveUp      {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_moveDown    {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_moveLeft    {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_moveRight   {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_skill_1     {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_skill_2     {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_skill_3     {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_skill_4     {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_skill_5     {Option<ctr::Input>()};
+    Option<ctr::Input> option_key_skill_6     {Option<ctr::Input>()};
     //game
-    //Option<int> option_deleteData       {Option<int>()};
+    //Option<void> option_deleteData       {Option<void>()};
 };
 
 #endif // STATE_OPTIONSMENU_H

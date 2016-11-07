@@ -43,7 +43,7 @@ public:
     void callFunction();
 
     //input
-    void setInput(char key);
+    void setInput(ctr::Input input);
 
 private:
     //options

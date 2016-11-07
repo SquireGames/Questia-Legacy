@@ -165,7 +165,7 @@ void OptionManager::saveOptions(SaveFile_Options& saveFile)
     }
 }
 
-void OptionManager::handleInput(char input)
+void OptionManager::handleInput(ctr::Input input)
 {
     if(assignInput != "nil")
     {
@@ -225,25 +225,24 @@ void OptionManager::checkMouseInput()
     {
         if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
         {
-            handleInput(30);
+            handleInput(ctr::Input::LMouse);
         }
         else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
         {
-            handleInput(31);
+            handleInput(ctr::Input::RMouse);
         }
         else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle))
         {
-            handleInput(29);
+            handleInput(ctr::Input::MMouse);
         }
         else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::XButton1))
         {
-            handleInput(27);
+            handleInput(ctr::Input::Macro1);
         }
         else if(sf::Mouse::isButtonPressed(sf::Mouse::Button::XButton2))
         {
-            handleInput(28);
+            handleInput(ctr::Input::Macro2);
         }
-
         mouseReleases = 0;
     }
 }

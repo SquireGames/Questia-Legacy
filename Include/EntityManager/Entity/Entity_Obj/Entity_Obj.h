@@ -20,13 +20,16 @@ class Obj_Type
 class Entity_Obj : public Entity
 {
 public:
-    Entity_Obj(int id, EntityManager& entityManager, ResourceManager& _resourceManager);
+    Entity_Obj(unsigned int id, EntityManager& entityManager, ResourceManager& _resourceManager);
     virtual ~Entity_Obj() = 0;
 
     virtual void draw(sf::RenderWindow& window, const DrawLayer& drawLayer);
 
     utl::Vector2f coords;
     std::map <Type, Obj_Type> atrs;
+
+    std::string displayTag = "";
+    bool showTag = false;
 
 protected:
     ResourceManager& resourceManager;

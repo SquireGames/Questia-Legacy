@@ -7,10 +7,16 @@
 class Entity_Coll : public Entity_Obj
 {
 public:
-    Entity_Coll(int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds _bounds);
+    Entity_Coll(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds _bounds, Bounds _hitBounds);
+
     virtual ~Entity_Coll() = 0;
 
-    Bounds bounds;
+    //use to move entity
+    void attemptMove(const utl::Vector2f velocity, Entity_Coll& entity);
+    void forceMove(const utl::Vector2f velocity, Entity_Coll& entity);
+
+    Bounds collBounds;
+    Bounds hitBounds;
 
     bool isPermeable = true;
     bool isSolid     = true;

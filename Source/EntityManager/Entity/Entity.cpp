@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity(int _id, EntityManager& _entityManager):
+Entity::Entity(unsigned int _id, EntityManager& _entityManager):
     id(_id)
     , entityManager(_entityManager)
 {
@@ -17,7 +17,7 @@ void Entity::update()
 
 }
 
-int Entity::getId()
+unsigned int Entity::getId()
 {
     return id;
 }

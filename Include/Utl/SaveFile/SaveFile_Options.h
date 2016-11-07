@@ -5,6 +5,7 @@
 #include "Option_Base.h"
 #include "FileData.h"
 #include "Utl.h"
+#include "Keyboard.h"
 
 class SaveFile_Options
 {
@@ -22,26 +23,26 @@ public:
     std::string getFont();
     int getMusicVolume();
     std::string getGuiPack();
-    char getKey_MoveUp();
-    char getKey_MoveDown();
-    char getKey_MoveLeft();
-    char getKey_MoveRight();
-    char getKey_skill_1();
-    char getKey_skill_2();
-    char getKey_skill_3();
-    char getKey_skill_4();
-    char getKey_skill_5();
-    char getKey_skill_6();
+    ctr::Input getKey_moveUp();
+    ctr::Input getKey_moveDown();
+    ctr::Input getKey_moveLeft();
+    ctr::Input getKey_moveRight();
+    ctr::Input getKey_skill_1();
+    ctr::Input getKey_skill_2();
+    ctr::Input getKey_skill_3();
+    ctr::Input getKey_skill_4();
+    ctr::Input getKey_skill_5();
+    ctr::Input getKey_skill_6();
 
     std::string getWindowMode_name();
     std::string getFps_name();
     std::string getFont_name();
     std::string getMusicVolume_name();
     std::string getGuiPack_name();
-    std::string getKey_MoveUp_name();
-    std::string getKey_MoveDown_name();
-    std::string getKey_MoveLeft_name();
-    std::string getKey_MoveRight_name();
+    std::string getKey_moveUp_name();
+    std::string getKey_moveDown_name();
+    std::string getKey_moveLeft_name();
+    std::string getKey_moveRight_name();
     std::string getKey_skill_1_name();
     std::string getKey_skill_2_name();
     std::string getKey_skill_3_name();
@@ -66,17 +67,17 @@ private:
     //musicVolume: x = volume out of 100
     int musicVolume = 0;
 
-    //key_x: x = key saved as char
-    char key_MoveUp    = 'w';
-    char key_MoveDown  = 's';
-    char key_MoveLeft  = 'a';
-    char key_MoveRight = 'd';
-    char key_skill_1 = 30;
-    char key_skill_2 = 31;
-    char key_skill_3 = 4;
-    char key_skill_4 = ' ';
-    char key_skill_5 = 'q';
-    char key_skill_6 = 'e';
+    //key_x: x = key saved as int
+    ctr::Input key_moveUp    = ctr::Input::W;
+    ctr::Input key_moveDown  = ctr::Input::S;
+    ctr::Input key_moveLeft  = ctr::Input::A;
+    ctr::Input key_moveRight = ctr::Input::D;
+    ctr::Input key_skill_1   = ctr::Input::LMouse;
+    ctr::Input key_skill_2   = ctr::Input::RMouse;
+    ctr::Input key_skill_3   = ctr::Input::LShift;
+    ctr::Input key_skill_4   = ctr::Input::Space;
+    ctr::Input key_skill_5   = ctr::Input::Q;
+    ctr::Input key_skill_6   = ctr::Input::E;
 
     ///option names
     const std::string windowMode_name  = "Window Setting";
@@ -86,10 +87,10 @@ private:
     const std::string musicVolume_name = "Music Volume";
 
     //key bindings
-    const std::string key_MoveUp_name    = "Move Up";
-    const std::string key_MoveDown_name  = "Move Down";
-    const std::string key_MoveLeft_name  = "Move Left";
-    const std::string key_MoveRight_name = "Move Right";
+    const std::string key_moveUp_name    = "Move Up";
+    const std::string key_moveDown_name  = "Move Down";
+    const std::string key_moveLeft_name  = "Move Left";
+    const std::string key_moveRight_name = "Move Right";
     const std::string key_skill_1_name = "Skill 1";
     const std::string key_skill_2_name = "Skill 2";
     const std::string key_skill_3_name = "Skill 3";

@@ -36,7 +36,7 @@ void Option<T>::init(T value)
     case OptionType::functional:
         break;
     case OptionType::input:
-        visibleOption = ctr::getKeyName(static_cast <char> (value));
+        visibleOption = ctr::getInputName(value);
         break;
     }
 }
@@ -97,6 +97,12 @@ template <class T>
 std::string Option<T>::getValueString()
 {
     return utl::asString(newOption);
+}
+
+template <>
+std::string Option<ctr::Input>::getValueString()
+{
+    return utl::asString(static_cast<int>(newOption));
 }
 
 template <class T>
@@ -191,10 +197,16 @@ void Option<T>::callFunction()
 }
 
 template <class T>
-void Option<T>::setInput(char key)
+void Option<T>::setInput(ctr::Input input)
 {
-    visibleOption = ctr::getKeyName(key);
-    newOption = key;
+
+}
+
+template <>
+void Option<ctr::Input>::setInput(ctr::Input input)
+{
+    visibleOption = ctr::getInputName(input);
+    newOption = input;
 }
 
 template class Option<bool>;
@@ -202,3 +214,4 @@ template class Option<char>;
 template class Option<int>;
 template class Option<float>;
 template class Option<std::string>;
+template class Option<ctr::Input>;

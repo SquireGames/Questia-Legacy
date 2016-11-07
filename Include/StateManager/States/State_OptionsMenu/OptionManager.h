@@ -10,6 +10,8 @@
 
 #include "GuiManager.h"
 
+#include "Keyboard.h"
+
 struct ButtonData
 {
     std::string buttonName = "nil";
@@ -39,7 +41,7 @@ public:
     void saveOptions(SaveFile_Options& saveFile);
 
     bool handleGui();
-    void handleInput(char input);
+    void handleInput(ctr::Input input);
 
     void setMouseReleased();
     void checkMouseInput();

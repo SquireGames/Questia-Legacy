@@ -24,6 +24,11 @@
 
 #include "DrawLayer.h"
 
+#include "KeyAction.h"
+
+//temp
+#include "Entity_Player.h"
+
 class State_Game : public State
 {
 public:
@@ -60,6 +65,18 @@ private:
     void task_ai();
     void task_particles();
     void task_gui();
+
+    //keys
+    ctr::Input ctr_moveUp;
+    ctr::Input ctr_moveDown;
+    ctr::Input ctr_moveLeft;
+    ctr::Input ctr_moveRight;
+    ctr::Input ctr_skill_1;
+    ctr::Input ctr_skill_2;
+    ctr::Input ctr_skill_3;
+    ctr::Input ctr_skill_4;
+    ctr::Input ctr_skill_5;
+    ctr::Input ctr_skill_6;
 
     //TEMP
     sf::Sprite alignment;

@@ -37,7 +37,7 @@ void StateManager::changeState(State* state)
     createState(state);
 }
 
-void StateManager::processImputState(sf::Keyboard::Key key,bool isPressed)
+void StateManager::processImputState(sf::Keyboard::Key key, bool isPressed)
 {
     stateStack.top()->processImput(key, isPressed);
 }

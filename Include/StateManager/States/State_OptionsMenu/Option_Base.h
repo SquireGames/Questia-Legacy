@@ -2,6 +2,7 @@
 #define OPTION_BASE_H
 
 #include <string>
+#include "Keyboard.h"
 
 enum class OptionType {choice, functional, input};
 
@@ -16,7 +17,7 @@ public:
     virtual std::string getValueString() = 0;
 
     virtual OptionType getType() = 0;
-    virtual void setInput(char key) = 0;
+    virtual void setInput(ctr::Input input) = 0;
 
     virtual bool isChanged() = 0;
 

@@ -17,10 +17,10 @@ void GuiLoader::setGuiPack(std::string guiPack)
 
 void GuiLoader::loadGui(GuiManager& guiManager, std::string gui)
 {
-    std::string filePath = utl::conjoinString({"Data_2/Gui Pack/", primaryPack, "/",  gui, ".txt"});
+    std::string filePath = utl::conjoinString({"Data/Gui Pack/", primaryPack, "/",  gui, ".txt"});
     if(!utl::doesExist(filePath))
     {
-        filePath = utl::conjoinString({"Data_2/Gui Pack/", secondaryPack, "/",  gui, ".txt"});
+        filePath = utl::conjoinString({"Data/Gui Pack/", secondaryPack, "/",  gui, ".txt"});
     }
 
     guiFile.setFilePath(filePath);

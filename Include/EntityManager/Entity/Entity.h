@@ -6,18 +6,17 @@
 class Entity
 {
 public:
-    Entity(int _id, EntityManager& _entityManager);
+    Entity(unsigned int _id, EntityManager& _entityManager);
     virtual ~Entity() = 0;
 
     virtual void update();
 
-    int getId();
-
+    unsigned int getId();
 protected:
     EntityManager& entityManager;
 
 private:
-    int id;
+    unsigned int id;
 };
 
 #endif // ENTITY_H

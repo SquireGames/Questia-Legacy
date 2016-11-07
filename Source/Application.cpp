@@ -64,6 +64,10 @@ void Application::run()
 
             processEvents();
             update(timePerFrame);
+            if(!window_main.isOpen())
+            {
+                return;
+            }
         }
         updateStatistics(elapsedTime);
         render();

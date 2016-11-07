@@ -8,15 +8,18 @@
 
 struct Circ
 {
+    Circ(float _radius):radius(_radius){}
     float radius;
 };
 struct Rect
 {
+    Rect(utl::Vector2f _origin, utl::Vector2f _dims):origin(_origin), dims(_dims){}
     utl::Vector2f origin;
     utl::Vector2f dims;
 };
 struct Poly
 {
+    Poly(utl::Vector2f _origin, float _angle, std::vector<utl::Vector2f> _points): origin(_origin), angle(_angle), points(_points){}
     utl::Vector2f origin;
     float angle;
     std::vector<utl::Vector2f> points;

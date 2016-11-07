@@ -39,6 +39,7 @@ void ThreadPool_Fixed::threadFunc()
         while(!wakeUp && !killAll && finished)
         {
             std::this_thread::yield();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
         // make sure all threads started
@@ -88,6 +89,7 @@ void ThreadPool_Fixed::runTasks()
     while(!finished)
     {
         std::this_thread::yield();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
