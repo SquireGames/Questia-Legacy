@@ -2,6 +2,7 @@
 #define THREADPOOL_FIXED_H
 
 #include <thread>
+#include <chrono>
 #include <memory>
 #include <atomic>
 #include <boost/thread/barrier.hpp>
@@ -19,13 +20,11 @@ public:
     ~ThreadPool_Fixed();
 
     void addTask(std::function<void()> task);
-
     void runTasks();
-
     void kill();
 
 private:
-    unsigned int maxThreads = std::thread::hardware_concurrency();
+    unsigned int maxThreads;
     std::vector<std::thread> threadPool;
 
     struct TaskObj
@@ -35,13 +34,10 @@ private:
         std::function<void()> task;
         bool runTask = false;
     };
+
     std::vector<TaskObj> taskPool;
-
-    boost::barrier taskBarrier;
-
+    boost::barrier threadSync;
     std::atomic <bool> killAll  = {false};
-    std::atomic <bool> wakeUp   = {false};
-    std::atomic <bool> finished = {false};
 
     void threadFunc();
 };

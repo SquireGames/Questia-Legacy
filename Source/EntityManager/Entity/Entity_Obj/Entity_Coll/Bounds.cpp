@@ -20,3 +20,17 @@ Bounds::Bounds(Poly poly):
 {
 
 }
+
+Bounds::Bounds(Dot dot):
+    area(dot)
+    , coll_shape(Shape::dot)
+{
+
+}
+
+Bounds::Bounds():
+    area(None())
+    , coll_shape(Shape::none)
+{
+
+}

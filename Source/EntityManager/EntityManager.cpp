@@ -25,7 +25,7 @@ EntityManager::EntityManager(ResourceManager& _resourceManager):
     }
 
     {
-        std::shared_ptr<Entity_Player> entity = std::make_shared<Entity_Player> (getNewID(), *this, resourceManager, Bounds(Circ(5)),Bounds(Circ(5)));
+        std::shared_ptr<Entity_Player> entity = std::make_shared<Entity_Player> (getNewID(), *this, resourceManager);
 
         entities.push_back(entity);
         entities_Obj.push_back(entity);

@@ -8,7 +8,7 @@
 class Entity_Player : public Entity_Living
 {
 public:
-    Entity_Player(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds collBounds, Bounds hitBounds);
+    Entity_Player(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager);
     ~Entity_Player();
 
     int exp_gen = 0;

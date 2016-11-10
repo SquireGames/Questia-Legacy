@@ -1,7 +1,7 @@
 #include "Entity_Player.h"
 
-Entity_Player::Entity_Player(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds collBounds, Bounds hitBounds):
-    Entity_Living(id, entityManager, resourceManager, collBounds, hitBounds)
+Entity_Player::Entity_Player(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager):
+    Entity_Living(id, entityManager, resourceManager, Bounds(Circ(2)),Bounds(Circ(5)))
 {
     //ctor
 }

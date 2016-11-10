@@ -182,16 +182,11 @@ void State_Game::task_gui()
 void State_Game::displayTextures()
 {
     window.setView(gameView);
-
     tileEngine.drawMap();
-    //tileEngine.drawTiles();
-
     entityManager.draw(window, DrawLayer::Entity_Regular);
-
     window.draw(alignment2);
 
     window.setView(overlayView);
-
     guiManager.drawButtons();
 
     //window.draw(alignment);

@@ -24,6 +24,11 @@ struct Poly
     float angle;
     std::vector<utl::Vector2f> points;
 };
+struct Dot
+{
+    utl::Vector2f point;
+};
+struct None {};
 
 class Bounds
 {
@@ -31,12 +36,14 @@ public:
     Bounds(Circ circ);
     Bounds(Rect rect);
     Bounds(Poly poly);
+    Bounds(Dot dot);
+    Bounds();
 private:
-    enum class Shape{circ, rect, poly};
+    enum class Shape{circ, rect, poly, dot, none};
     Shape coll_shape;
 
     utl::Vector2f rel_coords;
     float maxRadius;
-    boost::variant<Circ, Rect, Poly> area;
+    boost::variant<Circ, Rect, Poly, Dot, None> area;
 };
 #endif // BOUNDS_H

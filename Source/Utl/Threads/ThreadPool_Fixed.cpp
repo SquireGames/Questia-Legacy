@@ -1,9 +1,9 @@
 #include "ThreadPool_Fixed.h"
 
 ThreadPool_Fixed::ThreadPool_Fixed(unsigned int threads):
-    taskBarrier(std::min(threads, std::thread::hardware_concurrency()))
+    maxThreads(std::min(threads, std::thread::hardware_concurrency()))
+    , threadSync(maxThreads+1)
 {
-    maxThreads = std::min(threads, std::thread::hardware_concurrency());
     for (unsigned int it = 0; it != maxThreads; it++)
     {
         threadPool.emplace_back(std::thread(&ThreadPool_Fixed::threadFunc, this));
@@ -11,7 +11,8 @@ ThreadPool_Fixed::ThreadPool_Fixed(unsigned int threads):
 }
 
 ThreadPool_Fixed::ThreadPool_Fixed():
-    taskBarrier(std::thread::hardware_concurrency())
+    maxThreads(std::thread::hardware_concurrency())
+    , threadSync(maxThreads+1)
 {
     for (unsigned int it = 0; it != maxThreads; it++)
     {
@@ -24,7 +25,6 @@ ThreadPool_Fixed::~ThreadPool_Fixed()
     kill();
 }
 
-
 void ThreadPool_Fixed::addTask(std::function<void()> task)
 {
     taskPool.emplace_back(TaskObj(task));
@@ -35,16 +35,8 @@ void ThreadPool_Fixed::threadFunc()
 {
     while(true)
     {
-        //wait until signal to start something
-        while(!wakeUp && !killAll && finished)
-        {
-            std::this_thread::yield();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        }
-
-        // make sure all threads started
-        taskBarrier.wait();
-        wakeUp = false;
+        //wait until flag to start something
+        threadSync.wait();
 
         if(killAll)
         {
@@ -66,15 +58,15 @@ void ThreadPool_Fixed::threadFunc()
         }
 
         //make sure all threads finish
-        taskBarrier.wait();
-        finished = true;
+        threadSync.wait();
     }
 }
 
 
+
 void ThreadPool_Fixed::runTasks()
 {
-    // set the tasks to run
+    //set the tasks to run
     for(auto& taskObj : taskPool)
     {
         taskObj.taskMutex->lock();
@@ -82,25 +74,27 @@ void ThreadPool_Fixed::runTasks()
         taskObj.taskMutex->unlock();
     }
 
-    finished = false;
-    wakeUp = true;
+    //start threads
+    threadSync.wait();
 
-    // wait for tasks to finish
-    while(!finished)
-    {
-        std::this_thread::yield();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }
+    //wait for threads to finish
+    threadSync.wait();
 }
 
 void ThreadPool_Fixed::kill()
 {
-    // wait for tasks to finish
-    killAll = true;
-    for(auto& thread : threadPool)
+    if(threadPool.size() > 0)
     {
-        thread.join();
-    }
+        killAll = true;
 
-    threadPool.clear();
+        //wait for tasks to finish
+        threadSync.wait();
+
+        //join all threads
+        for(auto& thread : threadPool)
+        {
+            thread.join();
+        }
+        threadPool.clear();
+    }
 }
