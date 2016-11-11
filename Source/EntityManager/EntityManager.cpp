@@ -90,3 +90,57 @@ void EntityManager::killEntity(const unsigned int& id)
     ids.remove(id);
     std::cout << "ENTITYMANAGER: Killed ID - " << id << std::endl;
 }
+
+
+
+///draw coll bounds
+void drawCollBounds(sf::RenderWindow& window, Bounds& bounds, utl::Vector2f coords, sf::Color color)
+{
+    switch(bounds.getShape())
+    {
+    case Bounds::Shape::circ:
+    {
+        Circ& area = boost::get<Circ>(bounds.area);
+        sf::CircleShape circ(area.radius);
+        circ.setFillColor(color - sf::Color(0,0,0,135));
+        circ.setPosition(coords.sf() + bounds.rel_coords.sf());
+        circ.setOrigin(circ.getRadius(), circ.getRadius());
+        window.draw(circ);
+    }
+    break;
+    case Bounds::Shape::rect:
+    {
+        Rect& area = boost::get<Rect>(bounds.area);
+        sf::RectangleShape rect(area.dims.sf());
+        rect.setFillColor(color - sf::Color(0,0,0,135));
+        rect.setPosition(coords.sf() + bounds.rel_coords.sf());
+        rect.setOrigin(area.origin.x, area.origin.y);
+        window.draw(rect);
+    }
+    break;
+    case Bounds::Shape::dot:
+    {
+        Dot& area = boost::get<Dot>(bounds.area);
+        sf::CircleShape circ(5);
+        circ.setFillColor(color - sf::Color(0,0,0,135));
+        circ.setPosition(coords.sf() + bounds.rel_coords.sf()+area.point.sf());
+        window.draw(circ);
+    }
+    case Bounds::Shape::poly:
+    {
+        //TODO implement poly collision shape draw
+    }
+
+    default:
+        break;
+    }
+}
+
+void EntityManager::draw_coll(sf::RenderWindow& window)
+{
+    for(auto& entity : entities_Coll)
+    {
+        drawCollBounds(window, entity->collBounds, entity->coords, sf::Color::Red);
+        drawCollBounds(window, entity->hitBounds, entity->coords, sf::Color::Blue);
+    }
+}

@@ -11,9 +11,8 @@ public:
     Entity_Player(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager);
     ~Entity_Player();
 
-    int exp_gen = 0;
+    int exp_general = 0;
 
-    //TODO new input system
     void processInput(ctr::KeyAction action, bool isPressed);
 };
 

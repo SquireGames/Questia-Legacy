@@ -144,7 +144,7 @@ void Application::updateStatistics(sf::Time elapsedTime)
 
 void Application::render()
 {
-    window_main.clear();
+    window_main.clear(sf::Color::White);
     StateManager::getInstance().displayTexturesState();
     window_main.display();
 }

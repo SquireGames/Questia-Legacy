@@ -34,3 +34,8 @@ Bounds::Bounds():
 {
 
 }
+
+Bounds::Shape Bounds::getShape()
+{
+    return coll_shape;
+}

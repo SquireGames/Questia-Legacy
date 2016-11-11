@@ -38,12 +38,15 @@ public:
     Bounds(Poly poly);
     Bounds(Dot dot);
     Bounds();
-private:
-    enum class Shape{circ, rect, poly, dot, none};
-    Shape coll_shape;
 
-    utl::Vector2f rel_coords;
-    float maxRadius;
+    enum class Shape{circ, rect, poly, dot, none};
+
+    Shape getShape();
+
+    utl::Vector2f rel_coords = utl::Vector2f(0,0);
+    float maxRadius = -1;
     boost::variant<Circ, Rect, Poly, Dot, None> area;
+private:
+    Shape coll_shape;
 };
 #endif // BOUNDS_H

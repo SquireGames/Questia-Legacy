@@ -126,7 +126,7 @@ void State_Game::gameLogic()
     player.processInput(ctr::KeyAction::MoveLeft,  ctr::checkInput(ctr_moveLeft));
     player.processInput(ctr::KeyAction::MoveRight, ctr::checkInput(ctr_moveRight));
 
-    gameView.setCenter(960+player.coords.x,540+player.coords.y);
+    gameView.setCenter(player.coords.x,player.coords.y);
 
     if(!paused)
     {
@@ -146,7 +146,7 @@ void State_Game::gameLogic()
     }
 
 
-    tileEngine.setPosition(960+player.coords.x,540+player.coords.y);
+    tileEngine.setPosition(player.coords.x,player.coords.y);
 
     entityManager.update();
 }
@@ -184,12 +184,13 @@ void State_Game::displayTextures()
     window.setView(gameView);
     tileEngine.drawMap();
     entityManager.draw(window, DrawLayer::Entity_Regular);
+    entityManager.draw_coll(window);
     window.draw(alignment2);
 
     window.setView(overlayView);
     guiManager.drawButtons();
 
-    //window.draw(alignment);
+    window.draw(alignment);
 
     //temp
     /* *

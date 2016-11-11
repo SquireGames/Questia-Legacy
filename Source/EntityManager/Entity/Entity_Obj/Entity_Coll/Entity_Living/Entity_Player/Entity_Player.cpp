@@ -1,16 +1,16 @@
 #include "Entity_Player.h"
 
 Entity_Player::Entity_Player(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager):
-    Entity_Living(id, entityManager, resourceManager, Bounds(Circ(2)),Bounds(Circ(5)))
+    Entity_Living(id, entityManager, resourceManager, Bounds(Circ(10)),Bounds(Circ(15)))
 {
-    //ctor
+    collBounds.rel_coords = utl::Vector2f(0, 20);
+    hitBounds.rel_coords  = utl::Vector2f(0, -15);
 }
 
 Entity_Player::~Entity_Player()
 {
     //dtor
 }
-
 
 void Entity_Player::processInput(ctr::KeyAction action, bool isPressed)
 {

@@ -7,10 +7,12 @@
 
 #include <iostream>
 
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics.hpp>
 
 #include "ResourceManager.h"
 #include "DrawLayer.h"
+
+#include "Bounds.h"
 
 //forward declaration for stored classes
 class Entity;
@@ -25,6 +27,20 @@ public:
     EntityManager(ResourceManager& _resourceManager);
     ~EntityManager();
 
+    void update();
+    void draw(sf::RenderWindow& window, const DrawLayer& drawLayer);
+    void draw_coll(sf::RenderWindow& window);
+
+    Entity_Player& getPlayer(const unsigned int& playerID);
+
+    unsigned int getNewID();
+    void killEntity(const unsigned int& id);
+
+private:
+    ResourceManager& resourceManager;
+
+    unsigned int idCounter = 0;
+
     std::vector <std::shared_ptr<Entity> >        entities;
     std::vector <std::shared_ptr<Entity_Obj> >    entities_Obj;
     std::vector <std::shared_ptr<Entity_Coll> >   entities_Coll;
@@ -32,18 +48,6 @@ public:
     std::vector <std::shared_ptr<Entity_Player> > entities_Player;
 
     std::list <unsigned int> ids;
-
-    void update();
-    void draw(sf::RenderWindow& window, const DrawLayer& drawLayer);
-
-    Entity_Player& getPlayer(const unsigned int& playerID);
-
-    unsigned int getNewID();
-    void killEntity(const unsigned int& id);
-private:
-    ResourceManager& resourceManager;
-
-    unsigned int idCounter = 0;
 
     template <class T> void removeID(const unsigned int& id, std::vector<T>& entityVector)
     {
