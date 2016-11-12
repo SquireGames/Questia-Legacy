@@ -11,15 +11,19 @@ public:
 
     virtual ~Entity_Coll() = 0;
 
-    //use to move entity
     void attemptMove(const utl::Vector2f velocity, Entity_Coll& entity);
     void forceMove(const utl::Vector2f velocity, Entity_Coll& entity);
+
+    void onCollision(Entity_Coll& other);
 
     Bounds collBounds;
     Bounds hitBounds;
 
     bool isPermeable = true;
     bool isSolid     = true;
+
+protected:
+    virtual void onCollision(std::map <Type, Type_Field>& atrs, const unsigned int& entityID);
 };
 
 #endif // ENTITY_COLL_H

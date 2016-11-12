@@ -17,10 +17,23 @@
 #include "StateManager/States/State_MultiplayerGame.h"
 #include "StateManager/States/State_MultiplayerSelection.h"
 
+enum class GameState
+{
+    State_MainMenu             = 1,
+    State_Game                 = 2,
+    State_OptionsMenu          = 3,
+    State_CharacterSelection   = 4,
+    State_TileMapEditor        = 5,
+    State_MapSelector          = 6,
+    State_MultiplayerGame      = 7,
+    State_MultiplayerSelection = 8
+};
+
 class State_Transition : public State
 {
 public:
-    State_Transition(sf::RenderWindow &window, int stateID);
+    State_Transition(sf::RenderWindow& window, int _stateID);
+    State_Transition(sf::RenderWindow& window, GameState _stateID);
     ~State_Transition();
 
     void processImput(sf::Keyboard::Key key,bool isPressed);

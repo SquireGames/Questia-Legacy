@@ -10,6 +10,8 @@
 /// declaration of Derived Entities
 //Entity_Obj
 #include "Entity_Orb.h"
+//Entity_Coll
+#include "Entity_Crate.h"
 
 EntityManager::EntityManager(ResourceManager& _resourceManager):
     resourceManager(_resourceManager)
@@ -21,7 +23,7 @@ EntityManager::EntityManager(ResourceManager& _resourceManager):
 
         entities.push_back(entity);
         entities_Obj.push_back(entity);
-        ids.push_back(entity->getId());
+        ids.push_back(entity->getID());
     }
 
     {
@@ -32,7 +34,16 @@ EntityManager::EntityManager(ResourceManager& _resourceManager):
         entities_Coll.push_back(entity);
         entities_Living.push_back(entity);
         entities_Player.push_back(entity);
-        ids.push_back(entity->getId());
+        ids.push_back(entity->getID());
+    }
+
+    {
+        std::shared_ptr<Entity_Crate> entity = std::make_shared<Entity_Crate> (getNewID(), *this, resourceManager);
+
+        //entities.push_back(entity);
+        entities_Obj.push_back(entity);
+        entities_Coll.push_back(entity);
+        ids.push_back(entity->getID());
     }
 }
 
@@ -51,6 +62,29 @@ void EntityManager::update()
     {
         entity->update();
     }
+
+    //temp
+    for(auto& entity : entities_Coll)
+    {
+        for(auto& entity_other : entities_Coll)
+        {
+            if(entity->getID() != entity_other->getID())
+            {
+                if(std::abs(entity->coords.x - entity_other->coords.x) < 20 && std::abs(entity->coords.y - entity_other->coords.y) < 20)
+                {
+                    entity->onCollision(*entity_other);
+                    entity_other->onCollision(*entity);
+                }
+            }
+        }
+    }
+
+    //kill
+    for(auto& id : deadIDs)
+    {
+        killEntity(id);
+    }
+    deadIDs.clear();
 }
 
 void EntityManager::draw(sf::RenderWindow& window, const DrawLayer& drawLayer)
@@ -91,7 +125,10 @@ void EntityManager::killEntity(const unsigned int& id)
     std::cout << "ENTITYMANAGER: Killed ID - " << id << std::endl;
 }
 
-
+void EntityManager::queueKill(const unsigned int& id)
+{
+    deadIDs.push_back(id);
+}
 
 ///draw coll bounds
 void drawCollBounds(sf::RenderWindow& window, Bounds& bounds, utl::Vector2f coords, sf::Color color)
@@ -102,7 +139,7 @@ void drawCollBounds(sf::RenderWindow& window, Bounds& bounds, utl::Vector2f coor
     {
         Circ& area = boost::get<Circ>(bounds.area);
         sf::CircleShape circ(area.radius);
-        circ.setFillColor(color - sf::Color(0,0,0,135));
+        circ.setFillColor(color - sf::Color(0,0,0,140));
         circ.setPosition(coords.sf() + bounds.rel_coords.sf());
         circ.setOrigin(circ.getRadius(), circ.getRadius());
         window.draw(circ);
@@ -112,7 +149,7 @@ void drawCollBounds(sf::RenderWindow& window, Bounds& bounds, utl::Vector2f coor
     {
         Rect& area = boost::get<Rect>(bounds.area);
         sf::RectangleShape rect(area.dims.sf());
-        rect.setFillColor(color - sf::Color(0,0,0,135));
+        rect.setFillColor(color - sf::Color(0,0,0,140));
         rect.setPosition(coords.sf() + bounds.rel_coords.sf());
         rect.setOrigin(area.origin.x, area.origin.y);
         window.draw(rect);
@@ -122,7 +159,7 @@ void drawCollBounds(sf::RenderWindow& window, Bounds& bounds, utl::Vector2f coor
     {
         Dot& area = boost::get<Dot>(bounds.area);
         sf::CircleShape circ(5);
-        circ.setFillColor(color - sf::Color(0,0,0,135));
+        circ.setFillColor(color - sf::Color(0,0,0,140));
         circ.setPosition(coords.sf() + bounds.rel_coords.sf()+area.point.sf());
         window.draw(circ);
     }
@@ -140,7 +177,7 @@ void EntityManager::draw_coll(sf::RenderWindow& window)
 {
     for(auto& entity : entities_Coll)
     {
-        drawCollBounds(window, entity->collBounds, entity->coords, sf::Color::Red);
         drawCollBounds(window, entity->hitBounds, entity->coords, sf::Color::Blue);
+        drawCollBounds(window, entity->collBounds, entity->coords, sf::Color::Red);
     }
 }

@@ -3,7 +3,13 @@
 
 #include "Entity_Living.h"
 
+#include "Utl.h"
 #include "KeyAction.h"
+
+enum class MovementControl
+{
+    inControl = 0, skillControl = 1, hybridControl = 2, noMovement = 3
+};
 
 class Entity_Player : public Entity_Living
 {
@@ -11,9 +17,24 @@ public:
     Entity_Player(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager);
     ~Entity_Player();
 
-    int exp_general = 0;
-
     void processInput(ctr::KeyAction action, bool isPressed);
+    void update();
+
+    //movement
+    MovementControl mov_control = MovementControl::inControl;
+    std::vector<utl::Vector2f> mov_forces_external;
+    float mov_speedBase = 2.5;
+    float mov_speedModifier = 0;
+    float mov_speedMultiplier = 1;
+
+    utl::Direction facingDirection = utl::Direction::up;
+
+    int exp_general = 0;
+private:
+    bool isMovingUp    = false;
+    bool isMovingDown  = false;
+    bool isMovingLeft  = false;
+    bool isMovingRight = false;
 };
 
 #endif // ENTITY_PLAYER_H

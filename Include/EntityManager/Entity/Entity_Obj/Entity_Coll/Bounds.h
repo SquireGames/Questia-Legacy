@@ -13,9 +13,9 @@ struct Circ
 };
 struct Rect
 {
-    Rect(utl::Vector2f _origin, utl::Vector2f _dims):origin(_origin), dims(_dims){}
-    utl::Vector2f origin;
+    Rect(utl::Vector2f _dims, utl::Vector2f _origin):dims(_dims), origin(_origin){}
     utl::Vector2f dims;
+    utl::Vector2f origin;
 };
 struct Poly
 {

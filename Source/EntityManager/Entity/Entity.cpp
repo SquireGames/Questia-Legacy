@@ -17,7 +17,7 @@ void Entity::update()
 
 }
 
-unsigned int Entity::getId()
+unsigned int Entity::getID()
 {
     return id;
 }

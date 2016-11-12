@@ -36,6 +36,8 @@ public:
     unsigned int getNewID();
     void killEntity(const unsigned int& id);
 
+    void queueKill(const unsigned int& id);
+
 private:
     ResourceManager& resourceManager;
 
@@ -48,13 +50,14 @@ private:
     std::vector <std::shared_ptr<Entity_Player> > entities_Player;
 
     std::list <unsigned int> ids;
+    std::vector <unsigned int> deadIDs;
 
     template <class T> void removeID(const unsigned int& id, std::vector<T>& entityVector)
     {
         auto iter = entityVector.end();
         for(auto it = entityVector.begin(); it != entityVector.end(); it++)
         {
-            if(id == (*it)->getId())
+            if(id == (*it)->getID())
             {
                 iter = it;
                 break;

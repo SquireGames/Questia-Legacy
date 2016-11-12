@@ -67,6 +67,14 @@ struct Vector2f
         y+=other.y;
         return *this;
     }
+    Vector2f operator/(const float& other)
+    {
+        return Vector2f(x / other, y / other);
+    }
+    Vector2f operator*(const float& other)
+    {
+        return Vector2f(x * other, y * other);
+    }
 };
 }
 #endif // VECTOR2_H

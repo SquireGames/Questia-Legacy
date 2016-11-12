@@ -38,7 +38,7 @@ void State_MainMenu::update(sf::Time elapsedTime)
     {
         if(guiManager.isClicked("play"))
         {
-            StateManager::getInstance().changeState(new State_Transition(window, 2));
+            StateManager::getInstance().changeState(new State_Transition(window, GameState::State_Game));
         }
         else if(guiManager.isClicked("options"))
         {

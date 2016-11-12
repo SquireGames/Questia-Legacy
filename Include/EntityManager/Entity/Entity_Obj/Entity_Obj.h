@@ -9,12 +9,13 @@
 
 #include "Vector2.h"
 
-enum class Type {none = 0};
-enum class Atr_Test {none = 0};
+enum class Type {none = 0, test_attack = 1};
+enum class Type_test_attack {destroyStuff = 0};
 
-class Obj_Type
+class Type_Field
 {
-    std::map <int,  boost::variant<std::string, float, int> > atrs;
+public:
+    std::map <int,  boost::variant<std::string, float, int, bool> > atrs;
 };
 
 class Entity_Obj : public Entity
@@ -26,7 +27,7 @@ public:
     virtual void draw(sf::RenderWindow& window, const DrawLayer& drawLayer);
 
     utl::Vector2f coords;
-    std::map <Type, Obj_Type> atrs;
+    std::map <Type, Type_Field> atrs;
 
     std::string displayTag = "";
     bool showTag = false;

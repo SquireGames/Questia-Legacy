@@ -1,10 +1,24 @@
 #include "StateManager/States/State_Transition.h"
 
-
-
-State_Transition::State_Transition(sf::RenderWindow &window, int stateID):
+State_Transition::State_Transition(sf::RenderWindow& window, int _stateID):
     window(window)
-    , stateID(stateID)
+    , stateID(_stateID)
+{
+    std::cout<<"DEBUG: Transition Initialized"<<std::endl;
+
+    if(!aLoadingTexture.loadFromFile("Media/Image/Gui/Menu/BasicLoading.png")) {}
+    aLoadingImage.setTexture(aLoadingTexture);
+    aLoadingImage.setPosition(0.f,0.f);
+
+    sf::View normalView;
+    normalView.setSize(1920,1080);
+    normalView.setCenter(960,540);
+    window.setView(normalView);
+}
+
+State_Transition::State_Transition(sf::RenderWindow& window, GameState _stateID):
+    window(window)
+    , stateID((int)_stateID)
 {
     std::cout<<"DEBUG: Transition Initialized"<<std::endl;
 
@@ -40,9 +54,6 @@ void State_Transition::displayTextures()
 {
     window.draw(aLoadingImage);
     window.display();
-
-    //sf::Time loadingTime = sf::seconds(0.05);
-    //sf::sleep(loadingTime);
 
     window.draw(aLoadingImage);
     std::cout<<std::endl;

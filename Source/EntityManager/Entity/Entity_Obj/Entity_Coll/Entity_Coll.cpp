@@ -15,10 +15,22 @@ Entity_Coll::~Entity_Coll()
 
 void Entity_Coll::attemptMove(const utl::Vector2f velocity, Entity_Coll& entity)
 {
-
+    //TODO add tilemap coll
+    entity.coords += velocity;
 }
 
 void Entity_Coll::forceMove(const utl::Vector2f velocity, Entity_Coll& entity)
 {
     entity.coords += velocity;
 }
+
+void Entity_Coll::onCollision(Entity_Coll& other)
+{
+    onCollision(other.atrs, other.getID());
+}
+
+void Entity_Coll::onCollision(std::map <Type, Type_Field>& atrs, const unsigned int& entityID)
+{
+
+}
+

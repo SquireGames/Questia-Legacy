@@ -7,6 +7,7 @@ Entity_Orb::Entity_Orb(unsigned int id, EntityManager& entityManager, ResourceMa
 
     //set sprite
     sprite.setTexture(resourceManager.getTexture("Media/Image/Game/Entity/Test/Orb.png"));
+    sprite.setOrigin(sprite.getLocalBounds().width/2, sprite.getLocalBounds().height/2);
     sprite.setScale(SIZE_X / sprite.getLocalBounds().width, SIZE_Y / sprite.getLocalBounds().height);
 }
 

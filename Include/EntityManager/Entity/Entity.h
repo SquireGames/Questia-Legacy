@@ -11,7 +11,8 @@ public:
 
     virtual void update();
 
-    unsigned int getId();
+    unsigned int getID();
+
 protected:
     EntityManager& entityManager;
 

@@ -147,7 +147,6 @@ void State_Game::gameLogic()
 
 
     tileEngine.setPosition(player.coords.x,player.coords.y);
-
     entityManager.update();
 }
 
