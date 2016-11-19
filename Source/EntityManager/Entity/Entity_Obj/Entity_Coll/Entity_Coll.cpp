@@ -1,7 +1,7 @@
 #include "Entity_Coll.h"
 
-Entity_Coll::Entity_Coll(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds _collBounds, Bounds _hitBounds):
-    Entity_Obj(id, entityManager, resourceManager)
+Entity_Coll::Entity_Coll(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds _collBounds, Bounds _hitBounds, utl::Vector2f origin):
+    Entity_Obj(id, entityManager, resourceManager, origin)
     , collBounds(_collBounds)
     , hitBounds(_hitBounds)
 {
@@ -13,13 +13,12 @@ Entity_Coll::~Entity_Coll()
     //dtor
 }
 
-void Entity_Coll::attemptMove(const utl::Vector2f velocity, Entity_Coll& entity)
+void Entity_Coll::attemptMove(Entity_Coll& entity, const utl::Vector2f velocity)
 {
-    //TODO add tilemap coll
-    entity.coords += velocity;
+    entityManager.attemptMove(entity, velocity);
 }
 
-void Entity_Coll::forceMove(const utl::Vector2f velocity, Entity_Coll& entity)
+void Entity_Coll::forceMove(Entity_Coll& entity, const utl::Vector2f velocity)
 {
     entity.coords += velocity;
 }

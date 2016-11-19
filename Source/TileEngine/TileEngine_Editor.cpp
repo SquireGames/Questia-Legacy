@@ -56,5 +56,3 @@ void TileEngine_Editor::drawGridLines()
 {
     window.draw(gridLines);
 }
-
-

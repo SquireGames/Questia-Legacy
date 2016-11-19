@@ -4,6 +4,11 @@ SpriteSheet::SpriteSheet(ResourceManager& _resourceManager, std::string imageLoc
     res(_resourceManager)
     , spriteMap()
 {
+    loadSprite(imageLocation, slides_x, slides_y);
+}
+
+void SpriteSheet::loadSprite(std::string imageLocation, unsigned int slides_x, unsigned int slides_y)
+{
     //spriteSheet texture
     sf::Texture* texture = nullptr;
 
@@ -43,7 +48,7 @@ SpriteSheet::SpriteSheet(ResourceManager& _resourceManager, std::string imageLoc
         {
             for(unsigned int it_x = 0; it_x != textureSize.x; it_x++)
             {
-                tempImage.setPixel(it_x , it_y * (size_y + 1) + size_y, sf::Color(0,0,0,0));
+                tempImage.setPixel(it_x, it_y * (size_y + 1) + size_y, sf::Color(0,0,0,0));
             }
         }
         //convert back to texture
@@ -64,6 +69,14 @@ SpriteSheet::SpriteSheet(ResourceManager& _resourceManager, std::string imageLoc
             spriteMap[it_1] [it_2] = sheet;
         }
     }
+}
+
+
+SpriteSheet::SpriteSheet(ResourceManager& _resourceManager):
+    res(_resourceManager)
+    , spriteMap()
+{
+
 }
 
 void SpriteSheet::setSize(float width, float height)

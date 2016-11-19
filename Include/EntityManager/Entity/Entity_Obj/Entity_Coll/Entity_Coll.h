@@ -7,17 +7,19 @@
 class Entity_Coll : public Entity_Obj
 {
 public:
-    Entity_Coll(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds _bounds, Bounds _hitBounds);
+    Entity_Coll(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds _bounds, Bounds _hitBounds, utl::Vector2f origin);
 
     virtual ~Entity_Coll() = 0;
 
-    void attemptMove(const utl::Vector2f velocity, Entity_Coll& entity);
-    void forceMove(const utl::Vector2f velocity, Entity_Coll& entity);
+    void attemptMove(Entity_Coll& entity, const utl::Vector2f velocity);
+    void forceMove(Entity_Coll& entity, const utl::Vector2f velocity);
 
     void onCollision(Entity_Coll& other);
 
     Bounds collBounds;
     Bounds hitBounds;
+
+    utl::Vector2f previousVelocity = utl::Vector2f(0,0);
 
     bool isPermeable = true;
     bool isSolid     = true;

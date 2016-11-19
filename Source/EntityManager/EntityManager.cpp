@@ -38,7 +38,23 @@ EntityManager::EntityManager(ResourceManager& _resourceManager):
     }
 
     {
-        std::shared_ptr<Entity_Crate> entity = std::make_shared<Entity_Crate> (getNewID(), *this, resourceManager);
+        std::shared_ptr<Entity_Crate> entity = std::make_shared<Entity_Crate> (getNewID(), *this, resourceManager, utl::Vector2f(400,400.01));
+
+        //entities.push_back(entity);
+        entities_Obj.push_back(entity);
+        entities_Coll.push_back(entity);
+        ids.push_back(entity->getID());
+    }
+    {
+        std::shared_ptr<Entity_Crate> entity = std::make_shared<Entity_Crate> (getNewID(), *this, resourceManager, utl::Vector2f(400,430));
+
+        //entities.push_back(entity);
+        entities_Obj.push_back(entity);
+        entities_Coll.push_back(entity);
+        ids.push_back(entity->getID());
+    }
+    {
+        std::shared_ptr<Entity_Crate> entity = std::make_shared<Entity_Crate> (getNewID(), *this, resourceManager, utl::Vector2f(425,400));
 
         //entities.push_back(entity);
         entities_Obj.push_back(entity);
@@ -63,9 +79,10 @@ void EntityManager::update()
         entity->update();
     }
 
-    //temp
+    //pass collision info
     for(auto& entity : entities_Coll)
     {
+        //TODO fix entity matching for collision
         for(auto& entity_other : entities_Coll)
         {
             if(entity->getID() != entity_other->getID())
@@ -89,8 +106,12 @@ void EntityManager::update()
 
 void EntityManager::draw(sf::RenderWindow& window, const DrawLayer& drawLayer)
 {
-    // sort entities by y value
-    // ...
+    //sort entities by y value
+    std::sort(entities_Obj.begin(), entities_Obj.end(),
+              [](std::shared_ptr<Entity_Obj> obj_1, std::shared_ptr<Entity_Obj> obj_2)
+    {
+        return obj_1->coords.y + obj_1->origin.y <= obj_2->coords.y + obj_2->origin.y;
+    });
 
     for(auto& entity : entities_Obj)
     {
@@ -158,9 +179,10 @@ void drawCollBounds(sf::RenderWindow& window, Bounds& bounds, utl::Vector2f coor
     case Bounds::Shape::dot:
     {
         Dot& area = boost::get<Dot>(bounds.area);
-        sf::CircleShape circ(5);
-        circ.setFillColor(color - sf::Color(0,0,0,140));
-        circ.setPosition(coords.sf() + bounds.rel_coords.sf()+area.point.sf());
+        sf::CircleShape circ(3);
+        circ.setOrigin(3, 3);
+        circ.setFillColor(color);
+        circ.setPosition(coords.sf() + bounds.rel_coords.sf() + area.point.sf());
         window.draw(circ);
     }
     case Bounds::Shape::poly:
@@ -180,4 +202,56 @@ void EntityManager::draw_coll(sf::RenderWindow& window)
         drawCollBounds(window, entity->hitBounds, entity->coords, sf::Color::Blue);
         drawCollBounds(window, entity->collBounds, entity->coords, sf::Color::Red);
     }
+    for(auto& entity : entities_Obj)
+    {
+        auto originPoint = Bounds(Dot(entity->origin));
+        drawCollBounds(window, originPoint, entity->coords, sf::Color::Yellow);
+    }
+}
+
+void EntityManager::attemptMove(Entity_Coll& entity, const utl::Vector2f& velocity)
+{
+    utl::Vector2f allowedMovement = velocity;
+    for(auto& other : entities_Coll)
+    {
+        if(entity.getID() != other->getID())
+        {
+            if(allowedMovement.x == 0 && allowedMovement.y == 0)
+            {
+                break;
+            }
+            //TODO remember to check max range for collision
+            if(true)
+            {
+                if(entity.collBounds.getShape() == Bounds::Shape::rect && other->collBounds.getShape() == Bounds::Shape::rect)
+                {
+                    utl::Vector2f& entity_coords     = entity.coords;
+                    Bounds&        entity_collBounds = entity.collBounds;
+                    utl::Vector2f& other_coords      = other->coords;
+                    Bounds&        other_collBounds  = other->collBounds;
+                    Rect& entityRect = boost::get<Rect>(entity_collBounds.area);
+                    Rect& otherRect  = boost::get<Rect>(other_collBounds.area);
+
+                    utl::FloatRect other_coll_rect = utl::FloatRect(other_coords.x + other_collBounds.rel_coords.x - otherRect.origin.x,
+                                                     other_coords.y + other_collBounds.rel_coords.y - otherRect.origin.y,
+                                                     otherRect.dims.x, otherRect.dims.y);
+                    utl::FloatRect entity_coll_rect_x = utl::FloatRect(entity_coords.x + allowedMovement.x + entity_collBounds.rel_coords.x - entityRect.origin.x,
+                                                        entity_coords.y + entity_collBounds.rel_coords.y - entityRect.origin.y,
+                                                        entityRect.dims.x, entityRect.dims.y);
+                    if(other_coll_rect.isColliding(entity_coll_rect_x))
+                    {
+                        allowedMovement.x = 0;
+                    }
+                    utl::FloatRect entity_coll_rect_y = utl::FloatRect(entity_coords.x + allowedMovement.x + entity_collBounds.rel_coords.x - entityRect.origin.x,
+                                                        entity_coords.y + allowedMovement.y + entity_collBounds.rel_coords.y - entityRect.origin.y,
+                                                        entityRect.dims.x, entityRect.dims.y);
+                    if(other_coll_rect.isColliding(entity_coll_rect_y))
+                    {
+                        allowedMovement.y = 0;
+                    }
+                }
+            }
+        }
+    }
+    entity.forceMove(entity, allowedMovement);
 }

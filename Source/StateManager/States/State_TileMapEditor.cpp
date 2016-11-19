@@ -23,8 +23,8 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &window):
     overlayView.setCenter(1920/2,1080/2);
 
     //load map
-    //tileEngineEditor.createMap("TEST",500,500,4);
-    tileEngineEditor.loadMap("TEST");
+    tileEngineEditor.createMap("t_1",200,200,3);
+    tileEngineEditor.loadMap("t_1");
     tileEngineEditor.setPosition(0,0);
 }
 
@@ -110,7 +110,7 @@ void State_TileMapEditor::displayTextures()
 {
     //tile map
     window.setView(mapView);
-    tileEngineEditor.drawTiles();
+    tileEngineEditor.drawMap();
 
     //gui
     window.setView(overlayView);

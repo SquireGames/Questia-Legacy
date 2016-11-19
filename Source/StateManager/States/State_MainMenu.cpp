@@ -42,7 +42,7 @@ void State_MainMenu::update(sf::Time elapsedTime)
         }
         else if(guiManager.isClicked("options"))
         {
-            StateManager::getInstance().changeState(new State_Transition(window, 3));
+            StateManager::getInstance().changeState(new State_Transition(window, GameState::State_OptionsMenu));
         }
         else if(guiManager.isClicked("exit"))
         {
@@ -50,11 +50,11 @@ void State_MainMenu::update(sf::Time elapsedTime)
         }
         else if(guiManager.isClicked("editor"))
         {
-            StateManager::getInstance().changeState(new State_Transition(window, 6));
+            StateManager::getInstance().changeState(new State_Transition(window, GameState::State_TileMapEditor));
         }
         else if(guiManager.isClicked("multiplayer"))
         {
-            StateManager::getInstance().changeState(new State_Transition(window, 7));
+            StateManager::getInstance().changeState(new State_Transition(window, GameState::State_MultiplayerGame));
         }
     }
 }

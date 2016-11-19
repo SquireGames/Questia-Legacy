@@ -26,6 +26,7 @@ struct Poly
 };
 struct Dot
 {
+    Dot(utl::Vector2f _point):point(_point){}
     utl::Vector2f point;
 };
 struct None {};

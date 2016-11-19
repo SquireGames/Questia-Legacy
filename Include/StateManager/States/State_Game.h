@@ -54,8 +54,8 @@ private:
     TileEngine tileEngine;
     EntityManager entityManager;
 
-    float playerAngle;
     bool paused = false;
+    bool showColl = true;
 
     ThreadPool_Fixed threadPool;
 

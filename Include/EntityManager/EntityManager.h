@@ -14,6 +14,8 @@
 
 #include "Bounds.h"
 
+#include "Rect.h"
+
 //forward declaration for stored classes
 class Entity;
 class Entity_Obj;
@@ -37,6 +39,8 @@ public:
     void killEntity(const unsigned int& id);
 
     void queueKill(const unsigned int& id);
+
+    void attemptMove(Entity_Coll& entity, const utl::Vector2f& velocity);
 
 private:
     ResourceManager& resourceManager;

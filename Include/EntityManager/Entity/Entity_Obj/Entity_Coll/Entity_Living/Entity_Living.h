@@ -7,7 +7,7 @@
 class Entity_Living : public Entity_Coll
 {
 public:
-    Entity_Living(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds collBounds, Bounds hitBounds);
+    Entity_Living(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, Bounds collBounds, Bounds hitBounds, utl::Vector2f origin);
     virtual ~Entity_Living() = 0;
 
     int hp = 0;

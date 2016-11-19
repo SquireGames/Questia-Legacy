@@ -75,6 +75,15 @@ State_Game::~State_Game()
 
 void State_Game::processImput(sf::Keyboard::Key key,bool isPressed)
 {
+    if(key == sf::Keyboard::Num1)
+    {
+        showColl = true;
+    }
+    if(key == sf::Keyboard::Num2)
+    {
+        showColl = false;
+    }
+
     if(paused)
     {
         if(key == sf::Keyboard::Escape && isPressed == false)
@@ -107,7 +116,7 @@ void State_Game::update(sf::Time elapsedTime)
         if(guiManager.isClicked("mainMenu"))
         {
             threadPool.kill();
-            StateManager::getInstance().changeState(new State_Transition(window, 1));
+            StateManager::getInstance().changeState(new State_Transition(window, GameState::State_MainMenu));
         }
         else if(guiManager.isClicked("exitGame"))
         {
@@ -126,28 +135,15 @@ void State_Game::gameLogic()
     player.processInput(ctr::KeyAction::MoveLeft,  ctr::checkInput(ctr_moveLeft));
     player.processInput(ctr::KeyAction::MoveRight, ctr::checkInput(ctr_moveRight));
 
-    gameView.setCenter(player.coords.x,player.coords.y);
-
     if(!paused)
     {
-        //Angle
-        float angle = atan2(Data_Desktop::getInstance().getScaledMousePosition(window).y - 540, Data_Desktop::getInstance().getScaledMousePosition(window).x - 960);
-        angle = angle * 180 / 3.14159265;
-        if(angle<0)
-        {
-            angle = angle*-1;
-        }
-        else
-        {
-            angle = angle -360;
-            angle = angle * -1;
-        }
-        playerAngle = angle;
+        player.mouseInput(utl::Vector2f(Data_Desktop::getInstance().getScaledMousePosition(window).x, Data_Desktop::getInstance().getScaledMousePosition(window).y));
     }
-
 
     tileEngine.setPosition(player.coords.x,player.coords.y);
     entityManager.update();
+
+    gameView.setCenter(player.coords.sf());
 }
 
 void State_Game::task_lighting()
@@ -182,14 +178,18 @@ void State_Game::displayTextures()
 {
     window.setView(gameView);
     tileEngine.drawMap();
+
     entityManager.draw(window, DrawLayer::Entity_Regular);
-    entityManager.draw_coll(window);
-    window.draw(alignment2);
+    if(showColl)
+    {
+        entityManager.draw_coll(window);
+    }
+    //window.draw(alignment2);
 
     window.setView(overlayView);
     guiManager.drawButtons();
 
-    window.draw(alignment);
+    //window.draw(alignment);
 
     //temp
     /* *

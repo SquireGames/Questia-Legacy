@@ -1,14 +1,23 @@
 #include "Entity_Player.h"
 
 Entity_Player::Entity_Player(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager):
-    Entity_Living(id, entityManager, resourceManager, Bounds(Circ(13)),Bounds(Rect(utl::Vector2f(26,26), utl::Vector2f(13,13))))
+    Entity_Living(id, entityManager, resourceManager,
+                  Bounds(Rect(utl::Vector2f(24,24), utl::Vector2f(12,12))),
+                  Bounds(Circ(13)),
+                  utl::Vector2f(0,48))
+    , spriteSheet(resourceManager)
 {
-    collBounds.rel_coords = utl::Vector2f(0, 20);
-    hitBounds.rel_coords  = utl::Vector2f(0, -15);
+    collBounds.rel_coords = utl::Vector2f(0, 40);
+    hitBounds.rel_coords  = utl::Vector2f(0, 0);
 
-    coords = utl::Vector2f(1000,1000);
+             coords = utl::Vector2f(300,300);
 
     atrs[Type::test_attack].atrs[(int)Type_test_attack::destroyStuff] = true;
+
+    spriteSheet.loadSprite("Media/Image/Game/Entity/Player/White.png", 8, 3);
+
+    spriteSheet.setSize(SIZE_X, SIZE_Y);
+    spriteSheet.setOrigin(SIZE_X / 4.f, SIZE_Y / 4.f);
 }
 
 Entity_Player::~Entity_Player()
@@ -18,47 +27,27 @@ Entity_Player::~Entity_Player()
 
 void Entity_Player::processInput(ctr::KeyAction action, bool isPressed)
 {
-    if(isPressed)
+    switch (action)
     {
-        switch (action)
-        {
-        case ctr::KeyAction::MoveUp:
-            isMovingUp = true;
-            break;
-        case ctr::KeyAction::MoveDown:
-            isMovingDown = true;
-            break;
-        case ctr::KeyAction::MoveLeft:
-            isMovingLeft = true;
-            break;
-        case ctr::KeyAction::MoveRight:
-            isMovingRight = true;
-            break;
-        }
-    }
-    else
-    {
-        switch (action)
-        {
-        case ctr::KeyAction::MoveUp:
-            isMovingUp = false;
-            break;
-        case ctr::KeyAction::MoveDown:
-            isMovingDown = false;
-            break;
-        case ctr::KeyAction::MoveLeft:
-            isMovingLeft = false;
-            break;
-        case ctr::KeyAction::MoveRight:
-            isMovingRight = false;
-            break;
-        }
+    case ctr::KeyAction::MoveUp:
+        isMovingUp = isPressed;
+        break;
+    case ctr::KeyAction::MoveDown:
+        isMovingDown = isPressed;
+        break;
+    case ctr::KeyAction::MoveLeft:
+        isMovingLeft = isPressed;
+        break;
+    case ctr::KeyAction::MoveRight:
+        isMovingRight = isPressed;
+        break;
+    default:
+        break;
     }
 }
 
 void Entity_Player::update()
 {
-
     switch(mov_control)
     {
     //if the player is normally moving (no movement skills)
@@ -110,7 +99,8 @@ void Entity_Player::update()
         }
 
         //move player
-        attemptMove(mov_velocity, *this);
+        attemptMove(*this, mov_velocity);
+        previousVelocity = std::move(mov_velocity);
 
         //reset forces
         mov_forces_external.clear();
@@ -127,6 +117,63 @@ void Entity_Player::update()
     }
     break;
     }
+}
 
+void Entity_Player::mouseInput(utl::Vector2f mousePosition)
+{
+    //temp
+    float angleToMouse = std::atan2(mousePosition.y - 540, mousePosition.x - 960);
+    angleToMouse = angleToMouse * 180 / 3.141592;
+    if(angleToMouse < 0)
+    {
+        angleToMouse = angleToMouse * -1;
+    }
+    else
+    {
+        angleToMouse = angleToMouse - 360;
+        angleToMouse = angleToMouse * -1;
+    }
 
+    //temp
+    int animationDirection;
+    if(337.5<angleToMouse || angleToMouse<22.5)
+    {
+        animationDirection = 4;
+    }
+    else if(22.5<angleToMouse && angleToMouse<67.5)
+    {
+        animationDirection = 6;
+    }
+    else if(67.5<angleToMouse && angleToMouse<112.5)
+    {
+        animationDirection = 0;
+    }
+    else if(112.5<angleToMouse && angleToMouse<157.5)
+    {
+        animationDirection = 7;
+    }
+    else if(157.5<angleToMouse && angleToMouse<202.5)
+    {
+        animationDirection = 5;
+    }
+    else if(202.5<angleToMouse && angleToMouse<247.5)
+    {
+        animationDirection = 3;
+    }
+    else if(247.5<angleToMouse && angleToMouse<292.5)
+    {
+        animationDirection = 1;
+    }
+    else
+    {
+        animationDirection = 2;
+    }
+
+    spriteSheetIndex.x = animationDirection;
+}
+
+void Entity_Player::draw(sf::RenderWindow& window, const DrawLayer& drawLayer)
+{
+    spriteSheet.getSprite(spriteSheetIndex.x, spriteSheetIndex.y).setPosition(coords.sf());
+    window.draw(spriteSheet.getSprite(spriteSheetIndex.x,spriteSheetIndex.y));
 }

@@ -9,7 +9,7 @@
 class Entity_Crate : public Entity_Coll
 {
 public:
-    Entity_Crate(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager);
+    Entity_Crate(unsigned int id, EntityManager& entityManager, ResourceManager& resourceManager, const utl::Vector2f& _coords);
     ~Entity_Crate();
 
     void draw(sf::RenderWindow& window, const DrawLayer& drawLayer);
