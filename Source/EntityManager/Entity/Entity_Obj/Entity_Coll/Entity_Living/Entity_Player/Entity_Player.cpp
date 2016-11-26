@@ -12,7 +12,7 @@ Entity_Player::Entity_Player(unsigned int id, EntityManager& entityManager, Reso
 
              coords = utl::Vector2f(300,300);
 
-    atrs[Type::test_attack].atrs[(int)Type_test_attack::destroyStuff] = true;
+    atrs[Type::test_attack].atrs[(int)Type_test_attack::destroyStuff] = false;
 
     spriteSheet.loadSprite("Media/Image/Game/Entity/Player/White.png", 8, 3);
 

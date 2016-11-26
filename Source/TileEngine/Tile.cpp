@@ -27,7 +27,7 @@ void Tile::setTexture(std::string filePath)
         tileSprite.setTexture(resourceManager.getTexture(filePath));
         //set origin for rotations and flips
         tileOriginOffset = utl::Vector2f(tileSprite.getLocalBounds().width / 2.f, tileSprite.getLocalBounds().height / 2.f);
-        tileSprite.setOrigin(tileOriginOffset.x, tileOriginOffset.y);
+        tileSprite.setOrigin(tileOriginOffset.sf());
         break;
     case TileType::texture:
         break;
@@ -49,12 +49,13 @@ void Tile::setSize(unsigned int tilesWidth, unsigned int tilesHeight)
     switch(tileType)
     {
     case TileType::sprite:
-        tileSprite.setScale(64.f / tileSprite.getLocalBounds().width * tilesWidth, 64 / tileSprite.getLocalBounds().height * tilesHeight);
+        tileSprite.setScale(64.f / tileSprite.getLocalBounds().width * tilesWidth, 64.f / tileSprite.getLocalBounds().height * tilesHeight);
         //set origin for rotations and flips
-        tileOriginOffset = utl::Vector2f(tilesWidth * 32, tilesHeight * 32);
-        tileSprite.setOrigin(tileOriginOffset.x, tileOriginOffset.y);
+        tileOriginOffset = utl::Vector2f(tilesWidth * 64 / 2, tilesHeight * 64 / 2);
+        tileSprite.setOrigin(tileOriginOffset.sf());
+        tileSize = utl::Vector2i(tilesWidth, tilesHeight);
     case TileType::texture:
-        tileSize = utl::Vector2i(tilesHeight, tilesHeight);
+        tileSize = utl::Vector2i(tilesWidth, tilesHeight);
         break;
     }
 }

@@ -49,8 +49,8 @@ State_Game::State_Game(sf::RenderWindow &window):
     ///font
     guiManager.setFont(Data_Desktop::getInstance().font1);
 
-    ///NEW TILE ENGINE
-    tileEngine.loadMap("TEST");
+    ///tile engine
+    tileEngine.loadMap("TEST", SaveFile_TileEngine::TextureMode::Map, SaveFile_TileEngine::TileMode::Batch);
 
     //temp
     visibleScreen.setPrimitiveType(sf::PrimitiveType::LinesStrip);

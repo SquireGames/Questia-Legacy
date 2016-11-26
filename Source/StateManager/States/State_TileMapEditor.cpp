@@ -23,8 +23,8 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &window):
     overlayView.setCenter(1920/2,1080/2);
 
     //load map
-    tileEngineEditor.createMap("t_1",200,200,3);
-    tileEngineEditor.loadMap("t_1");
+    tileEngineEditor.createMap("test1",3,3,1);
+    tileEngineEditor.loadMap("test1");
     tileEngineEditor.setPosition(0,0);
 }
 
@@ -63,7 +63,7 @@ void State_TileMapEditor::update(sf::Time)
     guiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
 
     //movement
-    int moveSpeed = 10;
+    int moveSpeed = 3;
     if(is_key_up)
     {
         cameraPosition.y -= moveSpeed;

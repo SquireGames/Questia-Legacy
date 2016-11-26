@@ -15,7 +15,10 @@ bool TextureAtlas::addTexture(std::string name, std::string fileLocation)
 {
     //deleted after, used for getting texture data
     sf::Texture tempTexture;
-    tempTexture.loadFromFile(fileLocation);
+    if(!tempTexture.loadFromFile(fileLocation))
+    {
+        return false;
+    }
 
     ///check if it will fit horizontally and vertically
     // check fit in current layer

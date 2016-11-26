@@ -196,7 +196,7 @@ void Server::receive()
                 }
             }
 
-            for(unsigned int it = 0; it != clientVector.size(); it++) // TODO remember to break out when done
+            for(unsigned int it = 0; it != clientVector.size(); it++)
             {
                 sf::TcpSocket& clientSocket = *clientVector[it]->tcpSocket_receieve;
                 if(selector.isReady(clientSocket))

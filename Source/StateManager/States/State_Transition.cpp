@@ -49,7 +49,6 @@ void State_Transition::update(sf::Time elapsedTime)
 
 }
 
-// TODO int -> enum
 void State_Transition::displayTextures()
 {
     window.draw(aLoadingImage);

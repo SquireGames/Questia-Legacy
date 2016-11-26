@@ -28,7 +28,7 @@ public:
     TileEngine(sf::RenderWindow& _window, ResourceManager& _resourceManager);
     ~TileEngine();
 
-    void loadMap(std::string _mapName);
+    void loadMap(std::string _mapName, SaveFile_TileEngine::TextureMode textureMode, SaveFile_TileEngine::TileMode tileMode);
 
     //draws chunks
     void drawMap();
@@ -46,10 +46,10 @@ public:
 protected:
     ///map
     //stores tiles
-    std::map <std::pair <int, int>, Tile> tileStorage;
+    std::map <int, Tile> tileStorage;
 
     //stores map
-    std::vector <utl::Vector2ui> tileMap;
+    std::vector <int> tileMap;
     //stores map dimensions
     unsigned int mapWidth = 0, mapHeight = 0, mapLayers = 0;
     //largest tile in map for tile culling

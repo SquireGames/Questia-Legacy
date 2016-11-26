@@ -13,12 +13,12 @@ TileEngine::~TileEngine()
 
 }
 
-void TileEngine::loadMap(std::string _mapName)
+void TileEngine::loadMap(std::string _mapName, SaveFile_TileEngine::TextureMode textureMode, SaveFile_TileEngine::TileMode tileMode)
 {
     //get the texture atlas
     resourceManager.getTexture("TILESTORAGE");
     //get info
-    MapData mapData = std::move(saveFile.openMap(_mapName, window));
+    MapData mapData = std::move(saveFile.openMap(_mapName, window, textureMode, tileMode));
 
     //get texture
     textureAtlas = &resourceManager.getBlankTexture("TILESTORAGE");
@@ -92,14 +92,14 @@ void TileEngine::loadMap(std::string _mapName)
                         int currentTile_y = chunkOrigin_y + it_tile_y;
 
                         //get tile index and id
-                        const utl::Vector2ui& tileID = tileMap[getTile(currentTile_x, currentTile_y, it_layer)];
+                        const int& tileID = tileMap[getTile(currentTile_x, currentTile_y, it_layer)];
 
-                        if(tileID.x != 0)
+                        if(tileID != 0)
                         {
-                            const Tile& tileData = tileStorage.at(std::make_pair(tileID.x, tileID.y));
+                            const Tile& tileData = tileStorage.at(tileID);
 
                             //to prevent texture bleeding
-                            float offset = 0.01;
+                            float offset = 0.001;
 
                             //texture int rect
                             const utl::IntRect& texturePosition = tileData.texturePosition;
@@ -111,29 +111,29 @@ void TileEngine::loadMap(std::string _mapName)
                             const char& flip = tileData.flip;
 
                             //size vertices and texture coords for flips and rotations
-                            utl::Vector2i posVerticies[4] = {utl::Vector2i(0                     + (currentTile_x * 64) - offset, 0                      + (currentTile_y * 64) - offset),
-                                                             utl::Vector2i(texturePosition.width + (currentTile_x * 64) + offset, 0                      + (currentTile_y * 64) - offset),
-                                                             utl::Vector2i(texturePosition.width + (currentTile_x * 64) + offset, texturePosition.height + (currentTile_y * 64) + offset),
-                                                             utl::Vector2i(0                     + (currentTile_x * 64) - offset, texturePosition.height + (currentTile_y * 64) + offset)
+                            utl::Vector2f posVerticies[4] = {utl::Vector2f(0                     + (currentTile_x * 64) - offset, 0                      + (currentTile_y * 64) - offset),
+                                                             utl::Vector2f(texturePosition.width + (currentTile_x * 64) + offset, 0                      + (currentTile_y * 64) - offset),
+                                                             utl::Vector2f(texturePosition.width + (currentTile_x * 64) + offset, texturePosition.height + (currentTile_y * 64) + offset),
+                                                             utl::Vector2f(0                     + (currentTile_x * 64) - offset, texturePosition.height + (currentTile_y * 64) + offset)
                                                             };
-                            utl::Vector2i textureVerticies[4] = {utl::Vector2i(texturePosition.x                         + offset, texturePosition.y                          + offset),
-                                                                 utl::Vector2i(texturePosition.x + texturePosition.width - offset, texturePosition.y                          + offset),
-                                                                 utl::Vector2i(texturePosition.x + texturePosition.width - offset, texturePosition.y + texturePosition.height - offset),
-                                                                 utl::Vector2i(texturePosition.x                         + offset, texturePosition.y + texturePosition.height - offset)
+                            utl::Vector2f textureVerticies[4] = {utl::Vector2f(texturePosition.x                         + offset, texturePosition.y                          + offset),
+                                                                 utl::Vector2f(texturePosition.x + texturePosition.width - offset, texturePosition.y                          + offset),
+                                                                 utl::Vector2f(texturePosition.x + texturePosition.width - offset, texturePosition.y + texturePosition.height - offset),
+                                                                 utl::Vector2f(texturePosition.x                         + offset, texturePosition.y + texturePosition.height - offset)
                                                                 };
                             //apply transformations
                             //size
                             if(tileSize.x != -1)
                             {
-                                posVerticies[0] = utl::Vector2i(0                + (currentTile_x * 64) - offset, 0               + (currentTile_y * 64) - offset);
-                                posVerticies[1] = utl::Vector2i(64 * tileSize.x  + (currentTile_x * 64) + offset, 0               + (currentTile_y * 64) - offset);
-                                posVerticies[2] = utl::Vector2i(64 * tileSize.x  + (currentTile_x * 64) + offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
-                                posVerticies[3] = utl::Vector2i(0                + (currentTile_x * 64) - offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
+                                posVerticies[0] = utl::Vector2f(0                + (currentTile_x * 64) - offset, 0               + (currentTile_y * 64) - offset);
+                                posVerticies[1] = utl::Vector2f(64 * tileSize.x  + (currentTile_x * 64) + offset, 0               + (currentTile_y * 64) - offset);
+                                posVerticies[2] = utl::Vector2f(64 * tileSize.x  + (currentTile_x * 64) + offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
+                                posVerticies[3] = utl::Vector2f(0                + (currentTile_x * 64) - offset, 64 * tileSize.y + (currentTile_y * 64) + offset);
                             }
                             //flip
                             if(flip != 'n')
                             {
-                                utl::Vector2i tempVec(0,0);
+                                utl::Vector2f tempVec(0,0);
                                 if(flip == 'x')
                                 {
                                     tempVec = textureVerticies[0];
@@ -165,7 +165,7 @@ void TileEngine::loadMap(std::string _mapName)
                             //rotate
                             if(rotationDegrees != 0)
                             {
-                                utl::Vector2i tempVec(0,0);
+                                utl::Vector2f tempVec(0,0);
                                 if(rotationDegrees == 90)
                                 {
                                     tempVec = textureVerticies[0];
@@ -287,13 +287,13 @@ void TileEngine::drawTiles()
             for(int tileIt_y = drawMin_y; tileIt_y <= drawMax_y; tileIt_y++)
             {
                 //get tile index and id
-                const utl::Vector2ui& currentTileIndex = tileMap[getTile(tileIt_x, tileIt_y, layerIt)];
+                const int& currentTileIndex = tileMap[getTile(tileIt_x, tileIt_y, layerIt)];
 
                 //make sure its visible
-                if(currentTileIndex.x != 0)
+                if(currentTileIndex != 0)
                 {
                     //get actual tile
-                    Tile& currentTile = tileStorage.at(std::make_pair(currentTileIndex.x, currentTileIndex.y));
+                    Tile& currentTile = tileStorage.at(currentTileIndex);
 
                     //move to correct position and draw
                     currentTile.setPosition(tileIt_x, tileIt_y);

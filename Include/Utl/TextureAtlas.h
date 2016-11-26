@@ -16,7 +16,6 @@ struct TextureAtlasData
     sf::Texture* texture = nullptr;
 };
 
-//1d texture atlas, only horizontal
 class TextureAtlas
 {
 public:
