@@ -25,6 +25,11 @@ public:
     void loadMap(std::string _mapName);
     void drawMap();
 
+    //get map data
+    unsigned int getMapWidth();
+    unsigned int getMapHeight();
+    unsigned int getMapLayers();
+
 private:
     //grid to know where invisible tiles are
     void drawGridLines();

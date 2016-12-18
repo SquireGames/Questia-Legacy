@@ -26,6 +26,11 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &window):
     tileEngineEditor.createMap("test1",3,3,1);
     tileEngineEditor.loadMap("test1");
     tileEngineEditor.setPosition(0,0);
+
+    //map data
+    guiManager.setButtonAtr("mapDataText", "width", gui::ButtonAtrCharacteristic::text, utl::asString(tileEngineEditor.getMapWidth()));
+    guiManager.setButtonAtr("mapDataText", "height", gui::ButtonAtrCharacteristic::text, utl::asString(tileEngineEditor.getMapHeight()));
+    guiManager.setButtonAtr("mapDataText", "layers", gui::ButtonAtrCharacteristic::text, utl::asString(tileEngineEditor.getMapLayers()));
 }
 
 State_TileMapEditor::~State_TileMapEditor()
@@ -59,34 +64,23 @@ void State_TileMapEditor::processImput(sf::Keyboard::Key key, bool isPressed)
 
 void State_TileMapEditor::update(sf::Time)
 {
+    executor.processTasks();
+
     //gui
     guiManager.setMousePosition(std::make_pair(Data_Desktop::getInstance().getScaledMousePosition(window).x,Data_Desktop::getInstance().getScaledMousePosition(window).y));
 
-    //movement
-    int moveSpeed = 3;
-    if(is_key_up)
+    //tickers
+    ticker_overlayToggle.tick();
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        cameraPosition.y -= moveSpeed;
-        mapView.setCenter(cameraPosition.x, cameraPosition.y);
-        tileEngineEditor.setPosition(cameraPosition.x, cameraPosition.y);
-    }
-    if(is_key_down)
-    {
-        cameraPosition.y += moveSpeed;
-        mapView.setCenter(cameraPosition.x, cameraPosition.y);
-        tileEngineEditor.setPosition(cameraPosition.x, cameraPosition.y);
-    }
-    if(is_key_left)
-    {
-        cameraPosition.x -= moveSpeed;
-        mapView.setCenter(cameraPosition.x, cameraPosition.y);
-        tileEngineEditor.setPosition(cameraPosition.x, cameraPosition.y);
-    }
-    if(is_key_right)
-    {
-        cameraPosition.x += moveSpeed;
-        mapView.setCenter(cameraPosition.x, cameraPosition.y);
-        tileEngineEditor.setPosition(cameraPosition.x, cameraPosition.y);
+        if(guiManager.isClicked("overlayToggle"))
+        {
+            if(ticker_overlayToggle.isDone())
+            {
+                setOverlayStatus(toggler_overlay.toggle());
+            }
+        }
     }
 
     //zoom
@@ -102,8 +96,34 @@ void State_TileMapEditor::update(sf::Time)
         tileEngineEditor.setViewportSize(mapView.getSize().x, mapView.getSize().y);
     }
 
+    //calculate movement speed
+    moveSpeedModifier = std::max((mapView.getSize().x / 1920.f), 0.5f);
+    float moveDistance = moveSpeed * moveSpeedModifier;
+
+    //movement
+    if(is_key_up)
+    {
+        cameraPosition.y -= moveDistance;
+    }
+    if(is_key_down)
+    {
+        cameraPosition.y += moveDistance;
+    }
+    if(is_key_left)
+    {
+        cameraPosition.x -= moveDistance;
+    }
+    if(is_key_right)
+    {
+        cameraPosition.x += moveDistance;
+    }
+
+    //updating position
+    mapView.setCenter(cameraPosition.x, cameraPosition.y);
+    tileEngineEditor.setPosition(cameraPosition.x, cameraPosition.y);
+
     //debug
-    guiManager.setButtonAtr("fpsText", "text", gui::ButtonAtrCharacteristic::text, utl::asString(Data_Desktop::getInstance().get_FPS()));
+    guiManager.setButtonAtr("fpsText", "fps", gui::ButtonAtrCharacteristic::text, utl::asString(Data_Desktop::getInstance().get_FPS()));
 }
 
 void State_TileMapEditor::displayTextures()

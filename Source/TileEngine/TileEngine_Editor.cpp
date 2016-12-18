@@ -56,3 +56,16 @@ void TileEngine_Editor::drawGridLines()
 {
     window.draw(gridLines);
 }
+
+unsigned int TileEngine_Editor::getMapWidth()
+{
+    return mapWidth;
+}
+unsigned int TileEngine_Editor::getMapHeight()
+{
+    return mapHeight;
+}
+unsigned int TileEngine_Editor::getMapLayers()
+{
+    return mapLayers;
+}

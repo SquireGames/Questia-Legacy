@@ -56,10 +56,9 @@ bool SaveFile::readFile()
                 }
                 else
                 {
-                    goto escapeStream;
+                    break;
                 }
             }
-escapeStream:
             saveList.push_back(std::make_pair(lineSeperator[0], lineSeperator[1]));
             sStream.str(std::string());
             sStream.clear();
@@ -74,6 +73,59 @@ escapeStream:
     fileStream.close();
     return true;
 }
+
+bool SaveFile::readFile(char separator)
+{
+    fileStream.open(fileName, std::ios::in); // Open to read
+
+    if(fileStream.is_open())
+    {
+        saveList.clear();
+        std::string line;
+        while(std::getline(fileStream,line))
+        {
+            std::map <int, std::string> lineSeperator;
+            int iter = 0;
+            sStream << line;
+            while (sStream.good())
+            {
+                std::string entry;
+                std::getline(sStream, entry, separator);
+
+                char firstCharacter = ' ';
+                if(entry.length() > 0)
+                {
+                    firstCharacter = entry.at(0);
+                }
+
+                if(firstCharacter != '/' || firstCharacter != '(')
+                {
+                    if(firstCharacter != ' ')
+                    {
+                        lineSeperator[iter] = entry;
+                        iter++;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            saveList.push_back(std::make_pair(lineSeperator[0], lineSeperator[1]));
+            sStream.str(std::string());
+            sStream.clear();
+        }
+    }
+    else //file does not exist
+    {
+        fileStream.close();
+        return false;
+    }
+
+    fileStream.close();
+    return true;
+}
+
 void SaveFile::writeFile()
 {
     fileStream.open(fileName, std::ios::out | std::ios::trunc); // deletes and writes

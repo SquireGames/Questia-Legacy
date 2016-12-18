@@ -319,9 +319,9 @@ void Button::setButtonAtr(std::string atrName, gui::ButtonAtrCharacteristic atrC
         switch (atrChar)
         {
         default:
+            heldSprites[atrName]->normalSprite.setColor(color);
             break;
         }
-
     }
     else if(heldOverlaySprites.count(atrName))
     {
@@ -730,7 +730,7 @@ void Button::update(std::pair <int, int> mouseCoords)
     for(std::map<std::string, OverlaySprite*>::iterator it = heldOverlaySprites.begin(); it != heldOverlaySprites.end(); it++)
     {
         if(mouseCoords.first >  buttonPosition.first + scrollAmount_x && mouseCoords.first  < buttonPosition.first + scrollAmount_x  + buttonBounds.first &&
-           mouseCoords.second > buttonPosition.second + scrollAmount_y && mouseCoords.second < buttonPosition.second + scrollAmount_y + buttonBounds.second)
+                mouseCoords.second > buttonPosition.second + scrollAmount_y && mouseCoords.second < buttonPosition.second + scrollAmount_y + buttonBounds.second)
         {
             it->second->isChanged = true;
             it->second->isHoveredOver = true;

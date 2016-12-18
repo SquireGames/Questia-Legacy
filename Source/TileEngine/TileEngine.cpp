@@ -96,7 +96,7 @@ void TileEngine::loadMap(std::string _mapName, SaveFile_TileEngine::TextureMode 
 
                         if(tileID != 0)
                         {
-                            const Tile& tileData = tileStorage.at(tileID);
+                            const Tile& tileData = tileStorage.count(tileID) ? tileStorage.at(tileID) : tileStorage.at(-1);
 
                             //to prevent texture bleeding
                             float offset = 0.001;
@@ -201,13 +201,27 @@ void TileEngine::loadMap(std::string _mapName, SaveFile_TileEngine::TextureMode 
                             //bottom right
                             chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[2].x, posVerticies[2].y), sf::Vector2f(textureVerticies[2].x, textureVerticies[2].y)));
                             //bottom left
-                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[3].x, posVerticies[3].y), sf::Vector2f(textureVerticies[3].x, textureVerticies[2].y)));
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[3].x, posVerticies[3].y), sf::Vector2f(textureVerticies[3].x, textureVerticies[3].y)));
                         }
                     }
                 }
             }
         }
     }
+
+
+    //for sprite renderer, make sure all tiles exist
+    for(unsigned int it = 0; it != tileMap.size(); it++)
+    {
+        int tileID = tileMap[it];
+        //if does not exist, replace with -1 and give error message
+        if(tileID != 0 && !tileStorage.count(tileID))
+        {
+            tileMap[it] = -1;
+            std::cout << "TILEENGINE - TILE NUMBER: " << tileID << " DOES NOT EXIST " << std::endl;
+        }
+    }
+
     //saving map names
     mapName = _mapName;
 }

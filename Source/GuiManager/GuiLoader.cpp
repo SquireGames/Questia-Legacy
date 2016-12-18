@@ -25,7 +25,7 @@ void GuiLoader::loadGui(GuiManager& guiManager, std::string gui)
 
     guiFile.setFilePath(filePath);
 
-    if(guiFile.readFile())
+    if(guiFile.readFile('^'))
     {
         std::vector<std::string> guiCommands = guiFile.getItemList();
 

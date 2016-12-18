@@ -28,6 +28,7 @@ float utl::asFloat(const std::string& _string)
 template std::string utl::asString <bool>           (const bool& _item);
 template std::string utl::asString <char>           (const char& _item);
 template std::string utl::asString <int>            (const int& _item);
+template std::string utl::asString <unsigned int>   (const unsigned int& _item);
 template std::string utl::asString <unsigned short> (const unsigned short& _item);
 template std::string utl::asString <float>          (const float& _item);
 template std::string utl::asString <std::string>    (const std::string& _item);

@@ -45,9 +45,6 @@ void Data_Desktop::setDesktopResolution(sf::Vector2i newRes, sf::Vector2i Positi
     scaleFactor = sf::Vector2f(((float) 1920 / (float) desktopResolution.x), ((float) 1080 / (float) desktopResolution.y));
 }
 
-
-
-
 void Data_Desktop::changeFont(std::string font_name)
 {
     if(!font1.loadFromFile(utl::conjoinString({"Media/Fonts/", font_name})))

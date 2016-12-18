@@ -24,6 +24,7 @@ public:
     }
 
     bool readFile();  // gets updated vector
+    bool readFile(char separator);
     void writeFile(); // saves changes
     void clearSave(); // clears map
 

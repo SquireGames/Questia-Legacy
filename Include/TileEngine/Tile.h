@@ -49,7 +49,8 @@ public:
 private:
     //not always used
     sf::Sprite tileSprite;
-    utl::Vector2f tileOriginOffset = utl::Vector2f(0,0);
+    sf::Transform tileTransform;
+    sf::Transform moveTransform;
 
     //collision
     utl::IntRect collisionRect = utl::IntRect(0,0,-1,-1);

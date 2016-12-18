@@ -82,8 +82,9 @@ std::vector <std::pair <int, std::string> > SaveFile_TileEngine::getTileLocation
 {
     //emulating file input
     std::vector<std::pair <int, std::string> > tempTiles;
+    tempTiles.push_back(std::make_pair(-1,  "Media/Image/Game/Tiles/Debug/Missing.png"));
     tempTiles.push_back(std::make_pair(1,  "Media/Image/Game/Tiles/01/01.png"));
-    tempTiles.push_back(std::make_pair(22, "Media/Image/Game/Tiles/04/21.png"));
+    tempTiles.push_back(std::make_pair(2, "Media/Image/Game/Tiles/04/21.png"));
     tempTiles.push_back(std::make_pair(3,  "Media/Image/Game/Tiles/03/04.png"));
     tempTiles.push_back(std::make_pair(4,  "Media/Image/Game/Tiles/TESTING/Arrow.png"));
 
@@ -143,7 +144,9 @@ void SaveFile_TileEngine::loadTiles(const std::vector <std::pair <int, std::stri
         if(filePath.substr(filePath.length() - 4) == ".png")
         {
             TileTransform tile = TileTransform(filePath);
-            tile.tileSize = utl::Vector2i(1,2);
+            tile.tileSize = utl::Vector2i(1,1);
+            tile.degrees  = 0;
+            tile.flip     = 'n';
             tileTransform.emplace(std::make_pair(tileID, tile));
         }
         else if(filePath.substr(filePath.length() - 4) == ".txt")
@@ -196,46 +199,6 @@ void SaveFile_TileEngine::loadTiles(const std::vector <std::pair <int, std::stri
         mapData.tileStorage.at(tileID).setRotate(degrees);
         mapData.tileStorage.at(tileID).setFlip(flip);
     }
-    /*
-        mapData.tileStorage.emplace(1, Tile(window, resourceManager));
-        mapData.tileStorage.at(1).texturePosition = compiledTexture.textureCoords.at("1");
-        mapData.tileStorage.at(1).setSize(1,1);
-        //temp, only for tileEditor
-        //mapData.tileStorage.at(std::make_pair(1,1)).tileType = Tile::TileType::sprite;
-        mapData.tileStorage.at(1).setTexture("Media/Image/Game/Tiles/01/01.png");
-        mapData.tileStorage.at(1).setSize(1,1);
-
-
-        mapData.tileStorage.emplace(22, Tile(window, resourceManager));
-        mapData.tileStorage.at(22).texturePosition = compiledTexture.textureCoords.at("22");
-        mapData.tileStorage.at(22).setSize(1,1);
-        //temp, only for tileEditor
-        mapData.tileStorage.at(22).tileType = Tile::TileType::sprite;
-        mapData.tileStorage.at(22).setTexture("Media/Image/Game/Tiles/04/21.png");
-        mapData.tileStorage.at(22).setSize(1,1);
-
-        //////////////TEST
-        mapData.tileStorage.emplace(7, Tile(window, resourceManager));
-        mapData.tileStorage.at(7).texturePosition = compiledTexture.textureCoords.at("3");
-        //mapData.tileStorage.at(std::make_pair(7,7)).setSize(1,1);
-        //mapData.tileStorage.at(std::make_pair(7,7)).setRotate(90);
-        //mapData.tileStorage.at(std::make_pair(7,7)).setFlip('b');
-        //temp, only for tileEditor
-        mapData.tileStorage.at(7).tileType = Tile::TileType::sprite;
-        mapData.tileStorage.at(7).setTexture("Media/Image/Game/Tiles/TESTING/Arrow.png");
-        mapData.tileStorage.at(7).setSize(1,1);
-        //mapData.tileStorage.at(std::make_pair(7,7)).setRotate(90);
-        mapData.tileStorage.at(7).setFlip('b');
-        //////////////TEST
-
-        mapData.tileStorage.emplace(3, Tile(window, resourceManager));
-        mapData.tileStorage.at(3).texturePosition = compiledTexture.textureCoords.at("4");
-        mapData.tileStorage.at(3).setSize(1,1);
-
-        mapData.tileStorage.emplace(75, Tile(window, resourceManager));
-        mapData.tileStorage.at(75).setTexture("Media/Image/Game/Tiles/75/01.png");
-        mapData.tileStorage.at(75).setSize(1,1);
-        */
 }
 
 ///editor
