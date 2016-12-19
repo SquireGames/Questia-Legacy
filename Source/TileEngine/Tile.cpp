@@ -24,10 +24,19 @@ void Tile::setTexture(std::string filePath)
     switch(tileType)
     {
     case TileType::sprite:
+    {
         tileSprite.setTexture(resourceManager.getTexture(filePath));
+
         tileTransform = tileSprite.getTransform();
         tileSize = utl::Vector2i(tileSprite.getLocalBounds().width / 64, tileSprite.getLocalBounds().height / 64);
-        break;
+
+        //TODO add multiple nested folder support
+        std::vector<std::string> tileSourceDir = utl::separateString(filePath, '/');
+        source   = filePath;
+        folder   = tileSourceDir[4];
+        tileName = tileSourceDir[5];
+    }
+    break;
     case TileType::texture:
         break;
     }

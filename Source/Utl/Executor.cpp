@@ -52,3 +52,20 @@ void utl::Executor::processTasks()
     }), eventVector.end());
 }
 
+void utl::Executor::tryDelete(std::string taskName)
+{
+    auto taskIterator = eventVector.end();
+    for(auto it = eventVector.begin(); it != eventVector.end(); it++)
+    {
+        if(taskName == (*it).first)
+        {
+            taskIterator = it;
+            break;
+        }
+    }
+    if(taskIterator != eventVector.end())
+    {
+        eventVector.erase(taskIterator);
+    }
+}
+

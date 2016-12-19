@@ -44,6 +44,29 @@ void TileEngine_Editor::loadMap(std::string _mapName)
         gridLines[vertexCount] = vertex;
         vertexCount++;
     }
+
+    //iterate through tiles, sort by folders
+    for(auto& it : tileStorage)
+    {
+        Tile& tile = it.second;
+        std::string& folder = tile.folder;
+
+        std::pair<std::string, std::vector<Tile*> >& tileDir = getFolder(folder);
+        tileDir.second.push_back(&tile);
+    }
+}
+std::pair<std::string, std::vector<Tile*> >& TileEngine_Editor::getFolder(const std::string& dir)
+{
+    for(auto& it : sortedTiles)
+    {
+        std::string& tileDir = it.first;
+        if(dir == tileDir)
+        {
+            return it;
+        }
+    }
+    sortedTiles.push_back(std::make_pair(dir, std::vector<Tile*>()));
+    return sortedTiles.back();
 }
 
 void TileEngine_Editor::drawMap()
@@ -52,9 +75,42 @@ void TileEngine_Editor::drawMap()
     drawGridLines();
 }
 
+void TileEngine_Editor::drawTiles()
+{
+    for(unsigned int it_folder = 0; it_folder != sortedTiles.size(); it_folder++)
+    {
+        std::string& tileDir = sortedTiles[it_folder].first;
+        std::vector<Tile*>& tiles = sortedTiles[it_folder].second;
+        for(unsigned int it_tile = 0; it_tile != tiles.size(); it_tile++)
+        {
+            Tile& tile = *tiles[it_tile];
+            tile.setPosition(it_tile, it_folder);
+            tile.drawTile();
+        }
+    }
+}
+
 void TileEngine_Editor::drawGridLines()
 {
     window.draw(gridLines);
+}
+
+void TileEngine_Editor::displayTiles()
+{
+    std::cout << "-------------------" << std::endl;
+
+    for(auto& it : sortedTiles)
+    {
+        std::string& tileDir = it.first;
+        std::vector<Tile*>& tiles = it.second;
+
+        std::cout << "Folder: " << tileDir << std::endl;
+        for(auto& tile : tiles)
+        {
+            std::cout << "  -" << tile->tileName << std::endl;
+        }
+    }
+    std::cout << "-------------------" << std::endl;
 }
 
 unsigned int TileEngine_Editor::getMapWidth()

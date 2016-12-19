@@ -25,6 +25,8 @@ public:
     void addTask(std::string taskName, TaskType taskType, utl::Ticker ticker, std::function<void(float taskPercentage)> task);
     void processTasks();
 
+    void tryDelete(std::string taskName);
+
 private:
     struct Event
     {

@@ -11,6 +11,7 @@ public:
     ~Toggler();
 
     bool toggle();
+    bool getState();
 private:
     bool value;
 };

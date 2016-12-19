@@ -7,6 +7,8 @@
 #include "Vector2.h"
 #include "ResourceManager.h"
 
+#include "Utl.h"
+
 ///not stored in actual map but moved and drawn to screen or used to find texture coords
 class Tile
 {
@@ -45,6 +47,12 @@ public:
     int degrees = 0;
     //only x, y, b(both), and n are valid
     char flip = 'n';
+
+
+    //for editor
+    std::string source;
+    std::string folder;
+    std::string tileName;;
 
 private:
     //not always used

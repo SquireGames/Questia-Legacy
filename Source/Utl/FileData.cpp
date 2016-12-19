@@ -30,6 +30,7 @@ std::vector<std::string> utl::getFiles(std::string directory, bool isWithDirecto
                     ss<<x.path().filename().string();
                 }
                 ss>>st;
+                std::replace(st.begin(), st.end(),'\\', '/');
                 fileNames.push_back(st);
             }
         }
@@ -55,5 +56,18 @@ bool utl::createDirectory(const std::string& filePath)
         }
     }
     return true;
+}
+
+std::vector<std::string> utl::filterFiles(const std::vector<std::string>& inputFiles, const std::string& extension)
+{
+    std::vector<std::string> newFiles = std::vector<std::string>();
+    for(const std::string& file : inputFiles)
+    {
+        if(file.find(extension)!= std::string::npos)
+        {
+            newFiles.push_back(file);
+        }
+    }
+    return newFiles;
 }
 

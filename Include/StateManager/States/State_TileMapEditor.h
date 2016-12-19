@@ -42,10 +42,8 @@ private:
 
     SaveFile_Options saveFile_options;
 
-    sf::View mapView;
     sf::View overlayView;
 
-    utl::Vector2f cameraPosition = utl::Vector2f(0,0);
     int moveSpeed = 5;
     float moveSpeedModifier = 1;
 
@@ -54,37 +52,33 @@ private:
     bool is_key_left  = false;
     bool is_key_right = false;
 
+    //handles animations
     utl::Executor executor;
 
-    //overlay toggles
+    //handles different modes
+    enum class EditorState {View, Idle, Tile} editorState = EditorState::Idle;
+
+    //handles actions in various states
+    void updateState_view();
+    void updateState_idle();
+    void updateState_tile();
+
+    //handles movement in map view state
+    void moveCamera_map();
+    sf::View mapView;
+    utl::Vector2f cameraPosition_map = utl::Vector2f(0,0);
+
+    //handles movement in tile view state
+    void moveCamera_tiles();
+    sf::View tileView;
+    utl::Vector2f cameraPosition_tile = utl::Vector2f(0,0);
+
+    //toggles
     utl::Ticker ticker_overlayToggle = utl::Ticker(20);
-    utl::Toggler toggler_overlay = utl::Toggler(true);
+    utl::Toggler overlayToggler = utl::Toggler(true);
 
-
-
-    void setOverlayStatus(bool isVisible)
-    {
-        if(isVisible)
-        {
-            guiManager.setButtonAtr("overlayToggle", "buttonSprite", gui::ButtonAtrCharacteristic::flip, 'n');
-
-            executor.addTask("overlayOpen", utl::Executor::TaskType::Continuous, utl::Ticker(40), [&](float taskPercentage)
-            {
-                guiManager.setButtonAtr("overlay_up",   "sprite", gui::ButtonAtrCharacteristic::percentage, static_cast<int>(100.f * taskPercentage));
-                guiManager.setButtonAtr("overlay_down", "sprite", gui::ButtonAtrCharacteristic::percentage, static_cast<int>(100.f * taskPercentage));
-            });
-        }
-        else
-        {
-            guiManager.setButtonAtr("overlayToggle", "buttonSprite", gui::ButtonAtrCharacteristic::flip, 'y');
-
-            executor.addTask("overlayClose", utl::Executor::TaskType::Continuous, utl::Ticker(40), [&](float taskPercentage)
-            {
-                guiManager.setButtonAtr("overlay_up",   "sprite", gui::ButtonAtrCharacteristic::percentage, 100 - static_cast<int>(100.f * taskPercentage));
-                guiManager.setButtonAtr("overlay_down", "sprite", gui::ButtonAtrCharacteristic::percentage, 100 - static_cast<int>(100.f * taskPercentage));
-            });
-        }
-    }
+    //gui
+    void setOverlayStatus(bool isVisible);
 };
 
 #endif // STATE_TILEMAPEDITOR_H

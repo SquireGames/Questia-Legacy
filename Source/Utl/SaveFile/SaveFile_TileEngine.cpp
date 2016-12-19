@@ -80,15 +80,40 @@ MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& wind
 
 std::vector <std::pair <int, std::string> > SaveFile_TileEngine::getTileLocations(std::string filePath)
 {
-    //emulating file input
-    std::vector<std::pair <int, std::string> > tempTiles;
-    tempTiles.push_back(std::make_pair(-1,  "Media/Image/Game/Tiles/Debug/Missing.png"));
-    tempTiles.push_back(std::make_pair(1,  "Media/Image/Game/Tiles/01/01.png"));
-    tempTiles.push_back(std::make_pair(2, "Media/Image/Game/Tiles/04/21.png"));
-    tempTiles.push_back(std::make_pair(3,  "Media/Image/Game/Tiles/03/04.png"));
-    tempTiles.push_back(std::make_pair(4,  "Media/Image/Game/Tiles/TESTING/Arrow.png"));
+    //return vector
+    std::vector<std::pair <int, std::string> > returnTiles = std::vector<std::pair <int, std::string> >();
 
-    return tempTiles;
+    //get all files
+    std::vector<std::string> tilesDirs = utl::getFiles("Media/Image/Game/Tiles/", true);
+    //for tile indexing
+    int currentID = 1;
+
+    for(std::string& tileDir : tilesDirs)
+    {
+        //filter out all .png and .txt
+        std::vector<std::string> tilesStrs = utl::filterFiles(utl::getFiles(tileDir, true), ".png");
+        std::vector<std::string> tilesStrs_txt = utl::filterFiles(utl::getFiles(tileDir, true), ".txt");
+        tilesStrs.insert(tilesStrs.end(), tilesStrs_txt.begin(), tilesStrs_txt.end());
+
+        for(std::string& tileStr : tilesStrs)
+        {
+            if(tileStr == "Media/Image/Game/Tiles/Debug/Missing.png")
+            {
+                returnTiles.push_back(std::make_pair(-1,tileStr));
+            }
+            else
+            {
+                returnTiles.push_back(std::make_pair(currentID++, tileStr));
+            }
+        }
+    }
+
+    for(auto& returnTile : returnTiles)
+    {
+        std::cout << "TILE: (" << returnTile.first << ") - " << returnTile.second << std::endl;
+    }
+
+    return returnTiles;
 }
 
 void SaveFile_TileEngine::loadTiles(const std::vector <std::pair <int, std::string> >& tileLocations, MapData& mapData, TileMode tileMode, sf::RenderWindow& window)

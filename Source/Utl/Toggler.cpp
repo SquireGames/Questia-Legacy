@@ -16,3 +16,4 @@ bool utl::Toggler::toggle()
     value = !value;
     return value;
 }
+
