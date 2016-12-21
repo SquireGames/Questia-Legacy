@@ -60,6 +60,7 @@ MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& wind
     //get tiles
     std::vector <std::string> tileVector = saveFile_map.getItemList();
     unsigned int tileNumberIterator = 0;
+
     for(const std::string& tileLine : tileVector)
     {
         std::vector <std::string> tiles = utl::separateString(tileLine, '|');
@@ -70,7 +71,10 @@ MapData SaveFile_TileEngine::openMap(std::string mapName, sf::RenderWindow& wind
             {
                 mapData.tileMap[tileNumberIterator] = utl::asInt(tile);
             }
-            tileNumberIterator++;
+            if(tile.length() > 0 && tile.at(0) != '\n')
+            {
+                tileNumberIterator++;
+            }
         }
     }
 

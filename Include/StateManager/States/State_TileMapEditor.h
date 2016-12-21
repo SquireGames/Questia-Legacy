@@ -52,6 +52,8 @@ private:
     bool is_key_left  = false;
     bool is_key_right = false;
 
+    utl::Vector2i selectedTile = utl::Vector2i(0,0);
+
     //handles animations
     utl::Executor executor;
 
@@ -67,6 +69,7 @@ private:
     void moveCamera_map();
     sf::View mapView;
     utl::Vector2f cameraPosition_map = utl::Vector2f(0,0);
+    float mapZoomRatio = 0.f;
 
     //handles movement in tile view state
     void moveCamera_tiles();
@@ -79,6 +82,21 @@ private:
 
     //gui
     void setOverlayStatus(bool isVisible);
+
+    //layers
+    struct LayerData
+    {
+        LayerData(std::string _bottomButton, std::string _topButton):bottomButton(_bottomButton), topButton(_topButton) {};
+        std::string bottomButton;
+        std::string topButton;
+        int alpha = 100;
+        utl::Ticker ticker = utl::Ticker(20);
+    };
+    std::vector<LayerData> layerData;
+
+    //toggle state
+    int getNextLayerState(int alpha);
+    void resetLayerStates();
 };
 
 #endif // STATE_TILEMAPEDITOR_H

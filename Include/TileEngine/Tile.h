@@ -27,6 +27,7 @@ public:
     //only sprite
     void setTexture(std::string filePath);
     void setPosition(int x, int y);
+    void setTransparency(int alpha);
 
     //spite and texture
     void setSize(unsigned int tilesWidth, unsigned int tilesHeight);
@@ -52,7 +53,7 @@ public:
     //for editor
     std::string source;
     std::string folder;
-    std::string tileName;;
+    std::string tileName;
 
 private:
     //not always used

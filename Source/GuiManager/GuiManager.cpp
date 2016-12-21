@@ -337,20 +337,20 @@ void GuiManager::setFont(sf::Font _buttonFont)
 
 void GuiManager::createList(std::string listName)
 {
-    listMap[listName] = std::make_pair(std::make_pair("NOTEMPLATE", std::make_pair( std::make_pair(0,0), 0)), std::vector<std::string>());
+    listMap[listName] = std::make_pair(std::make_pair("NOTEMPLATE", std::make_pair(std::make_pair(0,0), std::make_pair(0,0))), std::vector<std::string>());
     currentListEdit = listName;
 }
 
-void GuiManager::setListSpacing(std::string listName, int spacing)
+void GuiManager::setListSpacing(std::string listName, int spacing_x, int spacing_y)
 {
     if(listMap.count(listName))
     {
-        listMap[listName].first.second.second = spacing;
+        listMap[listName].first.second.second = std::make_pair(spacing_x, spacing_y);
     }
 }
-void GuiManager::setListSpacing(int spacing)
+void GuiManager::setListSpacing(int spacing_x, int spacing_y)
 {
-    listMap[currentListEdit].first.second.second = spacing;
+    listMap[currentListEdit].first.second.second = std::make_pair(spacing_x, spacing_y);
 }
 void GuiManager::setListTemplate(std::string listName, std::string groupTemplate)
 {
@@ -392,8 +392,9 @@ std::string GuiManager::createListEntry(std::string listName)
         std::string entryName = listName + "_" + ss.str();
 
         createGroupFromTemplate(entryName, listMap[listName].first.first);
-        setGroupAtr(gui::ButtonCharacteristic::coords, std::make_pair(listMap[listName].first.second.first.first,
-                    listMap[listName].first.second.first.second + entries * listMap[listName].first.second.second));
+        setGroupAtr(gui::ButtonCharacteristic::coords,
+                    std::make_pair(listMap[listName].first.second.first.first  + entries * listMap[listName].first.second.second.first,
+                                   listMap[listName].first.second.first.second + entries * listMap[listName].first.second.second.second));
         listMap[listName].second.push_back(entryName);
 
         return entryName;
@@ -410,8 +411,9 @@ std::string GuiManager::createListEntry()
         std::string entryName = currentListEdit + "_" + ss.str();
 
         createGroupFromTemplate(entryName, listMap[currentListEdit].first.first);
-        setGroupAtr(gui::ButtonCharacteristic::coords, std::make_pair(listMap[currentListEdit].first.second.first.first,
-                    listMap[currentListEdit].first.second.first.second + entries * listMap[currentListEdit].first.second.second));
+        setGroupAtr(gui::ButtonCharacteristic::coords,
+                    std::make_pair(listMap[currentListEdit].first.second.first.first  + entries * listMap[currentListEdit].first.second.second.first,
+                                   listMap[currentListEdit].first.second.first.second + entries * listMap[currentListEdit].first.second.second.second));
         listMap[currentListEdit].second.push_back(entryName);
 
         return entryName;

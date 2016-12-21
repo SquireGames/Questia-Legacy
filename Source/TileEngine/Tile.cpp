@@ -52,6 +52,23 @@ void Tile::setPosition(int x, int y)
         break;
     }
 }
+void Tile::setTransparency(int alpha)
+{
+    switch(tileType)
+    {
+    case TileType::sprite:
+        {
+            sf::Color newColor = tileSprite.getColor();
+            float trans = static_cast <float> (alpha);
+            trans = trans * 255 / 100;
+            newColor.a = trans;
+            tileSprite.setColor(newColor);
+        }
+        break;
+    case TileType::texture:
+        break;
+    }
+}
 void Tile::setSize(unsigned int tilesWidth, unsigned int tilesHeight)
 {
     tileSize = utl::Vector2i(tilesWidth, tilesHeight);

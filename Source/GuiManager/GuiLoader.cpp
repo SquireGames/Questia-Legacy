@@ -141,15 +141,15 @@ void GuiLoader::loadGui(GuiManager& guiManager, std::string gui)
                     }
                     else if(command[1] == "ListSpacing")
                     {
-                        if(commands == 3)
+                        if(commands == 4)
                         {
                             //set ListSpacing Spacing
-                            guiManager.setListSpacing(utl::asInt(command[2]));
+                            guiManager.setListSpacing(utl::asInt(command[2]), utl::asInt(command[3]));
                         }
-                        else if(commands == 4)
+                        else if(commands == 5)
                         {
                             //set ListSpacing List Spacing
-                            guiManager.setListSpacing(command[2], utl::asInt(command[3]));
+                            guiManager.setListSpacing(command[2], utl::asInt(command[3]), utl::asInt(command[4]));
                         }
                     }
                     else if(command[1] == "ListTemplate")

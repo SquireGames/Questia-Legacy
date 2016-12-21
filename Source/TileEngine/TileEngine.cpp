@@ -294,7 +294,7 @@ void TileEngine::drawTiles()
     }
 
     //iterate map
-    for(int layerIt = 0; layerIt != mapLayers; layerIt++)
+    for(int layerIt = 0; layerIt < mapLayers; layerIt++)
     {
         for(int tileIt_x = drawMin_x; tileIt_x <= drawMax_x; tileIt_x++)
         {

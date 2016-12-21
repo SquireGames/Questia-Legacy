@@ -27,6 +27,8 @@ public:
     void drawMap();
     //draws out all tiles
     void drawTiles();
+    //only draws specific layers
+    void drawLayer(int layer, int transparency);
 
     //get map data
     unsigned int getMapWidth();
@@ -36,12 +38,17 @@ public:
     //debugging
     void displayTiles();
 
+    //hover over
+    void hoverTile(int x, int y);
+
+    //grid to know where invisible tiles are
+    void drawGridLines();
+
 private:
     //stores all tiles for drawing
     std::vector<std::pair<std::string, std::vector<Tile*> > > sortedTiles;
 
-    //grid to know where invisible tiles are
-    void drawGridLines();
+    //grid
     sf::VertexArray gridLines;
 
     //save

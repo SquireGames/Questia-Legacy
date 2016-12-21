@@ -29,14 +29,26 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &window):
     overlayView.setCenter(1920/2,1080/2);
 
     //load map
-    tileEngineEditor.createMap("test1",3,3,1);
-    tileEngineEditor.loadMap("test1");
+    tileEngineEditor.createMap("test2",5,5,3);
+    tileEngineEditor.loadMap("test2");
     tileEngineEditor.setPosition(0,0);
 
     //map data
     guiManager.setButtonAtr("mapDataText", "width", gui::ButtonAtrCharacteristic::text, utl::asString(tileEngineEditor.getMapWidth()));
     guiManager.setButtonAtr("mapDataText", "height", gui::ButtonAtrCharacteristic::text, utl::asString(tileEngineEditor.getMapHeight()));
     guiManager.setButtonAtr("mapDataText", "layers", gui::ButtonAtrCharacteristic::text, utl::asString(tileEngineEditor.getMapLayers()));
+
+    //layers
+    for(unsigned int it = 0; it != tileEngineEditor.getMapLayers(); it++)
+    {
+        std::string groupName    = guiManager.createListEntry("layers");
+        std::string bottomButton = guiManager.getGroupEntry(groupName, "layerButtonTemplate");
+        std::string topButton    = guiManager.getGroupEntry(groupName, "layerSelectionTemplate");
+
+        guiManager.setButtonAtr(bottomButton, "buttonText", gui::ButtonAtrCharacteristic::text, " " + utl::asString(it));
+
+        layerData.push_back(LayerData(bottomButton, topButton));
+    }
 }
 State_TileMapEditor::~State_TileMapEditor()
 {
@@ -77,6 +89,10 @@ void State_TileMapEditor::update(sf::Time)
 
     //tickers
     ticker_overlayToggle.tick();
+    for(LayerData& layer : layerData)
+    {
+        layer.ticker.tick();
+    }
 
     //handling states
     switch(editorState)
@@ -101,6 +117,32 @@ void State_TileMapEditor::displayTextures()
     switch(editorState)
     {
     case EditorState::Idle:
+    {
+        window.setView(mapView);
+
+        //draw map
+        for(unsigned int it = 0; it != layerData.size(); it++)
+        {
+            tileEngineEditor.drawLayer(it, layerData.at(it).alpha);
+        }
+
+        tileEngineEditor.drawGridLines();
+
+        //get tile hover position
+        utl::Vector2f mousePos = Data_Desktop::getInstance().getScaledMousePosition(window);
+        mousePos = (mousePos * mapZoomRatio) - (utl::Vector2f(1920/2, 1080/2) * mapZoomRatio) + utl::Vector2f(mapView.getCenter());
+        mousePos = mousePos / 64.f;
+        selectedTile = utl::Vector2i(mousePos.x, mousePos.y);
+
+        //show selected tile
+        guiManager.setButtonAtr("selectedTile", "text", gui::ButtonAtrCharacteristic::text, "Selected: (" + utl::asString(selectedTile.x) + ", " + utl::asString(selectedTile.y) + ")");
+
+        if(!(selectedTile.x < 0) && !(selectedTile.y < 0) && !(selectedTile.x > tileEngineEditor.getMapWidth() - 1) && !(selectedTile.y > tileEngineEditor.getMapHeight() - 1))
+        {
+            tileEngineEditor.hoverTile(selectedTile.x, selectedTile.y);
+        }
+    }
+    break;
     case EditorState::View:
         window.setView(mapView);
         tileEngineEditor.drawMap();
@@ -150,6 +192,7 @@ void State_TileMapEditor::updateState_idle()
             {
                 editorState = EditorState::View;
                 setOverlayStatus(false);
+                resetLayerStates();
             }
         }
         if(guiManager.isClicked("b_tileScreen"))
@@ -159,6 +202,25 @@ void State_TileMapEditor::updateState_idle()
             {
                 editorState = EditorState::Tile;
                 overlayToggler = utl::Toggler(true);
+                resetLayerStates();
+            }
+        }
+        for(LayerData& layer : layerData)
+        {
+            if(guiManager.isClicked(layer.bottomButton))
+            {
+                if(layer.ticker.isDone())
+                {
+                    layer.alpha = getNextLayerState(layer.alpha);
+                    if(layer.alpha == 35)
+                    {
+                        guiManager.setButtonAtr(layer.topButton, "buttonSprite", gui::ButtonAtrCharacteristic::percentage, 50);
+                    }
+                    else
+                    {
+                        guiManager.setButtonAtr(layer.topButton, "buttonSprite", gui::ButtonAtrCharacteristic::percentage, layer.alpha);
+                    }
+                }
             }
         }
     }
@@ -211,8 +273,11 @@ void State_TileMapEditor::moveCamera_map()
         tileEngineEditor.setViewportSize(mapView.getSize().x, mapView.getSize().y);
     }
 
+    //get ratio
+    mapZoomRatio = (mapView.getSize().x / 1920.f);
+
     //calculate movement speed
-    moveSpeedModifier = std::max((mapView.getSize().x / 1920.f), 0.5f);
+    moveSpeedModifier = std::max(mapZoomRatio, 0.5f);
     float moveDistance = moveSpeed * moveSpeedModifier;
 
     //movement
@@ -297,6 +362,7 @@ void State_TileMapEditor::setOverlayStatus(bool isVisible)
             if(taskPercentage == 1)
             {
                 guiManager.setGroupAtr("overlayGroup", gui::ButtonCharacteristic::isVisible, true);
+                guiManager.setListAtr("layers", gui::ButtonCharacteristic::isVisible, true);
             }
         });
     }
@@ -305,6 +371,7 @@ void State_TileMapEditor::setOverlayStatus(bool isVisible)
         executor.tryDelete("overlayOpen");
         guiManager.setButtonAtr(buttonName, "buttonSprite", gui::ButtonAtrCharacteristic::flip, 'y');
         guiManager.setGroupAtr("overlayGroup", gui::ButtonCharacteristic::isVisible, false);
+        guiManager.setListAtr("layers", gui::ButtonCharacteristic::isVisible, false);
 
         executor.addTask("overlayClose", utl::Executor::TaskType::Continuous, utl::Ticker(animationTicks), [&](float taskPercentage)
         {
@@ -314,4 +381,31 @@ void State_TileMapEditor::setOverlayStatus(bool isVisible)
     }
 }
 
+int State_TileMapEditor::getNextLayerState(int alpha)
+{
+    if(alpha == 100)
+    {
+        return 35;
+    }
+    else if(alpha == 35)
+    {
+        return 0;
+    }
+    else
+    {
+        return 100;
+    }
+}
 
+void State_TileMapEditor::resetLayerStates()
+{
+    for(LayerData& layer : layerData)
+    {
+        layer.alpha = 100;
+        guiManager.setButtonAtr(layer.topButton, "buttonSprite", gui::ButtonAtrCharacteristic::percentage, 100);
+    }
+    for(unsigned int it = 0; it != layerData.size(); it++)
+    {
+        tileEngineEditor.drawLayer(it, 100);
+    }
+}

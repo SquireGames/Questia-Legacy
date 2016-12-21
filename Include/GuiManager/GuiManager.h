@@ -45,8 +45,8 @@ public:
     std::string getGroupEntry(std::string groupName, std::string buttonName);
 
     void createList(std::string listName);
-    void setListSpacing(std::string listName, int spacing);
-    void setListSpacing(int spacing);
+    void setListSpacing(std::string listName, int spacing_x, int spacing_y);
+    void setListSpacing(int spacing_x, int spacing_y);
     void setListTemplate(std::string listName, std::string groupTemplate);
     void setListTemplate(std::string groupTemplate);
     void setListPosition(std::string listName, std::pair<int, int> position);
@@ -150,7 +150,7 @@ private:
     std::map <std::string, std::vector <std::string> > groupMap;
     std::map <std::string, std::vector <std::string> > groupTemplateMap;
 
-    std::map <std::string, std::pair <std::pair <std::string, std::pair <std::pair <int, int>, int>>,std::vector <std::string > > > listMap;
+    std::map <std::string, std::pair <std::pair <std::string, std::pair <std::pair <int, int>, std::pair<int, int>>>,std::vector <std::string > > > listMap;
 
     sf::Font buttonFont;
     int buttonCount = 0;

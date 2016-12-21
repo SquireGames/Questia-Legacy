@@ -12,7 +12,10 @@ struct Vector2i
     int x, y;
 
     //conversion
-    sf::Vector2i sf(){return sf::Vector2i(x, y);}
+    sf::Vector2i sf()
+    {
+        return sf::Vector2i(x, y);
+    }
 
     //operator overloading
     Vector2i operator+(const Vector2i& other)
@@ -33,7 +36,10 @@ struct Vector2ui
     unsigned int x, y;
 
     //conversion
-    sf::Vector2u sf(){return sf::Vector2u(x, y);}
+    sf::Vector2u sf()
+    {
+        return sf::Vector2u(x, y);
+    }
 
     //operator overloading
     Vector2ui operator+(const Vector2ui& other)
@@ -51,15 +57,24 @@ struct Vector2f
 {
     Vector2f() : x(0), y(0) {}
     Vector2f(float _x, float _y): x(_x), y(_y) {}
+    Vector2f(sf::Vector2f other): x(other.x), y(other.y) {}
     float x, y;
 
     //conversion
-    sf::Vector2f sf(){return sf::Vector2f(x, y);}
+    sf::Vector2f sf()
+    {
+        return sf::Vector2f(x, y);
+    }
 
     //operator overloading
     Vector2f operator+(const Vector2f& other)
     {
         return Vector2f(other.x + x, other.y + y);
+    }
+    Vector2f operator-(const Vector2f& other)
+    {
+        //TODO test if right order
+        return Vector2f(x - other.x, y - other.y);
     }
     Vector2f& operator+=(const Vector2f& other)
     {
