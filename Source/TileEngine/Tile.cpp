@@ -47,6 +47,7 @@ void Tile::setPosition(int x, int y)
     {
     case TileType::sprite:
         moveTransform = sf::Transform().translate(x * 64, y * 64);
+        tilePosition = utl::Vector2i(x, y);
         break;
     case TileType::texture:
         break;
@@ -57,14 +58,14 @@ void Tile::setTransparency(int alpha)
     switch(tileType)
     {
     case TileType::sprite:
-        {
-            sf::Color newColor = tileSprite.getColor();
-            float trans = static_cast <float> (alpha);
-            trans = trans * 255 / 100;
-            newColor.a = trans;
-            tileSprite.setColor(newColor);
-        }
-        break;
+    {
+        sf::Color newColor = tileSprite.getColor();
+        float trans = static_cast <float> (alpha);
+        trans = trans * 255 / 100;
+        newColor.a = trans;
+        tileSprite.setColor(newColor);
+    }
+    break;
     case TileType::texture:
         break;
     }
@@ -125,6 +126,17 @@ void Tile::setFlip(char direction)
         break;
     }
 }
+
+bool Tile::isInTile(int x, int y)
+{
+    if((x >= tilePosition.x && x <= tilePosition.x + (tileSize.x - 1))&&
+            (y >= tilePosition.y && y <= tilePosition.y + (tileSize.y - 1)))
+    {
+        return true;
+    }
+    return false;
+}
+
 void Tile::setCollisionRect(int x, int y, int width, int height)
 {
     collisionRect = utl::IntRect(x, y, width, height);

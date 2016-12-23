@@ -4,7 +4,6 @@
 TileEngine_Editor::TileEngine_Editor(sf::RenderWindow& _window, ResourceManager& _resourceManager):
     TileEngine(_window, _resourceManager)
     , gridLines()
-    , saveFile(_resourceManager)
 {
     gridLines.setPrimitiveType(sf::PrimitiveType::Lines);
 }
@@ -82,7 +81,7 @@ void TileEngine_Editor::drawTiles()
         std::vector<Tile*>& tiles = sortedTiles[it_folder].second;
 
         sf::Text dirText = sf::Text(tileDir, Data_Desktop::getInstance().font1, 20);
-        dirText.setColor(sf::Color::Black);
+        dirText.setFillColor(sf::Color::Black);
         dirText.setPosition(0, (64 * (it_folder * 3)) - 30);
         window.draw(dirText);
 
@@ -153,6 +152,28 @@ void TileEngine_Editor::drawLayer(int layer, int transparency)
     }
 }
 
+void TileEngine_Editor::overrideMap()
+{
+    saveFile.saveMap(mapName, tileMap, mapWidth, mapHeight, mapLayers, tileStorage);
+}
+
+void TileEngine_Editor::replaceTile(int newTile, int x, int y, int layer)
+{
+    if((x >= 0 && x < mapWidth) && (y >= 0 && y < mapHeight) && (layer >= 0 && layer < mapLayers))
+    {
+        tileMap.at(getTile(x, y, layer)) = newTile;
+    }
+}
+
+void TileEngine_Editor::resetTileAlpha()
+{
+    for(auto& it : tileStorage)
+    {
+        Tile& tile = it.second;
+        tile.setTransparency(100);
+    }
+}
+
 void TileEngine_Editor::drawGridLines()
 {
     window.draw(gridLines);
@@ -179,9 +200,33 @@ void TileEngine_Editor::displayTiles()
 void TileEngine_Editor::hoverTile(int x, int y)
 {
     sf::RectangleShape hover = sf::RectangleShape(sf::Vector2f(64, 64));
-    hover.setFillColor(sf::Color(255,0,255, 40));
+    hover.setFillColor(sf::Color(255,255,0, 70));
     hover.setPosition(x*64, y*64);
     window.draw(hover);
+}
+
+Tile* TileEngine_Editor::getTile_tileState(int x, int y)
+{
+    for(auto& it : tileStorage)
+    {
+        Tile& tile = it.second;
+        if(tile.isInTile(x, y))
+        {
+            return &tile;
+        }
+    }
+    return nullptr;
+}
+
+int TileEngine_Editor::getTileID(const std::string& source)
+{
+    for(auto& tile : tileStorage)
+    {
+        if(tile.second.source == source)
+        {
+            return tile.first;
+        }
+    }
 }
 
 unsigned int TileEngine_Editor::getMapWidth()

@@ -27,8 +27,14 @@ public:
     void drawMap();
     //draws out all tiles
     void drawTiles();
-    //only draws specific layers
+    //only draws specific layers (transparency out of 100)
     void drawLayer(int layer, int transparency);
+
+    //saves map
+    void overrideMap();
+
+    //reset transparency
+    void resetTileAlpha();
 
     //get map data
     unsigned int getMapWidth();
@@ -44,6 +50,12 @@ public:
     //grid to know where invisible tiles are
     void drawGridLines();
 
+    //gets current tile or returns a nullptr
+    Tile* getTile_tileState(int x, int y);
+    int getTileID(const std::string& source);
+
+    void replaceTile(int newTile, int x, int y, int layer);
+
 private:
     //stores all tiles for drawing
     std::vector<std::pair<std::string, std::vector<Tile*> > > sortedTiles;
@@ -52,7 +64,7 @@ private:
     sf::VertexArray gridLines;
 
     //save
-    SaveFile_TileEngine saveFile;
+    //SaveFile_TileEngine saveFile;
 
     //helpers
     std::pair<std::string, std::vector<Tile*> >& getFolder(const std::string& dir);

@@ -57,7 +57,7 @@ public:
     MapData editMap(std::string mapName, sf::RenderWindow& window);
     void changeMapDimensions(std::string mapName, unsigned int width, unsigned int height, unsigned int layers);
     //saving map and tiles used
-    void saveMap(const std::vector <utl::Vector2ui>& tileMap, unsigned int width, unsigned int height, unsigned int layers);
+    void saveMap(std::string mapName, const std::vector <int>& tileMap, unsigned int width, unsigned int height, unsigned int layers, const std::map<int, Tile>& tilePairs);
 
     //helper
     int getTile(unsigned int x, unsigned int y, unsigned int layer, unsigned int mapWidth, unsigned int mapHeight);
@@ -76,6 +76,10 @@ private:
 
     //saves textures in 1 sheet
     TextureAtlas textureAtlas;
+
+    const std::string file_mapInfo =   "/mapInfo.txt";
+    const std::string file_tilesUsed = "/tilesUsed.txt";
+    const std::string file_map =       "/map.txt";
 };
 
 #endif // SAVEFILE_TILEENGINE_H

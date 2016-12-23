@@ -6,6 +6,8 @@
 #include "Data_Desktop.h"
 
 #include "StateManager/State.h"
+#include "StateManager/StateManager.h"
+#include "StateManager/States/State_Transition.h"
 
 #include "Data_Desktop.h"
 #include "TileEngine_Editor.h"
@@ -65,16 +67,17 @@ private:
     void updateState_idle();
     void updateState_tile();
 
+    ///movement
     //handles movement in map view state
     void moveCamera_map();
     sf::View mapView;
     utl::Vector2f cameraPosition_map = utl::Vector2f(0,0);
-    float mapZoomRatio = 0.f;
-
+    float mapZoomRatio = 1.f;
     //handles movement in tile view state
     void moveCamera_tiles();
     sf::View tileView;
     utl::Vector2f cameraPosition_tile = utl::Vector2f(0,0);
+    float tileZoomRatio = 1.f;
 
     //toggles
     utl::Ticker ticker_overlayToggle = utl::Ticker(20);
@@ -83,7 +86,8 @@ private:
     //gui
     void setOverlayStatus(bool isVisible);
 
-    //layers
+    ///layers
+    //storage
     struct LayerData
     {
         LayerData(std::string _bottomButton, std::string _topButton):bottomButton(_bottomButton), topButton(_topButton) {};
@@ -93,10 +97,17 @@ private:
         utl::Ticker ticker = utl::Ticker(20);
     };
     std::vector<LayerData> layerData;
-
-    //toggle state
+    //layer states
+    int advanceLayerState(unsigned int layer);
     int getNextLayerState(int alpha);
     void resetLayerStates();
+    //layer selection
+    void setLayerSelection(unsigned int layer);
+    unsigned int selectedLayer = 0;
+
+    //current tile
+    Tile* currentTile = nullptr;
+    int currentTileID = -7;
 };
 
 #endif // STATE_TILEMAPEDITOR_H

@@ -230,14 +230,68 @@ void SaveFile_TileEngine::loadTiles(const std::vector <std::pair <int, std::stri
     }
 }
 
+void SaveFile_TileEngine::saveMap(std::string mapName, const std::vector <int>& tileMap, unsigned int width, unsigned int height, unsigned int layers, const std::map<int, Tile>& tilePairs)
+{
+    if(utl::doesExist(utl::conjoinString({"Maps/", mapName})))
+    {
+        std::string filePath = utl::conjoinString({"Maps/", mapName});
+
+        //create info file
+        SaveFile saveFile_mapInfo;
+        saveFile_mapInfo.setFilePath(filePath + file_mapInfo);
+        saveFile_mapInfo.saveItem(name_width, width);
+        saveFile_mapInfo.saveItem(name_height, height);
+        saveFile_mapInfo.saveItem(name_layers, layers);
+        saveFile_mapInfo.writeFile();
+
+        //create tile info file
+        SaveFile saveFile_tilesUsed;
+        saveFile_tilesUsed.setFilePath(filePath + file_tilesUsed);
+        //temp
+        saveFile_tilesUsed.addItem("nil", "nil");
+        saveFile_tilesUsed.writeFile();
+
+        //create map save
+        SaveFile saveFile_map;
+        saveFile_map.setFilePath(filePath + file_map);
+
+        int tileMapIterator = 0;
+
+        //save map
+        for(unsigned int itLayers = 0; itLayers != layers; itLayers++)
+        {
+            for(unsigned int itHeight = 0; itHeight != height; itHeight++)
+            {
+                //get the map string
+                const std::string nullTile  =    "0|";
+                const std::string nullTileEnd  = "0";
+                std::vector <std::string> tileLine;
+                //-1 to account for end
+                for(unsigned int it = 0; it != width - 1; it++)
+                {
+                    tileLine.push_back(utl::asString(tileMap.at(tileMapIterator)) + "|");
+                    tileMapIterator++;
+                }
+                tileLine.push_back(utl::asString(tileMap.at(tileMapIterator)));
+                tileMapIterator++;
+                saveFile_map.addItem(utl::conjoinString(tileLine), "");
+            }
+            //line between layers
+            if(itLayers != layers - 1)
+            {
+                saveFile_map.addItem("", "");
+            }
+        }
+
+        saveFile_map.writeFile();
+    }
+}
+
 ///editor
 bool SaveFile_TileEngine::createMap(std::string mapName, unsigned int width, unsigned int height, unsigned int layers)
 {
     //file paths
     std::string filePath = utl::conjoinString({"Maps/", mapName});
-    const std::string file_mapInfo =   "/mapInfo.txt";
-    const std::string file_tilesUsed = "/tilesUsed.txt";
-    const std::string file_map =       "/map.txt";
 
     //make sure not to override any other map
     if(utl::doesExist(filePath))

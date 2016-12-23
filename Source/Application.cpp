@@ -68,9 +68,10 @@ void Application::run()
             {
                 return;
             }
+
         }
-        updateStatistics(elapsedTime);
         render();
+        updateStatistics(elapsedTime);
     }
 }
 
@@ -133,11 +134,11 @@ void Application::updateStatistics(sf::Time elapsedTime)
     mStatisticsUpdateTime += elapsedTime;
     mStatisticsFramesCount += 1;
 
-    if (mStatisticsUpdateTime >= sf::seconds(1.0f))
+    if(mStatisticsUpdateTime >= sf::seconds(1))
     {
         Data_Desktop::getInstance().set_FPS(mStatisticsFramesCount);
 
-        mStatisticsUpdateTime -= sf::seconds(1.0f);
+        mStatisticsUpdateTime -= sf::seconds(1);
         mStatisticsFramesCount = 0;
     }
 }

@@ -9,6 +9,8 @@
 
 #include "Utl.h"
 
+#include <iostream>
+
 ///not stored in actual map but moved and drawn to screen or used to find texture coords
 class Tile
 {
@@ -54,6 +56,8 @@ public:
     std::string source;
     std::string folder;
     std::string tileName;
+    utl::Vector2i tilePosition;
+    bool isInTile(int x, int y);
 
 private:
     //not always used

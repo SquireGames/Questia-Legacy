@@ -17,3 +17,7 @@ bool utl::Toggler::toggle()
     return value;
 }
 
+bool utl::Toggler::getState()
+{
+    return value;
+}
