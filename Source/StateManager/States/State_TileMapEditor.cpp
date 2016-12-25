@@ -29,8 +29,8 @@ State_TileMapEditor::State_TileMapEditor(sf::RenderWindow &window):
     overlayView.setCenter(1920/2,1080/2);
 
     //load map
-    tileEngineEditor.createMap("test2",5,5,3);
-    tileEngineEditor.loadMap("test2");
+    tileEngineEditor.createMap("test3", 250, 250, 3);
+    tileEngineEditor.loadMap("test3");
     tileEngineEditor.setPosition(0,0);
 
     //map data
@@ -267,7 +267,7 @@ void State_TileMapEditor::updateState_idle()
 
             if(guiManager.isClicked(layer.bottomButton))
             {
-                advanceLayerState(layerIt);
+                setLayerSelection(layerIt);
                 break;
             }
         }
@@ -286,7 +286,7 @@ void State_TileMapEditor::updateState_idle()
 
             if(guiManager.isClicked(layer.bottomButton))
             {
-                setLayerSelection(layerIt);
+                advanceLayerState(layerIt);
                 break;
             }
         }

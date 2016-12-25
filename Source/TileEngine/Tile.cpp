@@ -77,7 +77,7 @@ void Tile::setSize(unsigned int tilesWidth, unsigned int tilesHeight)
     {
     case TileType::sprite:
         tileTransform = tileSprite.getTransform();
-        tileTransform.scale(64.f / tileSprite.getLocalBounds().width * tilesWidth, 64.f / tileSprite.getLocalBounds().height * tilesHeight);
+        tileTransform.scale((64.f / tileSprite.getLocalBounds().width) * tilesWidth, (64.f / tileSprite.getLocalBounds().height) * tilesHeight);
     case TileType::texture:
         break;
     }

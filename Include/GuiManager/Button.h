@@ -1,7 +1,6 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include <tuple>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Text.hpp>
 

@@ -54,7 +54,7 @@ void TileEngine::loadMap(std::string _mapName, SaveFile_TileEngine::TextureMode 
     }
 
     //set size of chunk vector
-    chunkVector.resize(chunks_x * chunks_y);
+    chunkVector.resize(chunks_x * chunks_y * mapLayers);
 
     sf::VertexArray emptyChunk;
     //4 vertices per tile, 8 x 8 tiles
@@ -195,13 +195,13 @@ void TileEngine::loadMap(std::string _mapName, SaveFile_TileEngine::TextureMode 
 
                             //set the coords
                             //top left
-                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[0].x, posVerticies[0].y), sf::Vector2f(textureVerticies[0].x, textureVerticies[0].y)));
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)].append(sf::Vertex(sf::Vector2f(posVerticies[0].x, posVerticies[0].y), sf::Vector2f(textureVerticies[0].x, textureVerticies[0].y)));
                             //top right
-                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[1].x, posVerticies[1].y), sf::Vector2f(textureVerticies[1].x, textureVerticies[1].y)));
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)].append(sf::Vertex(sf::Vector2f(posVerticies[1].x, posVerticies[1].y), sf::Vector2f(textureVerticies[1].x, textureVerticies[1].y)));
                             //bottom right
-                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[2].x, posVerticies[2].y), sf::Vector2f(textureVerticies[2].x, textureVerticies[2].y)));
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)].append(sf::Vertex(sf::Vector2f(posVerticies[2].x, posVerticies[2].y), sf::Vector2f(textureVerticies[2].x, textureVerticies[2].y)));
                             //bottom left
-                            chunkVector[getChunk(it_chunk_x, it_chunk_y)].append(sf::Vertex(sf::Vector2f(posVerticies[3].x, posVerticies[3].y), sf::Vector2f(textureVerticies[3].x, textureVerticies[3].y)));
+                            chunkVector[getChunk(it_chunk_x, it_chunk_y, it_layer)].append(sf::Vertex(sf::Vector2f(posVerticies[3].x, posVerticies[3].y), sf::Vector2f(textureVerticies[3].x, textureVerticies[3].y)));
                         }
                     }
                 }
@@ -259,11 +259,14 @@ void TileEngine::drawMap()
     int maxChunk_y = std::floor((float)drawMax_y / 8.f);
 
     //draw chunks
-    for(unsigned int it_x = minChunk_x; it_x != (maxChunk_x + 1); it_x++)
+    for (unsigned int it_layer = 0; it_layer != mapLayers; it_layer++)
     {
-        for(unsigned int it_y = minChunk_y; it_y != (maxChunk_y + 1); it_y++)
+        for(unsigned int it_x = minChunk_x; it_x != (maxChunk_x + 1); it_x++)
         {
-            window.draw(chunkVector[getChunk(it_x, it_y)], textureAtlas);
+            for(unsigned int it_y = minChunk_y; it_y != (maxChunk_y + 1); it_y++)
+            {
+                window.draw(chunkVector[getChunk(it_x, it_y, it_layer)], textureAtlas);
+            }
         }
     }
 }
@@ -334,8 +337,8 @@ int TileEngine::getTile(unsigned int x, unsigned int y, unsigned int layer)
 {
     return x + (mapWidth * y) + (layer * mapWidth * mapHeight);
 }
-int TileEngine::getChunk(unsigned int x, unsigned int y)
+int TileEngine::getChunk(unsigned int x, unsigned int y, unsigned int layer)
 {
-    return x + (chunks_x * y);
+    return x + (chunks_x * y) + (layer * chunks_x * chunks_y);
 }
 

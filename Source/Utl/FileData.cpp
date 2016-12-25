@@ -38,6 +38,23 @@ std::vector<std::string> utl::getFiles(std::string directory, bool isWithDirecto
     return fileNames;
 }
 
+std::vector<std::string> utl::getAllFiles(std::string directory, bool isWithDirectory)
+{
+    std::vector <std::string> fileNames;
+    boost::filesystem::path directoryFolder {directory};
+
+    if(boost::filesystem::exists(directoryFolder) && boost::filesystem::is_directory(directoryFolder))
+    {
+        boost::filesystem::recursive_directory_iterator dir(directoryFolder);
+
+        for(auto&& it : dir)
+        {
+            fileNames.push_back(it.path().string());
+        }
+    }
+    return fileNames;
+}
+
 bool utl::createDirectory(const std::string& filePath)
 {
     boost::filesystem::path directory(filePath);

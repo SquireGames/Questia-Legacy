@@ -67,7 +67,7 @@ protected:
     ///helpers
     //for map
     int getTile(unsigned int x, unsigned int y, unsigned int layer);
-    int getChunk(unsigned int x, unsigned int y);
+    int getChunk(unsigned int x, unsigned int y, unsigned int layer);
 
     ///default
     sf::RenderWindow &window;

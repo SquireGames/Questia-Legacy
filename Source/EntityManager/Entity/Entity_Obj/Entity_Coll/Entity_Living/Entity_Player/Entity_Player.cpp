@@ -10,7 +10,7 @@ Entity_Player::Entity_Player(unsigned int id, EntityManager& entityManager, Reso
     collBounds.rel_coords = utl::Vector2f(0, 40);
     hitBounds.rel_coords  = utl::Vector2f(0, 0);
 
-             coords = utl::Vector2f(300,300);
+    coords = utl::Vector2f(0,0);
 
     atrs[Type::test_attack].atrs[(int)Type_test_attack::destroyStuff] = false;
 

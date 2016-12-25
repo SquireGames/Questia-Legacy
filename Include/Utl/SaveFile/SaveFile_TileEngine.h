@@ -62,8 +62,8 @@ public:
     //helper
     int getTile(unsigned int x, unsigned int y, unsigned int layer, unsigned int mapWidth, unsigned int mapHeight);
 private:
-    std::vector <std::pair <int, std::string> > getTileLocations(std::string filePath);
-    void loadTiles(const std::vector <std::pair <int, std::string> >& tileLocations, MapData& mapData, TileMode tileMode, sf::RenderWindow& window);
+    std::vector <std::pair <int, std::string> > getTileLocations(std::string filePath, TextureMode textureMode);
+    void loadTiles(std::vector <std::pair <int, std::string> >& tileLocations, MapData& mapData, TileMode tileMode, sf::RenderWindow& window);
 
     ///names of items
     //mapInfo

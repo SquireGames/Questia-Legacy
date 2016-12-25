@@ -1,7 +1,6 @@
 #ifndef GUIMANAGER_H
 #define GUIMANAGER_H
 
-#include <tuple>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Text.hpp>
 
