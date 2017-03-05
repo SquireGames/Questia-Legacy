@@ -1,7 +1,7 @@
 #if !(__GNUC__ == 6 && \
      __GNUC_MINOR__ == 1 && \
      __GNUC_PATCHLEVEL__ == 0)
-     #error Wrong compiler version. Use g++ 6.1.0 (DW2).
+     #warning Wrong compiler version. Use g++ 6.1.0 (DW2).
 #endif // __GNUC__
 
 //#if (DEBUGMODE == 1)
