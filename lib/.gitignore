@@ -1,0 +1,4 @@
+# Allowed for convenience #
+###########################
+!*.a
+!*.dll
