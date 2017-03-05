@@ -16,6 +16,7 @@ Questia.cbp
 ###################
 *.com
 *.class
+*.dll
 *.exe
 *.o
 *.d
