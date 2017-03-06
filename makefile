@@ -1,17 +1,18 @@
 #-------------------
 # Variables
-#-------------------
-CC         := g++ 
-CFLAGS     := -std=c++11 -Wall -MMD -MP
+#------------------- 
+CC         := g++ -MP -MD
+CFLAGS     := -std=c++11
 DEBUGFLAGS := -g -DDEBUGMODE=1
-LIB        := -L lib/SFML-2.4.2/lib -lsfml-audio -lsfml-network -lsfml-graphics -lsfml-window -lsfml-system
+LIB_win    := -L lib/SFML-2.4.2-win/lib -lsfml-audio -lsfml-network -lsfml-graphics -lsfml-window -lsfml-system
+LIB_lin    := -L lib/SFML-2.4.2-lin/lib -lsfml-audio -lsfml-network -lsfml-graphics -lsfml-window -lsfml-system
 SRCEXT     := cpp
 
 SRCDIR     := src
 INC        := -I include
-TARGET      = bin/Questia
-TARGET_D    = bin/Questia_debug
-BUILDDIR   := build
+TARGET_R   := bin/Questia
+TARGET_D   := bin/Questia_debug
+BUILDDIR_R := build
 BUILDDIR_D := build_debug
 
 #-------------------
@@ -19,78 +20,83 @@ BUILDDIR_D := build_debug
 #-------------------
 
 ifneq "$(findstring ebug, $(MAKECMDGOALS))" ""
-	TARGET    = $(TARGET_D)
+	TARGET   := $(TARGET_D)
 	BUILDDIR := $(BUILDDIR_D)
 	CFLAGS   += $(DEBUGFLAGS)
 else
+	TARGET   := $(TARGET_R)
+	BUILDDIR := $(BUILDDIR_R)
 endif
 
 #-------------------
 # Dependant Variables
-#------------------- 
-
+#-------------------
 
 ifeq ($(OS),Windows_NT)
 	SOURCES := $(wildcard src/*.$(SRCEXT)) $(wildcard src/**/*.$(SRCEXT)) $(wildcard src/**/**/*.$(SRCEXT))\
 	$(wildcard src/**/**/**/*.$(SRCEXT)) $(wildcard src/**/**/**/**/*.$(SRCEXT))\
 	$(wildcard src/**/**/**/**/**/*.$(SRCEXT)) $(wildcard src/**/**/**/**/**/**/*.$(SRCEXT))
+
+	LIB := $(LIB_win)
 else
 	SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+
+	LIB := $(LIB_lin)
 endif
 
-TARGET_ALL   = $(TARGET)   $(TARGET_D)
-BUILDDIR_ALL = $(BUILDDIR) $(BUILDDIR_D)
-
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-DEPS    := $(OBJECTS:.o=.d)
+DEPS := $(OBJECTS:.o=.d))
 
-#-------------------
+#------------------- 
 # Build
-#------------------- @echo $(SOURCES)
+#-------------------
 
-all: $(OBJECTS) $(TARGET)
+all: default
 default: release
 Release: release
 Debug: release
 debug: release
 
 release: $(TARGET)
+
 $(TARGET): $(OBJECTS)
 ifeq ($(OS),Windows_NT)
-	-$(shell mkdir $(dir $@))
+	cmd /c if not exist $(subst /,\\, $(dir $@)) md $(subst /,\\, $(dir $@))
 else
-	@mkdir -p $(dir $@)
+	mkdir -p $(dir $@)
 endif
-	@echo " Linking..."
+	echo " Linking..."
 	$(CC) $^ -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 ifeq ($(OS),Windows_NT)
-	-$(shell mkdir $(dir $@))
+	cmd /c if not exist $(subst /,\\, $(dir $@)) md $(subst /,\\, $(dir $@))
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
 else
-	@mkdir -p $(dir $@)
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
 endif
 
--include $(DEPS)
-
-clean:
-	@echo " Cleaning...";
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR_ALL) $(TARGET_ALL)
+clean: cleanRelease cleanDebug
 
 cleanRelease:
 	@echo " Cleaning Release...";
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+ifeq ($(OS),Windows_NT)
+	-cmd /c rmdir /s /q $(BUILDDIR_R)
+	-cmd /c del /f $(subst /,\\,$(TARGET_R)).exe
+else
+	$(RM) -r $(BUILDDIR_R) $(TARGET_R)
+endif
 
 cleanDebug:
 	@echo " Cleaning Debug...";
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR_D) $(TARGET_D)
-
-	DEPS := $(SOURCES:.c=.d)
-
-.c.d:
-	$(CC) -o $< -MM $(CFLAGS)
+ifeq ($(OS),Windows_NT)
+	-cmd /c rmdir /s /q $(BUILDDIR_D)
+	-cmd /c del /f $(subst /,\\,$(TARGET_D)).exe
+else
+	$(RM) -r $(BUILDDIR_D) $(TARGET_D)
+endif
 
 .PHONY: clean
-#------------
+#------------ 
+-include $(DEPS)
