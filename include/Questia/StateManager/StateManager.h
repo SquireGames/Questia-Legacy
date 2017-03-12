@@ -23,11 +23,7 @@ public:
     void displayTexturesState();
 
 private:
-    std::stack <State*> stateStack;
+    std::stack<State*> stateStack;
 };
 
 #endif // STATEMANAGER_H
-
-
-
-

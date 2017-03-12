@@ -36,11 +36,13 @@ ifeq ($(OS),Windows_NT)
 	SOURCES := $(wildcard src/*.$(SRCEXT)) $(wildcard src/**/*.$(SRCEXT)) $(wildcard src/**/**/*.$(SRCEXT))\
 	$(wildcard src/**/**/**/*.$(SRCEXT)) $(wildcard src/**/**/**/**/*.$(SRCEXT))\
 	$(wildcard src/**/**/**/**/**/*.$(SRCEXT)) $(wildcard src/**/**/**/**/**/**/*.$(SRCEXT))
-
+	
+	EXE := .exe
 	LIB := $(LIB_win)
 else
 	SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 
+	EXE = 
 	LIB := $(LIB_lin)
 endif
 
@@ -57,9 +59,9 @@ Release: release
 Debug: release
 debug: release
 
-release: $(TARGET)
+release: $(OBJECTS) $(TARGET)$(EXE)
 
-$(TARGET): $(OBJECTS)
+$(TARGET)$(EXE): $(OBJECTS)
 ifeq ($(OS),Windows_NT)
 	cmd /c if not exist $(subst /,\\, $(dir $@)) md $(subst /,\\, $(dir $@))
 else

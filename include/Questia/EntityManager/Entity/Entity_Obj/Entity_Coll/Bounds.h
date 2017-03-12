@@ -1,7 +1,6 @@
 #ifndef BOUNDS_H
 #define BOUNDS_H
 
-//#include <boost/variant.hpp>
 #include <vector>
 
 #include "Questia/Utl/Type/Vector2.h"

@@ -1,10 +1,13 @@
-#if !(__GNUC__ == 6 && \
-     __GNUC_MINOR__ == 1 && \
-     __GNUC_PATCHLEVEL__ == 0)
-     #warning Wrong compiler version. Use g++ 6.1.0 (DW2).
-#endif // __GNUC__
-
-//#if (DEBUGMODE == 1)
+//give warnings about potential incompatible compilers
+#ifdef _WIN32
+	#if !(__GNUC__ == 6 && \
+		  __GNUC_MINOR__ == 1 && \
+		  __GNUC_PATCHLEVEL__ == 0)
+		  #warning Compiler version may be incompatible with pre-built SFML dlls. Use g++ 6.1.0 (DW2).
+	#endif // __GNUC__
+#else
+	#warning Your operating system was not yet tested with the prebuilt SFML dlls.
+#endif
 
 #include <iostream>
 #include <stdexcept>
@@ -20,6 +23,6 @@ int main()
     }
     catch (std::exception& exc)
     {
-        std::cout << std::endl << "Exception: " << exc.what() <<std::endl;
+        std::cout << std::endl << "Runtime exception: " << exc.what() <<std::endl;
     }
 }
