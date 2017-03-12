@@ -115,13 +115,13 @@ void Server::receive()
             udpSocket_receive.receive(packet,tempIP, tempPort2);
 
             int header;
-            packet >> header;
+            //packet >> header;
             switch (header)
             {
             case pkt::Header::player:
             {
                 Packet_Player player;
-                packet >> player;
+                //packet >> player;
 
                 playerDataMutex.lock();
                 playerData_received.push_back(player);
@@ -166,13 +166,13 @@ void Server::receive()
                         if(clientSocket.receive(packet) == sf::Socket::Done)
                         {
                             int header;
-                            packet >> header;
+                            //packet >> header;
                             switch (header)
                             {
                             case pkt::Header::clientTcp:
                             {
                                 Packet_Init_Tcp packetObj;
-                                packet >> packetObj;
+                                //packet >> packetObj;
 
                                 sf::TcpSocket* tcp[2] {nullptr, nullptr};
 
@@ -212,13 +212,13 @@ void Server::receive()
                         case ClientStage::connected:
                             //used to send client user and pass
                             int header;
-                            packet >> header;
+                            //packet >> header;
                             switch (header)
                             {
                             case pkt::Header::clientLogin:
                             {
                                 Packet_Init_Login loginInfo;
-                                packet >> loginInfo;
+                                //packet >> loginInfo;
                                 for(const std::pair <std::string, std::string>& login : registeredClients)
                                 {
                                     if(login.first == loginInfo.username && login.second == loginInfo.password)
@@ -232,7 +232,7 @@ void Server::receive()
 
                                         Packet_Init_SvrResp responsePacketObj(false);
                                         sf::Packet responsePacket;
-                                        responsePacket << responsePacketObj;
+                                        //responsePacket << responsePacketObj;
 
                                         //clientVector[it]->tcpSocket_receieve->send(responsePacket);
                                     }

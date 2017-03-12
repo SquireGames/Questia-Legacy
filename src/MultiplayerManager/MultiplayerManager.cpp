@@ -101,7 +101,7 @@ bool MultiplayerManager::joinServer(std::string ipAddress)
             Packet_Init_Tcp tcpPacket(sf::IpAddress::getLocalAddress().toString(), sf::IpAddress::getPublicAddress().toString(),
                                       client_tcpSocket_send.getLocalPort(), client_tcpSocket_receive.getLocalPort());
             sf::Packet initPacket;
-            initPacket << tcpPacket;
+            //initPacket << tcpPacket;
             client_tcpSocket_send.send(initPacket);
 
             thread_client_main.launch();
@@ -371,14 +371,14 @@ void MultiplayerManager::client_mainThread()
                 //std::cout << ">>>>>CLIENT<<<<<" << std::endl;
 
                 int header;
-                packet >> header;
+                //packet >> header;
                 switch (header)
                 {
                 case pkt::Header::player:
                 {
                     //std::cout << "player" << std::endl;
                     Packet_Player player;
-                    packet >> player;
+                    //packet >> player;
 
                     playerDataMutex.lock();
                     playerData_received.push_back(player);

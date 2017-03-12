@@ -35,7 +35,7 @@ struct Packet_Player : public UPacket
     sf::Int32 coords_y;
 #define BYTES_PLAYER 20 //4*4 bytes + 4 bytes(header)
 };
-
+/*
 static sf::Packet& operator << (sf::Packet& packet, const Packet_Player& player)
 {
     packet << static_cast <sf::Int32> (pkt::Header::player);
@@ -58,7 +58,7 @@ static sf::Packet& operator >> (sf::Packet& packet, Packet_Player& player)
 
     return packet;
 }
-
+*/
 struct PacketContainer_Player : public UPacket
 {
     PacketContainer_Player(int _packetNumber):
@@ -88,7 +88,7 @@ struct PacketContainer_Player : public UPacket
     std::vector <Packet_Player> playerContainer;
     int byteCount;
 };
-
+/*
 static sf::Packet& operator << (sf::Packet& packet, const PacketContainer_Player& packetContainer)
 {
     packet << static_cast <sf::Int32> (pkt::Header::playerContainer);
@@ -126,4 +126,5 @@ static sf::Packet& operator >> (sf::Packet& packet, PacketContainer_Player& pack
     return packet;
 }
 
+*/
 #endif // PACKET_PLAYER_H
