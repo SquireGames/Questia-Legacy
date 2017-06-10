@@ -1,7 +1,7 @@
 #include "Questia/Application.h"
 
 Application::Application():
-	eng("Questia", 128)
+	eng("Questia", 128, 0, 0, 0, "Alpha")
 {	
 	eng.state().reg("MainMenu", 	[]() {return new State_MainMenu();});
 	eng.state().reg("Loading",  	[]() {return new State_Loading();});
