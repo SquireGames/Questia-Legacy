@@ -2,12 +2,14 @@
 
 Application::Application():
 	eng("Questia", 128, 0, 0, 0, "Alpha")
-{	
+{
 	eng.state().reg("MainMenu", 	[]() {return new State_MainMenu();});
+	eng.state().reg("Game", 		[]() {return new State_Game();});
+	eng.state().reg("Options", 		[]() {return new State_OptionsMenu();});
 	eng.state().reg("Loading",  	[]() {return new State_Loading();});
-	
-	eng.state().changeState("MainMenu");;
-	
+
+	eng.state().changeState("MainMenu");
+
 	eng.guiLd().setGuiPack("Default");
 }
 

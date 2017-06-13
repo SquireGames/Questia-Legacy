@@ -26,7 +26,15 @@ void State_MainMenu::update(sf::Time elapsedTime)
 {
 	if(eng->mouse().isMouseReleased(ctr::Input::LMouse))
 	{
-		if(eng->gui().isClicked("exit"))
+		if(eng->gui().isClicked("play"))
+		{
+			eng->state().changeState("Game");
+		}
+		else if(eng->gui().isClicked("options"))
+		{
+			eng->state().changeState("Options");
+		}
+		else if(eng->gui().isClicked("exit"))
 		{
 			eng->terminate();
 		}

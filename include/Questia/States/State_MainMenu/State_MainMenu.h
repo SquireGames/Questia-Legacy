@@ -2,9 +2,6 @@
 #define STATE_MAINMENU_H
 
 #include "QuestiaEng/StateManager/State.h"
-
-#include "QuestiaEng/Utl/Controls/Input.h"
-
 #include "QuestiaEng/Engine.h"
 
 class State_MainMenu : public State
