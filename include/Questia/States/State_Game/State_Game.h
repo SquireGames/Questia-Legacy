@@ -6,8 +6,12 @@
 
 #include "QuestiaEng/Utl/Type/Vector2.h"
 
+#include "QuestiaEng/Identifiers/DrawLayer.h"
+
 #include "QuestiaEng/Utl/Controls/KeyAction.h"
 #include "QuestiaEng/Utl/Controls/MouseListener.h"
+
+#include "Questia/Entities/Test/Entity_Orb.h"
 
 class State_Game : public State
 {

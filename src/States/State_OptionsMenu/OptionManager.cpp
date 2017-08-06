@@ -246,11 +246,13 @@ void OptionManager::initLists()
     {
         if(option.first->getList() != "nil")
         {
-            std::string groupName = guiManager->createListEntry(option.first->getList());
+			GuiBuilder& guiBuilder = guiManager->edit();
+			
+            std::string groupName = guiBuilder.createListEntry(option.first->getList());
 
-            option.second.leftButton.buttonName =     guiManager->getGroupEntry(groupName, "leftButton");
-            option.second.rightButton.buttonName =    guiManager->getGroupEntry(groupName, "rightButton");
-            option.second.functionButton.buttonName = guiManager->getGroupEntry(groupName, "funcButton");
+            option.second.leftButton.buttonName =     guiBuilder.getGroupEntry(groupName, "leftButton");
+            option.second.rightButton.buttonName =    guiBuilder.getGroupEntry(groupName, "rightButton");
+            option.second.functionButton.buttonName = guiBuilder.getGroupEntry(groupName, "funcButton");
 
             switch (option.first->getType())
             {
@@ -264,13 +266,13 @@ void OptionManager::initLists()
                 break;
             }
 
-            option.second.textButtonName = guiManager->getGroupEntry(groupName, "optionValue");
+            option.second.textButtonName = guiBuilder.getGroupEntry(groupName, "optionValue");
             option.second.displayString  = option.first->getDisplayString();
 
-            std::string optionButtonName = guiManager->getGroupEntry(groupName, "optionName");
+            std::string optionButtonName = guiBuilder.getGroupEntry(groupName, "optionName");
 
-            guiManager->setBtnAtr(option.second.textButtonName, "text", gui::BtnAtrChar::text, *option.second.displayString);
-            guiManager->setBtnAtr(optionButtonName, "text", gui::BtnAtrChar::text, option.first->getOptionName());
+            guiBuilder.setBtnAtr(option.second.textButtonName, "text", gui::BtnAtrChar::text, *option.second.displayString);
+            guiBuilder.setBtnAtr(optionButtonName, "text", gui::BtnAtrChar::text, option.first->getOptionName());
         }
     }
     initSprites();
@@ -279,15 +281,17 @@ void OptionManager::initLists()
 
 bool OptionManager::handleGui()
 {
+	GuiBuilder& guiBuilder = guiManager->edit();
+	
     //triggered on click
     for(const auto& option : optionVector)
     {
         if(option.second.leftButton.isActive)
         {
-            if(guiManager->isClicked(option.second.leftButton.buttonName))
+            if(guiManager->isHovered(option.second.leftButton.buttonName))
             {
                 option.first->iterateBackward();
-                guiManager->setBtnAtr(option.second.textButtonName, "text", gui::BtnAtrChar::text, *option.second.displayString);
+                guiBuilder.setBtnAtr(option.second.textButtonName, "text", gui::BtnAtrChar::text, *option.second.displayString);
 
                 updateArrows();
                 return true;
@@ -295,10 +299,10 @@ bool OptionManager::handleGui()
         }
         if(option.second.rightButton.isActive)
         {
-            if(guiManager->isClicked(option.second.rightButton.buttonName))
+            if(guiManager->isHovered(option.second.rightButton.buttonName))
             {
                 option.first->iterateForward();
-                guiManager->setBtnAtr(option.second.textButtonName, "text", gui::BtnAtrChar::text, *option.second.displayString);
+                guiBuilder.setBtnAtr(option.second.textButtonName, "text", gui::BtnAtrChar::text, *option.second.displayString);
 
                 updateArrows();
                 return true;
@@ -308,13 +312,13 @@ bool OptionManager::handleGui()
         {
             if(assignInput == option.second.textButtonName)
             {
-                if(!guiManager->isClicked(option.second.functionButton.buttonName))
+                if(!guiManager->isHovered(option.second.functionButton.buttonName))
                 {
                     assignInput = "nil";
                     return true;
                 }
             }
-            else if(guiManager->isClicked(option.second.functionButton.buttonName))
+            else if(guiManager->isHovered(option.second.functionButton.buttonName))
             {
                 assignInput = option.second.textButtonName;
                 return true;
@@ -326,20 +330,22 @@ bool OptionManager::handleGui()
 
 void OptionManager::initSprites()
 {
+	GuiBuilder& guiBuilder = guiManager->edit();
+	
     for(const auto& option : optionVector)
     {
         switch(option.first->getType())
         {
         case OptionType::choice:
-            guiManager->setButton(option.second.functionButton.buttonName, gui::BtnChar::isActive, false);
-            guiManager->setBtnAtr(option.second.functionButton.buttonName,  "funcSprite", gui::BtnAtrChar::transparency, 0);
+            guiBuilder.setButton(option.second.functionButton.buttonName, gui::BtnChar::isActive, false);
+            guiBuilder.setBtnAtr(option.second.functionButton.buttonName,  "funcSprite", gui::BtnAtrChar::transparency, 0);
             break;
         case OptionType::functional:
         case OptionType::input:
-            guiManager->setButton(option.second.leftButton.buttonName, gui::BtnChar::isActive, false);
-            guiManager->setButton(option.second.rightButton.buttonName, gui::BtnChar::isActive, false);
-            guiManager->setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 0);
-            guiManager->setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 0);
+            guiBuilder.setButton(option.second.leftButton.buttonName, gui::BtnChar::isActive, false);
+            guiBuilder.setButton(option.second.rightButton.buttonName, gui::BtnChar::isActive, false);
+            guiBuilder.setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 0);
+            guiBuilder.setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 0);
             break;
         }
     }
@@ -347,29 +353,31 @@ void OptionManager::initSprites()
 
 void OptionManager::updateArrows()
 {
+	GuiBuilder& guiBuilder = guiManager->edit();
+	
     for(const auto& option : optionVector)
     {
         if(option.first->getType() == OptionType::choice)
         {
             if(option.first->isBegin() && option.first->isEnd())
             {
-                guiManager->setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 0);
-                guiManager->setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 0);
+                guiBuilder.setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 0);
+                guiBuilder.setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 0);
             }
             else if(option.first->isBegin())
             {
-                guiManager->setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 0);
-                guiManager->setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 100);
+                guiBuilder.setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 0);
+                guiBuilder.setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 100);
             }
             else if(option.first->isEnd())
             {
-                guiManager->setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 100);
-                guiManager->setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 0);
+                guiBuilder.setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 100);
+                guiBuilder.setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 0);
             }
             else
             {
-                guiManager->setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 100);
-                guiManager->setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 100);
+                guiBuilder.setBtnAtr(option.second.leftButton.buttonName,  "arrowSprite", gui::BtnAtrChar::transparency, 100);
+                guiBuilder.setBtnAtr(option.second.rightButton.buttonName, "arrowSprite", gui::BtnAtrChar::transparency, 100);
             }
         }
     }
@@ -394,10 +402,10 @@ void OptionManager::handleInput(ctr::Input input)
         {
             if((option.second.textButtonName == assignInput) &&
                     option.first->getType() == OptionType::input &&
-                    guiManager->isClicked(option.second.functionButton.buttonName))
+                    guiManager->isHovered(option.second.functionButton.buttonName))
             {
                 option.first->setInput(input);
-                guiManager->setBtnAtr(option.second.textButtonName, "text", gui::BtnAtrChar::text, *option.second.displayString);
+                guiManager->edit().setBtnAtr(option.second.textButtonName, "text", gui::BtnAtrChar::text, *option.second.displayString);
                 return;
             }
         }
@@ -415,7 +423,7 @@ bool OptionManager::isMouseOverAssignedInput()
             {
                 if(assignInput == option.second.textButtonName)
                 {
-                    if(guiManager->isClicked(option.second.functionButton.buttonName))
+                    if(guiManager->isHovered(option.second.functionButton.buttonName))
                     {
                         return true;
                     }

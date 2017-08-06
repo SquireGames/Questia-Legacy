@@ -10,7 +10,7 @@ Application::Application():
 
 	eng.state().changeState("MainMenu");
 
-	eng.guiLd().setGuiPack("Default");
+	eng.gui().setGuiPack("Default");
 }
 
 Application::~Application()

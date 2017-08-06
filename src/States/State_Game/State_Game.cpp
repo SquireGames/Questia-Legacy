@@ -8,22 +8,30 @@ State_Game::State_Game():
 }
 void State_Game::init()
 {
+	eng->gui().loadGui("game");
+	
+	//eng->ent().reg("Orb", [](int id, EntityManager& e, ResourceManager& r, utl::Vector2f coords) {return new Entity_Orb(id, e, r, coords);});
+
 	eng->tile().loadMap("Demo_1");
 	eng->tile().setViewportSize(1920, 1080);
+	
+	//eng->ent().spawn("Orb", utl::Vector2f(25,25));
 }
 
 State_Game::~State_Game()
 {
-	eng->gui().purgeButtons();
+	eng->gui().edit().purgeButtons();
 }
 
 void State_Game::processInput(std::u32string const& inputText)
 {
-	
+
 }
 void State_Game::update(sf::Time elapsedTime)
 {
-	const int speed = 3;
+	eng->ent().update();
+
+	const int speed = 10;
 	if(ctr::checkInput(ctr::Input::W))
 	{
 		pos = pos - utl::Vector2f(0, speed);
@@ -40,13 +48,15 @@ void State_Game::update(sf::Time elapsedTime)
 	{
 		pos = pos + utl::Vector2f(speed, 0);
 	}
-	eng->tile().setPosition(pos.x, pos.y);
+	eng->tile().setPosition(pos);
 	gameView.setCenter(pos.sf());
 }
 void State_Game::displayTextures()
 {
 	eng->win().setView(gameView);
 	eng->tile().draw();
-	
+	eng->ent().draw(DrawLayer::Entity_Regular);
+
 	eng->win().setView(guiView);
+	eng->gui().draw();
 }

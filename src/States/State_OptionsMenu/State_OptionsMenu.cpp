@@ -8,7 +8,7 @@ State_OptionsMenu::State_OptionsMenu()
 void State_OptionsMenu::init()
 {
 	optionManager = std::unique_ptr<OptionManager>(new OptionManager(&eng->gui()));
-	eng->guiLd().loadGui(eng->gui(), "options");
+	eng->gui().loadGui("options");
 	eng->win().setView(sf::View(sf::FloatRect(0,0,1920,1080)));
 
 	SV_Options& saveFile = eng->sv();
@@ -141,15 +141,16 @@ void State_OptionsMenu::init()
 	optionManager->initLists();
 
 	///hiding of unneeded lists
-	eng->gui().setListAtr("displayList", gui::BtnChar::isVisible, true);
-	eng->gui().setListAtr("audioList"  , gui::BtnChar::isVisible, false);
-	eng->gui().setListAtr("gameList"   , gui::BtnChar::isVisible, false);
-	eng->gui().setListAtr("inputList"  , gui::BtnChar::isVisible, false);
+	GuiBuilder& guiBuilder = eng->gui().edit();
+	guiBuilder.setListAtr("displayList", gui::BtnChar::isVisible, true);
+	guiBuilder.setListAtr("audioList"  , gui::BtnChar::isVisible, false);
+	guiBuilder.setListAtr("gameList"   , gui::BtnChar::isVisible, false);
+	guiBuilder.setListAtr("inputList"  , gui::BtnChar::isVisible, false);
 }
 
 State_OptionsMenu::~State_OptionsMenu()
 {
-	eng->gui().purgeButtons();
+	eng->gui().edit().purgeButtons();
 }
 
 void State_OptionsMenu::processInput(std::u32string const& inputText)
@@ -159,6 +160,8 @@ void State_OptionsMenu::processInput(std::u32string const& inputText)
 
 void State_OptionsMenu::update(sf::Time elapsedTime)
 {
+	GuiBuilder& guiBuilder = eng->gui().edit();
+	
 	if(eng->lastKey() != ctr::Input::None)
 	{
 		optionManager->handleInput(eng->lastKey());
@@ -168,22 +171,22 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
 	{
 		if(ctr::checkInput(ctr::Input::W))
 		{
-			eng->gui().setListAtr(activeSelector, gui::BtnChar::addToScroll_y, 15);
+			guiBuilder.setListAtr(activeSelector, gui::BtnChar::addToScroll_y, 15);
 		}
 		if(ctr::checkInput(ctr::Input::S))
 		{
-			eng->gui().setListAtr(activeSelector, gui::BtnChar::addToScroll_y, -15);
+			guiBuilder.setListAtr(activeSelector, gui::BtnChar::addToScroll_y, -15);
 		}
 		optionManager->resetClicks();
 	}
 	const int mouseScroll = eng->mouse().getScroll();
 	if(mouseScroll == 1)
 	{
-		eng->gui().setListAtr(activeSelector, gui::BtnChar::addToScroll_y, 40);
+		guiBuilder.setListAtr(activeSelector, gui::BtnChar::addToScroll_y, 40);
 	}
 	else if(mouseScroll == -1)
 	{
-		eng->gui().setListAtr(activeSelector, gui::BtnChar::addToScroll_y, -40);
+		guiBuilder.setListAtr(activeSelector, gui::BtnChar::addToScroll_y, -40);
 	}
 
 	//mouse input for key binding
@@ -199,44 +202,44 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
 		if(optionManager->handleGui()) {}
 
 		//switches
-		if(eng->gui().isClicked("displaySwitch"))
+		if(eng->gui().isHovered("displaySwitch"))
 		{
 			activeSelector = "displayList";
-			eng->gui().setListAtr("displayList", gui::BtnChar::isVisible, true);
-			eng->gui().setListAtr("audioList",   gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("gameList",    gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("inputList",   gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("displayList", gui::BtnChar::isVisible, true);
+			guiBuilder.setListAtr("audioList",   gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("gameList",    gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("inputList",   gui::BtnChar::isVisible, false);
 		}
-		else if(eng->gui().isClicked("audioSwitch"))
+		else if(eng->gui().isHovered("audioSwitch"))
 		{
 			activeSelector = "audioList";
-			eng->gui().setListAtr("displayList", gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("audioList",   gui::BtnChar::isVisible, true);
-			eng->gui().setListAtr("gameList",    gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("inputList",   gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("displayList", gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("audioList",   gui::BtnChar::isVisible, true);
+			guiBuilder.setListAtr("gameList",    gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("inputList",   gui::BtnChar::isVisible, false);
 		}
-		else if(eng->gui().isClicked("gameSwitch"))
+		else if(eng->gui().isHovered("gameSwitch"))
 		{
 			activeSelector = "gameList";
-			eng->gui().setListAtr("displayList", gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("audioList",   gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("gameList",    gui::BtnChar::isVisible, true);
-			eng->gui().setListAtr("inputList",   gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("displayList", gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("audioList",   gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("gameList",    gui::BtnChar::isVisible, true);
+			guiBuilder.setListAtr("inputList",   gui::BtnChar::isVisible, false);
 		}
-		else if(eng->gui().isClicked("inputSwitch"))
+		else if(eng->gui().isHovered("inputSwitch"))
 		{
 			activeSelector = "inputList";
-			eng->gui().setListAtr("displayList", gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("audioList",   gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("gameList",    gui::BtnChar::isVisible, false);
-			eng->gui().setListAtr("inputList",   gui::BtnChar::isVisible, true);
+			guiBuilder.setListAtr("displayList", gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("audioList",   gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("gameList",    gui::BtnChar::isVisible, false);
+			guiBuilder.setListAtr("inputList",   gui::BtnChar::isVisible, true);
 		}
 		//regular
-		else if(eng->gui().isClicked("mainMenu"))
+		else if(eng->gui().isHovered("mainMenu"))
 		{
 			eng->state().changeState("MainMenu");
 		}
-		else if(eng->gui().isClicked("apply"))
+		else if(eng->gui().isHovered("apply"))
 		{
 			optionManager->saveOptions(eng->sv());
 			eng->sv().writeOptions();
@@ -276,7 +279,7 @@ void State_OptionsMenu::update(sf::Time elapsedTime)
 				sf::Font newFont;
 				if(newFont.loadFromFile("Media/Fonts/" + option_font.getValue()))
 				{
-					eng->gui().setFont(newFont);
+					guiBuilder.setFont(newFont);
 				}
 			}
 			//music
