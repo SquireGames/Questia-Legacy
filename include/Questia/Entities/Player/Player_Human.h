@@ -6,7 +6,7 @@
 class Player_Human : public Entity_Player
 {
 public:
-	Player_Human(unsigned int id, EntityManager& entitiyManager, ResourceManager& resourceManager, utl::Vector2f coords);
+	Player_Human(unsigned int id, EntityManager& entitiyManager, ResourceManager* resourceManager, utl::Vector2f coords);
 	~Player_Human();
 };
 

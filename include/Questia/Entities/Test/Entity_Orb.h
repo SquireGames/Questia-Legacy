@@ -9,11 +9,12 @@
 class Entity_Orb : public Entity_Obj
 {
 public:
-	Entity_Orb(unsigned int id, EntityManager& entitiyManager, ResourceManager& resourceManager, utl::Vector2f coords);
+	Entity_Orb(unsigned int id, EntityManager& entitiyManager, ResourceManager* resourceManager, utl::Vector2f coords);
 	~Entity_Orb();
 	
-	void update();
-	void draw(sf::RenderWindow& window, DrawLayer drawLayer);
+	virtual void update() override final;
+	virtual void draw(sf::RenderWindow& window, DrawLayer drawLayer) override final;
+	virtual int getGroundOffset() override final;
 	
 private:
 	sf::Sprite sprite;

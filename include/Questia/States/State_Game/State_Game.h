@@ -11,6 +11,8 @@
 #include "QuestiaEng/Utl/Controls/KeyAction.h"
 #include "QuestiaEng/Utl/Controls/MouseListener.h"
 
+#include "QuestiaEng/Utl/Threads/ThreadPool_Fixed.h"
+
 #include "Questia/Entities/Test/Entity_Orb.h"
 
 class State_Game : public State
@@ -25,6 +27,8 @@ public:
 	void displayTextures();
 
 private:
+	ThreadPool_Fixed threadPool;
+
 	utl::Vector2f pos;
 
 	sf::View gameView;
