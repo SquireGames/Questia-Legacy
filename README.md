@@ -1,7 +1,8 @@
 # Questia
 Questia is an in-development top down action roleplaying game that takes place in the Medieval ages. 
-It is written in c++, along with the SFML API for rendering and audio. It relies on the Questia 
-Engine libraries, found [here](https://github.com/SquireGames/Questia-Engine).
+It is written in c++, along with the SFML API for rendering, networking and audio. It relies on the Questia 
+Engine library, found [here](https://github.com/SquireGames/Questia-Engine).
+It also uses Crypto++ Library 5.6.5 to securely encrypt sensitive data
 This project features many modular components that could be added into anybodies engine, including resource management, gui 
 systems, tile map editing, and file parsing. All future updates to the game will be pushed to this 
 repository. All of the source code is open source, so use the code in your own projects.
