@@ -7,7 +7,9 @@ Application::Application():
 	eng.state().reg("Game", 		[]() {return new State_Game();});
 	eng.state().reg("Options", 		[]() {return new State_OptionsMenu();});
 	eng.state().reg("Loading",  	[]() {return new State_Loading();});
+	eng.state().reg("MultiGame",  	[](std::shared_ptr<void> params) {return new State_MultiplayerGame(params);});
 
+	//eng.state().changeState("MultiGame", State_MultiplayerGame::createParameters(std::string("192.168.1.77"), 7777));
 	eng.state().changeState("MainMenu");
 
 	eng.gui().setGuiPack("Default");

@@ -16,7 +16,7 @@ void State_Game::init()
 	eng->tile().setViewportSize(1920, 1080);
 	eng->tile().loadMap("Demo_1");
 
-	threadPool.addTask([](){std::cout << "A" << std::endl;});
+	//threadPool.addTask([]() {std::cout << "A" << std::endl;});
 
 	eng->ent().spawn("Orb", utl::Vector2f(25,25));
 }
@@ -56,9 +56,9 @@ void State_Game::update(sf::Time elapsedTime)
 	eng->tile().setPosition(pos);
 	gameView.setCenter(pos.sf());
 
-	std::cout << "-------" << std::endl;
+	//std::cout << "-------" << std::endl;
 	threadPool.runTasks();
-	std::cout << "-------" << std::endl;
+	//std::cout << "-------" << std::endl;
 }
 void State_Game::displayTextures()
 {

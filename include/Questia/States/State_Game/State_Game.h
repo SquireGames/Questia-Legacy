@@ -19,12 +19,12 @@ class State_Game : public State
 {
 public:
 	State_Game();
-	void init();
+	virtual void init() final;
 	~State_Game();
 
-	void processInput(std::u32string const& inputText);
-	void update(sf::Time elapsedTime);
-	void displayTextures();
+	virtual void processInput(std::u32string const& inputText) final;
+	virtual void update(sf::Time elapsedTime) final;
+	virtual void displayTextures() final;
 
 private:
 	ThreadPool_Fixed threadPool;

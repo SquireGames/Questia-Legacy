@@ -9,6 +9,7 @@
 #include "Questia/States/State_Game/State_Game.h"
 #include "Questia/States/State_OptionsMenu/State_OptionsMenu.h"
 #include "Questia/States/State_Loading.h"
+#include "Questia/States/State_MultiplayerGame/State_MultiplayerGame.h"
 
 class Application
 {

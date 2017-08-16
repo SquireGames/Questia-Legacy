@@ -12,12 +12,12 @@ class State_OptionsMenu : public State
 {
 public:
 	State_OptionsMenu();
-	void init();
+	virtual void init() final;
 	~State_OptionsMenu();
 
-	void processInput(std::u32string const& inputText);
-	void update(sf::Time elapsedTime);
-	void displayTextures();
+	virtual void processInput(std::u32string const& inputText) final;
+	virtual void update(sf::Time elapsedTime) final;
+	virtual void displayTextures() final;
 
 private:
 	//TODO make on stack

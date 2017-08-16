@@ -8,12 +8,12 @@ class State_MainMenu : public State
 {
 public:
 	State_MainMenu();
-	void init();
+	virtual void init() final;
 	~State_MainMenu();
 
-	void processInput(std::u32string const& inputText);
-	void update(sf::Time elapsedTime);
-	void displayTextures();
+	virtual void processInput(std::u32string const& inputText) final;
+	virtual void update(sf::Time elapsedTime) final;
+	virtual void displayTextures() final;
 };
 
 #endif // STATE_MAINMENU_H
